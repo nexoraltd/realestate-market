@@ -35,7 +35,11 @@ export default function RootLayout({
                 document.documentElement.classList.add('in-iframe');
                 var lastHeight = 0;
                 function sendHeight() {
-                  var h = document.documentElement.scrollHeight;
+                  // 一時的にhtmlの高さを0にして真のコンテンツ高さを測定
+                  var doc = document.documentElement;
+                  doc.style.height = '0';
+                  var h = doc.scrollHeight;
+                  doc.style.height = '';
                   if (h !== lastHeight) {
                     lastHeight = h;
                     window.parent.postMessage({ type: 'resize-iframe', height: h }, '*');
