@@ -13,6 +13,7 @@
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "leaflet": "^1.9.4",
+    "microcms-js-sdk": "^3.3.0",
     "next": "^16.2.1",
     "postcss": "^8.5.8",
     "react": "^19.2.4",

@@ -6,11 +6,8 @@ const userTypes = [
     title: "売りたい方",
     subtitle: "適正価格を知って、損しない売却を",
     icon: (
-      <svg className="w-12 h-12" fill="none" viewBox="0 0 48 48" stroke="currentColor" strokeWidth={1.5}>
-        <rect x="8" y="20" width="32" height="22" rx="2" />
-        <path d="M4 22L24 6L44 22" />
-        <circle cx="24" cy="32" r="5" />
-        <path d="M24 30v4M22 32h4" />
+      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 0h.008v.008h-.008V7.5z" />
       </svg>
     ),
     points: [
@@ -29,11 +26,8 @@ const userTypes = [
     title: "買いたい方",
     subtitle: "相場を知って、賢い物件選びを",
     icon: (
-      <svg className="w-12 h-12" fill="none" viewBox="0 0 48 48" stroke="currentColor" strokeWidth={1.5}>
-        <circle cx="20" cy="20" r="14" />
-        <path d="M30 30L42 42" strokeWidth={3} strokeLinecap="round" />
-        <rect x="14" y="16" width="12" height="8" rx="1" />
-        <path d="M12 18L20 10L28 18" />
+      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
       </svg>
     ),
     points: [
@@ -52,12 +46,8 @@ const userTypes = [
     title: "不動産のプロの方",
     subtitle: "データドリブンな意思決定を",
     icon: (
-      <svg className="w-12 h-12" fill="none" viewBox="0 0 48 48" stroke="currentColor" strokeWidth={1.5}>
-        <rect x="6" y="6" width="36" height="36" rx="4" />
-        <polyline points="12,34 20,22 28,26 36,14" />
-        <circle cx="20" cy="22" r="2" fill="currentColor" />
-        <circle cx="28" cy="26" r="2" fill="currentColor" />
-        <circle cx="36" cy="14" r="2" fill="currentColor" />
+      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
       </svg>
     ),
     points: [
@@ -66,22 +56,22 @@ const userTypes = [
       "トレンド分析・エリア比較レポート",
     ],
     cta: "プロプランを見る",
-    ctaLink: "#pricing",
+    ctaLink: "/#pricing",
     ctaSub: "API連携について相談",
     ctaSubLink: "#contact",
-    gradient: "from-purple-600 to-purple-800",
+    gradient: "from-violet-600 to-violet-800",
   },
 ];
 
 export default function UserTypeSection() {
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-16 md:py-24 bg-white">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#1a365d] mb-3">
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">
             あなたの目的に合わせて
           </h2>
-          <p className="text-gray-600">
+          <p className="text-slate-500 text-sm">
             売却・購入・プロ利用、それぞれに最適な機能を提供
           </p>
         </div>
@@ -90,7 +80,7 @@ export default function UserTypeSection() {
           {userTypes.map((u) => (
             <div
               key={u.type}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition border border-gray-100 overflow-hidden flex flex-col"
+              className="card-hover bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col"
             >
               <div className={`bg-gradient-to-br ${u.gradient} text-white p-6`}>
                 <div className="opacity-90 mb-3">{u.icon}</div>
@@ -100,24 +90,24 @@ export default function UserTypeSection() {
               <div className="p-6 flex-1 flex flex-col">
                 <ul className="space-y-3 mb-6 flex-1">
                   {u.points.map((p, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm">
-                      <span className="inline-block w-5 h-5 rounded-full bg-gray-100 text-[#1a365d] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                    <li key={i} className="flex items-start gap-2.5 text-sm">
+                      <span className="inline-flex w-5 h-5 rounded-full bg-slate-100 text-slate-600 text-xs font-bold items-center justify-center shrink-0 mt-0.5">
                         {i + 1}
                       </span>
-                      <span>{p}</span>
+                      <span className="text-slate-600">{p}</span>
                     </li>
                   ))}
                 </ul>
                 <div className="space-y-2">
                   <Link
                     href={u.ctaLink}
-                    className="block text-center py-2.5 px-4 rounded-xl bg-[#1a365d] hover:bg-[#2b6cb0] text-white font-bold transition text-sm"
+                    className="block text-center py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold transition text-sm"
                   >
                     {u.cta}
                   </Link>
                   <a
                     href={u.ctaSubLink}
-                    className="block text-center py-2 px-4 rounded-xl text-[#1a365d] hover:bg-gray-50 font-medium transition text-sm"
+                    className="block text-center py-2 px-4 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-medium transition text-sm"
                   >
                     {u.ctaSub} &rarr;
                   </a>

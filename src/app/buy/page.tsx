@@ -143,12 +143,11 @@ export default function BuyPage() {
             ご希望の条件に合った物件をお探しします。
           </p>
           <a
-            href="tel:0120000000"
+            href="mailto:info@next-aura.com"
             className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-10 rounded-xl text-lg transition shadow-lg"
           >
-            0120-000-000 に電話する
+            info@next-aura.com にメール
           </a>
-          <p className="text-xs text-gray-500 mt-3">受付時間 9:00-19:00（年中無休）</p>
         </div>
       </section>
 

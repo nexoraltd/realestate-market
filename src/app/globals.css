@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --color-primary: #1a365d;
-  --color-primary-light: #2b6cb0;
-  --color-accent: #ed8936;
-  --color-bg: #f7fafc;
+  --color-primary: #0f172a;
+  --color-primary-light: #1e40af;
+  --color-accent: #f59e0b;
+  --color-accent-hover: #d97706;
+  --color-bg: #f8fafc;
   --color-card: #ffffff;
-  --color-text: #1a202c;
-  --color-text-muted: #718096;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
   --color-border: #e2e8f0;
 }
 
@@ -17,8 +18,105 @@ body {
   color: var(--color-text);
 }
 
+/* Leaflet */
 .leaflet-container {
   width: 100%;
   height: 100%;
   z-index: 1;
+  background: #0f172a;
+}
+
+.pref-label span {
+  color: #e2e8f0;
+  font-size: 10px;
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.pref-popup .leaflet-popup-content-wrapper {
+  background: #1e293b;
+  color: #f1f5f9;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pref-popup .leaflet-popup-tip {
+  background: #1e293b;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes countUp {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+  50% { box-shadow: 0 0 20px 4px rgba(245, 158, 11, 0.2); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-fade-in-up-delay-1 {
+  animation: fadeInUp 0.6s ease-out 0.15s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-up-delay-2 {
+  animation: fadeInUp 0.6s ease-out 0.3s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-up-delay-3 {
+  animation: fadeInUp 0.6s ease-out 0.45s forwards;
+  opacity: 0;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Card hover */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

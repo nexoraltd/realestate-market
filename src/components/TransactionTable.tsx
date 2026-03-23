@@ -16,6 +16,8 @@ interface Transaction {
   Period: string;
   Use: string;
   TotalFloorArea: string;
+  NearestStation?: string;
+  TimeToNearestStation?: string;
 }
 
 function formatYen(val: string): string {
@@ -79,7 +81,7 @@ export default function TransactionTable({
         <table className="w-full text-sm">
           <thead className="bg-gray-50">
             <tr>
-              {["種別", "所在地", "取引価格", "面積", "間取り", "築年", "用途地域", "時期"].map(
+              {["種別", "所在地", "取引価格", "面積", "間取り", "築年", "最寄駅", "徒歩", "用途地域", "時期"].map(
                 (h) => (
                   <th
                     key={h}
@@ -94,42 +96,51 @@ export default function TransactionTable({
           <tbody>
             {pageData.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-3 py-8 text-center text-gray-400">
+                <td colSpan={10} className="px-3 py-8 text-center text-gray-400">
                   データがありません
                 </td>
               </tr>
             ) : (
-              pageData.map((t, i) => (
+              pageData.map((t, i) => {
+                const isMasked = i >= 2; // 3件目以降はマスク
+                return (
                 <tr
                   key={i}
-                  className="border-t border-gray-100 hover:bg-blue-50/50 transition"
+                  className={`border-t border-gray-100 transition ${isMasked ? "" : "hover:bg-blue-50/50"}`}
                 >
                   <td className="px-3 py-2 whitespace-nowrap">
                     <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded">
                       {t.Type || "-"}
                     </span>
                   </td>
-                  <td className="px-3 py-2 whitespace-nowrap">
+                  <td className={`px-3 py-2 whitespace-nowrap ${isMasked ? "blur-[3px] select-none" : ""}`}>
                     {t.Municipality}
                     {t.DistrictName ? ` ${t.DistrictName}` : ""}
                   </td>
-                  <td className="px-3 py-2 whitespace-nowrap font-semibold text-[#1a365d]">
+                  <td className={`px-3 py-2 whitespace-nowrap font-semibold text-[#1a365d] ${isMasked ? "blur-[3px] select-none" : ""}`}>
                     {formatYen(t.TradePrice)}
                   </td>
-                  <td className="px-3 py-2 whitespace-nowrap">
+                  <td className={`px-3 py-2 whitespace-nowrap ${isMasked ? "blur-[3px] select-none" : ""}`}>
                     {t.Area ? `${t.Area}m²` : "-"}
                     {t.TotalFloorArea ? ` (延床${t.TotalFloorArea}m²)` : ""}
                   </td>
                   <td className="px-3 py-2 whitespace-nowrap">{t.FloorPlan || "-"}</td>
-                  <td className="px-3 py-2 whitespace-nowrap">{t.BuildingYear || "-"}</td>
-                  <td className="px-3 py-2 whitespace-nowrap text-xs">
+                  <td className={`px-3 py-2 whitespace-nowrap ${isMasked ? "blur-[3px] select-none" : ""}`}>{t.BuildingYear || "-"}</td>
+                  <td className={`px-3 py-2 whitespace-nowrap text-xs ${isMasked ? "blur-[3px] select-none" : ""}`}>
+                    {t.NearestStation || "-"}
+                  </td>
+                  <td className={`px-3 py-2 whitespace-nowrap text-xs ${isMasked ? "blur-[3px] select-none" : ""}`}>
+                    {t.TimeToNearestStation ? `${t.TimeToNearestStation}分` : "-"}
+                  </td>
+                  <td className={`px-3 py-2 whitespace-nowrap text-xs ${isMasked ? "blur-[3px] select-none" : ""}`}>
                     {t.CityPlanning || "-"}
                   </td>
                   <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
                     {t.Period || "-"}
                   </td>
                 </tr>
-              ))
+                );
+              })
             )}
           </tbody>
         </table>

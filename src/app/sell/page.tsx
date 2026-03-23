@@ -124,13 +124,12 @@ export default function SellPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="tel:0120000000"
+              href="mailto:info@next-aura.com"
               className="inline-block bg-[#ed8936] hover:bg-orange-500 text-white font-bold py-4 px-10 rounded-xl text-lg transition shadow-lg"
             >
-              0120-000-000 に電話する
+              info@next-aura.com にメール
             </a>
           </div>
-          <p className="text-xs text-gray-500 mt-3">受付時間 9:00-19:00（年中無休）</p>
         </div>
       </section>
 

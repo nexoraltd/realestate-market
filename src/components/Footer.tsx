@@ -1,39 +1,71 @@
+import Link from "next/link";
+
 export default function Footer() {
   return (
-    <footer className="bg-[#1a365d] text-white mt-auto">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="font-bold text-lg mb-2">不動産相場ナビ</h3>
-            <p className="text-sm text-blue-200">
-              国土交通省の公的データに基づく
-              <br />
-              不動産取引価格情報サービス
+    <footer className="bg-slate-900 text-white mt-auto">
+      <div className="max-w-7xl mx-auto px-4 py-10">
+        <div className="grid md:grid-cols-4 gap-8">
+          <div className="md:col-span-1">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-7 h-7 rounded-md bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M3 12L12 3L21 12" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M5 10V20C5 20.5523 5.44772 21 6 21H18C18.5523 21 19 20.5523 19 20V10" stroke="white" strokeWidth="2" />
+                </svg>
+              </div>
+              <span className="font-bold">不動産相場ナビ</span>
+            </div>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              ネクソラ不動産が運営する不動産相場データベース
             </p>
           </div>
+
           <div>
-            <h4 className="font-bold mb-2">データ出典</h4>
-            <p className="text-sm text-blue-200">
+            <h4 className="font-bold text-sm mb-3 text-slate-300">サービス</h4>
+            <ul className="space-y-2 text-sm text-slate-400">
+              <li><Link href="/search" className="hover:text-white transition">相場検索</Link></li>
+              <li><Link href="/sell" className="hover:text-white transition">売りたい方</Link></li>
+              <li><Link href="/buy" className="hover:text-white transition">買いたい方</Link></li>
+              <li><a href="/#pricing" className="hover:text-white transition">料金プラン</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-sm mb-3 text-slate-300">データ出典</h4>
+            <p className="text-sm text-slate-400 leading-relaxed">
               国土交通省 不動産情報ライブラリ
               <br />
-              不動産取引価格情報・地価公示データ
-            </p>
-          </div>
-          <div id="contact">
-            <h4 className="font-bold mb-2">無料査定のご相談</h4>
-            <p className="text-sm text-blue-200 mb-2">
-              売却をご検討の方はお気軽にご連絡ください
+              不動産取引価格情報
             </p>
             <a
-              href="tel:0120000000"
-              className="inline-block bg-[#ed8936] hover:bg-orange-500 px-4 py-2 rounded-lg text-sm font-bold transition"
+              href="https://www.reinfolib.mlit.go.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-slate-500 hover:text-slate-300 transition mt-1 inline-block"
             >
-              0120-000-000
+              reinfolib.mlit.go.jp
+            </a>
+          </div>
+
+          <div id="contact">
+            <h4 className="font-bold text-sm mb-3 text-slate-300">無料査定のご相談</h4>
+            <p className="text-sm text-slate-400 mb-3">
+              売却をご検討の方はお気軽に
+            </p>
+            <a
+              href="mailto:info@next-aura.com"
+              className="inline-block bg-amber-500 hover:bg-amber-600 px-4 py-2 rounded-lg text-sm font-bold transition"
+            >
+              info@next-aura.com
             </a>
           </div>
         </div>
-        <div className="border-t border-blue-800 mt-6 pt-4 text-center text-xs text-blue-300">
-          &copy; {new Date().getFullYear()} 不動産相場ナビ All Rights Reserved.
+
+        <div className="border-t border-slate-800 mt-8 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+          <span>&copy; {new Date().getFullYear()} ネクソラ不動産 All Rights Reserved.</span>
+          <span>
+            出典：国土交通省 不動産情報ライブラリのAPI機能を利用して取得したデータを加工して作成
+          </span>
         </div>
       </div>
     </footer>
