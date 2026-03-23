@@ -25,7 +25,7 @@ export default function PaywallOverlay({
             スタンダードプラン以上でご利用いただけます
           </p>
           <a
-            href="/#pricing"
+            href="/pricing"
             className="inline-block bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold py-2 px-5 rounded-lg transition"
           >
             プランを見る

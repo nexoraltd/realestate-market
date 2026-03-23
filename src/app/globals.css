@@ -97,6 +97,16 @@ html {
   scroll-behavior: smooth;
 }
 
+/* iframe埋め込み時：二重スクロールバー防止 */
+html.in-iframe {
+  overflow: hidden;
+}
+html.in-iframe body {
+  overflow: visible;
+  height: auto;
+  min-height: auto;
+}
+
 /* Card hover */
 .card-hover {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

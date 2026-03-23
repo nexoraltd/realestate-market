@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,7 +22,29 @@ export default function RootLayout({
           crossOrigin=""
         />
       </head>
-      <body className="min-h-screen flex flex-col">{children}</body>
+      <body className="min-h-screen flex flex-col">
+        {children}
+        {/* iframe埋め込み時：親に高さを通知して二重スクロールバーを防止 */}
+        <Script
+          id="iframe-resize"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                if (window.self === window.top) return;
+                document.documentElement.classList.add('in-iframe');
+                function sendHeight() {
+                  var h = document.documentElement.scrollHeight;
+                  window.parent.postMessage({ type: 'resize-iframe', height: h }, '*');
+                }
+                sendHeight();
+                new ResizeObserver(sendHeight).observe(document.body);
+                window.addEventListener('load', sendHeight);
+              })();
+            `,
+          }}
+        />
+      </body>
     </html>
   );
 }

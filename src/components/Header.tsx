@@ -53,15 +53,15 @@ export default function Header() {
           <Link href="/buy" className="text-slate-300 hover:text-white transition font-medium">
             買いたい方
           </Link>
-          <a href="/#pricing" className="text-slate-300 hover:text-white transition font-medium">
+          <Link href="/pricing" className="text-slate-300 hover:text-white transition font-medium">
             料金
-          </a>
-          <a
-            href="#contact"
+          </Link>
+          <Link
+            href="/contact"
             className="bg-amber-500 hover:bg-amber-600 px-5 py-2 rounded-lg font-bold transition text-sm text-white shadow-md"
           >
             無料査定相談
-          </a>
+          </Link>
         </nav>
 
         {/* Mobile */}
@@ -88,7 +88,7 @@ export default function Header() {
             { href: "/search", label: "相場検索" },
             { href: "/sell", label: "売りたい方" },
             { href: "/buy", label: "買いたい方" },
-            { href: "/#pricing", label: "料金" },
+            { href: "/pricing", label: "料金" },
           ].map((item) => (
             <Link
               key={item.href}
@@ -99,13 +99,13 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
-          <a
-            href="#contact"
+          <Link
+            href="/contact"
             className="block bg-amber-500 text-center py-2.5 rounded-lg font-bold mt-2 text-white"
             onClick={() => setMenuOpen(false)}
           >
             無料査定相談
-          </a>
+          </Link>
         </nav>
       )}
     </header>

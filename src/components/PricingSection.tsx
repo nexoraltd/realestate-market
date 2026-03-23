@@ -1,65 +1,6 @@
 "use client";
 
-const plans = [
-  {
-    name: "フリー",
-    price: "0",
-    unit: "円/月",
-    desc: "まずは相場をチェック",
-    features: [
-      "都道府県別の相場サマリー",
-      "直近1四半期のデータ閲覧",
-      "取引事例 20件まで表示",
-      "種別別グラフ",
-    ],
-    limited: [
-      "詳細データ閲覧",
-      "CSVダウンロード",
-      "トレンド分析",
-      "エリア比較",
-    ],
-    cta: "無料で始める",
-    ctaLink: "/search",
-    popular: false,
-  },
-  {
-    name: "スタンダード",
-    price: "2,980",
-    unit: "円/月",
-    desc: "不動産業者・投資家向け",
-    features: [
-      "全国の詳細取引データ",
-      "過去20年分のデータ閲覧",
-      "取引事例 無制限表示",
-      "種別別グラフ",
-      "CSVダウンロード (月100件)",
-      "相場トレンド分析",
-      "エリア比較レポート",
-    ],
-    limited: [],
-    cta: "14日間無料で試す",
-    ctaLink: "#contact",
-    popular: true,
-  },
-  {
-    name: "プロフェッショナル",
-    price: "9,800",
-    unit: "円/月",
-    desc: "法人・大量データ利用向け",
-    features: [
-      "スタンダードの全機能",
-      "CSVダウンロード 無制限",
-      "API連携",
-      "カスタムレポート生成",
-      "チームアカウント (5名)",
-      "優先サポート",
-    ],
-    limited: [],
-    cta: "お問い合わせ",
-    ctaLink: "#contact",
-    popular: false,
-  },
-];
+import { plans } from "@/lib/plans";
 
 export default function PricingSection() {
   return (

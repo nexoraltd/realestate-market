@@ -136,16 +136,16 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="mailto:info@next-aura.com"
+              href="/contact"
               className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 px-8 rounded-xl text-lg transition shadow-lg hover:shadow-xl animate-pulse-glow"
             >
               無料査定を依頼する
             </a>
             <a
-              href="mailto:info@next-aura.com"
+              href="/pricing"
               className="inline-block glass hover:bg-white/10 text-white font-bold py-3.5 px-8 rounded-xl text-lg transition"
             >
-              info@next-aura.com
+              料金プランを見る
             </a>
           </div>
         </div>

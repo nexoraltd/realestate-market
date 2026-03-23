@@ -26,7 +26,8 @@ export default function Footer() {
               <li><Link href="/search" className="hover:text-white transition">相場検索</Link></li>
               <li><Link href="/sell" className="hover:text-white transition">売りたい方</Link></li>
               <li><Link href="/buy" className="hover:text-white transition">買いたい方</Link></li>
-              <li><a href="/#pricing" className="hover:text-white transition">料金プラン</a></li>
+              <li><Link href="/pricing" className="hover:text-white transition">料金プラン</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition">お問い合わせ</Link></li>
             </ul>
           </div>
 
@@ -35,12 +36,12 @@ export default function Footer() {
             <p className="text-sm text-slate-400 mb-3">
               売却をご検討の方はお気軽に
             </p>
-            <a
-              href="mailto:info@next-aura.com"
+            <Link
+              href="/contact"
               className="inline-block bg-amber-500 hover:bg-amber-600 px-4 py-2 rounded-lg text-sm font-bold transition"
             >
-              info@next-aura.com
-            </a>
+              お問い合わせフォーム
+            </Link>
           </div>
         </div>
 
