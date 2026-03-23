@@ -125,7 +125,7 @@ export default function DetailedDataPreview() {
             こんなデータが見られます
           </h2>
           <p className="text-slate-500 text-sm max-w-2xl mx-auto">
-            国土交通省の不動産取引価格情報から、間取り・築年数・最寄駅・徒歩分数まで
+            間取り・築年数・最寄駅・徒歩分数まで
             <br className="hidden md:block" />
             物件探しに必要な情報を一覧で確認できます
           </p>
