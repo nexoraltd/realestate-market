@@ -33,13 +33,19 @@ export default function RootLayout({
               (function() {
                 if (window.self === window.top) return;
                 document.documentElement.classList.add('in-iframe');
+                var lastHeight = 0;
                 function sendHeight() {
                   var h = document.documentElement.scrollHeight;
-                  window.parent.postMessage({ type: 'resize-iframe', height: h }, '*');
+                  if (h !== lastHeight) {
+                    lastHeight = h;
+                    window.parent.postMessage({ type: 'resize-iframe', height: h }, '*');
+                  }
                 }
                 sendHeight();
                 new ResizeObserver(sendHeight).observe(document.body);
+                new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true, attributes: true });
                 window.addEventListener('load', sendHeight);
+                setInterval(sendHeight, 300);
               })();
             `,
           }}
