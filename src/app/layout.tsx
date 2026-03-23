@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import IframeResizer from "@/components/IframeResizer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,10 +12,13 @@ const iframeScript = `
   if (window.self === window.top) return;
   document.documentElement.classList.add('in-iframe');
   var lastHeight = 0;
+  var measuring = false;
   function sendHeight() {
-    var doc = document.documentElement;
+    if (measuring) return;
     var body = document.body;
     if (!body) return;
+    measuring = true;
+    var doc = document.documentElement;
     var origDocH = doc.style.height;
     var origBodyH = body.style.height;
     var origBodyMin = body.style.minHeight;
@@ -27,23 +29,22 @@ const iframeScript = `
     doc.style.height = origDocH;
     body.style.height = origBodyH;
     body.style.minHeight = origBodyMin;
+    measuring = false;
     if (h > 0 && h !== lastHeight) {
       lastHeight = h;
       window.parent.postMessage({ type: 'resize-iframe', height: h }, '*');
     }
   }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      sendHeight();
-      new ResizeObserver(sendHeight).observe(document.body);
-      new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true, attributes: true });
-      setInterval(sendHeight, 300);
-    });
-  } else {
+  function setup() {
     sendHeight();
     new ResizeObserver(sendHeight).observe(document.body);
-    new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true, attributes: true });
-    setInterval(sendHeight, 300);
+    new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true });
+    setInterval(sendHeight, 500);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setup);
+  } else {
+    setup();
   }
   window.addEventListener('load', sendHeight);
 })();
@@ -66,7 +67,6 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col">
         {children}
-        <IframeResizer />
       </body>
     </html>
   );
