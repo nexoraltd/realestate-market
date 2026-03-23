@@ -103,7 +103,7 @@ html.in-iframe {
 }
 html.in-iframe body {
   overflow: visible !important;
-  height: auto !important;
+  height: auto;
   min-height: 0 !important;
 }
 
