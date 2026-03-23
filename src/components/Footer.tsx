@@ -62,10 +62,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-slate-800 mt-8 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <span>&copy; {new Date().getFullYear()} ネクソラ不動産 All Rights Reserved.</span>
-          <span>
-            出典：国土交通省 不動産情報ライブラリのAPI機能を利用して取得したデータを加工して作成
-          </span>
+          <span>&copy; {new Date().getFullYear()} Nexora合同会社 All Rights Reserved.</span>
         </div>
       </div>
     </footer>
