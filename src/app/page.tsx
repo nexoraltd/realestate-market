@@ -50,7 +50,7 @@ export default function Home() {
                 </h1>
 
                 <p className="text-slate-400 mb-8 leading-relaxed text-sm md:text-base">
-                  首都圏の不動産取引データをマップで直感的に検索。
+                  不動産取引データをマップで直感的に検索。
                   買いたい方も売りたい方も、相場を知ることが第一歩です。
                 </p>
               </div>
@@ -159,7 +159,7 @@ export default function Home() {
           </h2>
           <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
             <p>
-              不動産相場ナビは、国土交通省が公開している不動産取引価格情報を活用した、日本最大級の不動産相場データベースです。
+              不動産相場ナビは、不動産業界の情報の非対称性を解消することを目的に作られた、日本最大級の不動産相場データベースです。
               2005年以降の全国47都道府県の取引事例を網羅し、マンション・戸建て・土地など物件種別ごとの相場情報を無料でご覧いただけます。
             </p>
             <p>
