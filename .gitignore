@@ -6,3 +6,5 @@ out
 dist
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel

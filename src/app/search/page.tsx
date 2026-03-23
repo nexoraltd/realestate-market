@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SearchForm from "@/components/SearchForm";
+import LegalNotice from "@/components/LegalNotice";
 import SearchResults from "./SearchResults";
 
 export default function SearchPage() {
@@ -45,6 +46,7 @@ export default function SearchPage() {
         </div>
       </section>
 
+      <LegalNotice />
       <Footer />
     </>
   );
