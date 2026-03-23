@@ -30,23 +30,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
-            <h4 className="font-bold text-sm mb-3 text-slate-300">データ出典</h4>
-            <p className="text-sm text-slate-400 leading-relaxed">
-              国土交通省 不動産情報ライブラリ
-              <br />
-              不動産取引価格情報
-            </p>
-            <a
-              href="https://www.reinfolib.mlit.go.jp/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-slate-500 hover:text-slate-300 transition mt-1 inline-block"
-            >
-              reinfolib.mlit.go.jp
-            </a>
-          </div>
-
           <div id="contact">
             <h4 className="font-bold text-sm mb-3 text-slate-300">無料査定のご相談</h4>
             <p className="text-sm text-slate-400 mb-3">
