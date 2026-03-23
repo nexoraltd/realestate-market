@@ -56,12 +56,15 @@ export default function Header() {
           <Link href="/pricing" className="text-slate-300 hover:text-white transition font-medium">
             料金
           </Link>
-          <Link
-            href="/contact"
+          <Link href="/dashboard" className="text-slate-300 hover:text-white transition font-medium">
+            マイページ
+          </Link>
+          <a
+            href="mailto:info@next-aura.com"
             className="bg-amber-500 hover:bg-amber-600 px-5 py-2 rounded-lg font-bold transition text-sm text-white shadow-md"
           >
             無料査定相談
-          </Link>
+          </a>
         </nav>
 
         {/* Mobile */}
@@ -89,6 +92,7 @@ export default function Header() {
             { href: "/sell", label: "売りたい方" },
             { href: "/buy", label: "買いたい方" },
             { href: "/pricing", label: "料金" },
+            { href: "/dashboard", label: "マイページ" },
           ].map((item) => (
             <Link
               key={item.href}
@@ -99,13 +103,13 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/contact"
+          <a
+            href="mailto:info@next-aura.com"
             className="block bg-amber-500 text-center py-2.5 rounded-lg font-bold mt-2 text-white"
             onClick={() => setMenuOpen(false)}
           >
             無料査定相談
-          </Link>
+          </a>
         </nav>
       )}
     </header>

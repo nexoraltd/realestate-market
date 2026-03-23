@@ -16,7 +16,7 @@ export default function Footer() {
               <span className="font-bold">不動産相場ナビ</span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
-              ネクソラ不動産が運営する不動産相場データベース
+              ネクソラ不動産が運営する不動産相場データベース。売却・購入のご相談もお気軽にどうぞ。
             </p>
           </div>
 
@@ -27,7 +27,7 @@ export default function Footer() {
               <li><Link href="/sell" className="hover:text-white transition">売りたい方</Link></li>
               <li><Link href="/buy" className="hover:text-white transition">買いたい方</Link></li>
               <li><Link href="/pricing" className="hover:text-white transition">料金プラン</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition">お問い合わせ</Link></li>
+              <li><a href="mailto:info@next-aura.com" className="hover:text-white transition">お問い合わせ</a></li>
             </ul>
           </div>
 
@@ -36,12 +36,12 @@ export default function Footer() {
             <p className="text-sm text-slate-400 mb-3">
               売却をご検討の方はお気軽に
             </p>
-            <Link
-              href="/contact"
+            <a
+              href="mailto:info@next-aura.com"
               className="inline-block bg-amber-500 hover:bg-amber-600 px-4 py-2 rounded-lg text-sm font-bold transition"
             >
-              お問い合わせフォーム
-            </Link>
+              メールで相談する
+            </a>
           </div>
         </div>
 

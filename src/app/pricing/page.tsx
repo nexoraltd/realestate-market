@@ -239,12 +239,12 @@ export default function PricingPage() {
             >
               無料トライアルを始める
             </Link>
-            <Link
-              href="/contact"
+            <a
+              href="mailto:info@next-aura.com"
               className="inline-block glass hover:bg-white/10 text-white font-bold py-3.5 px-8 rounded-xl text-lg transition"
             >
               お問い合わせ
-            </Link>
+            </a>
           </div>
         </div>
       </section>

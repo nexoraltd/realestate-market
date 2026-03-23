@@ -113,6 +113,67 @@ export default function Home() {
       {/* Pricing */}
       <PricingSection />
 
+      {/* Real Estate Service Banner */}
+      <section className="py-12 bg-white border-y border-slate-100">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="text-center mb-8">
+            <p className="text-sm text-amber-600 font-bold mb-1">ネクソラ不動産</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-800">
+              相場データだけでなく、売却・購入もサポート
+            </h2>
+            <p className="text-slate-500 text-sm mt-2 max-w-2xl mx-auto">
+              不動産相場ナビを運営するネクソラ不動産では、データに基づいた不動産の売却・購入の仲介も行っています。
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-5">
+            <a
+              href="/sell"
+              className="group bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl p-6 border border-blue-200/50 hover:shadow-md transition"
+            >
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 0h.008v.008h-.008V7.5z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-slate-800 group-hover:text-blue-700 transition">不動産を売りたい方</h3>
+                  <p className="text-sm text-slate-600 mt-1">相場データに基づく適正価格で、損しない売却を実現。無料査定も実施中です。</p>
+                  <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium mt-2">
+                    詳しく見る
+                    <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </a>
+            <a
+              href="/buy"
+              className="group bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-2xl p-6 border border-emerald-200/50 hover:shadow-md transition"
+            >
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-slate-800 group-hover:text-emerald-700 transition">不動産を買いたい方</h3>
+                  <p className="text-sm text-slate-600 mt-1">相場データで賢く物件選び。ご希望の条件に合った物件探しをサポートします。</p>
+                  <span className="inline-flex items-center gap-1 text-sm text-emerald-600 font-medium mt-2">
+                    詳しく見る
+                    <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="relative bg-gradient-to-r from-[#0f172a] to-[#1e3a5f] py-16 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10">
@@ -127,19 +188,19 @@ export default function Home() {
         </div>
         <div className="relative max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            売却をお考えですか？
+            売却・購入のご相談もお気軽に
           </h2>
           <p className="text-slate-300 mb-8 leading-relaxed">
-            相場データを確認したら、次は無料査定でより正確な価格をお確かめください。
+            相場データの確認から、実際の売却・購入まで一貫してサポート。
             <br className="hidden md:block" />
-            経験豊富なスタッフが丁寧にご対応いたします。
+            まずはメールでお気軽にご相談ください。
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="/contact"
+              href="mailto:info@next-aura.com"
               className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 px-8 rounded-xl text-lg transition shadow-lg hover:shadow-xl animate-pulse-glow"
             >
-              無料査定を依頼する
+              無料で相談する
             </a>
             <a
               href="/pricing"

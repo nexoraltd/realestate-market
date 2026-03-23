@@ -38,7 +38,7 @@ export default function SearchPage() {
             公的データに加え、最新の市況・物件固有の条件を踏まえた査定を無料でご提供。
           </p>
           <a
-            href="#contact"
+            href="mailto:info@next-aura.com"
             className="inline-block bg-[#ed8936] hover:bg-orange-500 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg"
           >
             無料査定を依頼する

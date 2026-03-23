@@ -18,7 +18,7 @@ const userTypes = [
     cta: "相場を調べる",
     ctaLink: "/search",
     ctaSub: "無料査定を依頼",
-    ctaSubLink: "#contact",
+    ctaSubLink: "mailto:info@next-aura.com",
     gradient: "from-blue-600 to-blue-800",
   },
   {
@@ -38,7 +38,7 @@ const userTypes = [
     cta: "エリアの相場を見る",
     ctaLink: "/search",
     ctaSub: "購入相談する",
-    ctaSubLink: "#contact",
+    ctaSubLink: "mailto:info@next-aura.com",
     gradient: "from-emerald-600 to-emerald-800",
   },
   {
@@ -58,7 +58,7 @@ const userTypes = [
     cta: "プロプランを見る",
     ctaLink: "/#pricing",
     ctaSub: "API連携について相談",
-    ctaSubLink: "#contact",
+    ctaSubLink: "mailto:info@next-aura.com",
     gradient: "from-violet-600 to-violet-800",
   },
 ];
