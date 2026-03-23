@@ -35,11 +35,19 @@ export default function RootLayout({
                 document.documentElement.classList.add('in-iframe');
                 var lastHeight = 0;
                 function sendHeight() {
-                  // 一時的にhtmlの高さを0にして真のコンテンツ高さを測定
+                  // html・bodyを一時的に縮小して真のコンテンツ高さを測定
                   var doc = document.documentElement;
+                  var body = document.body;
+                  var origDocH = doc.style.height;
+                  var origBodyH = body.style.height;
+                  var origBodyMin = body.style.minHeight;
                   doc.style.height = '0';
-                  var h = doc.scrollHeight;
-                  doc.style.height = '';
+                  body.style.height = '0';
+                  body.style.minHeight = '0';
+                  var h = body.scrollHeight;
+                  doc.style.height = origDocH;
+                  body.style.height = origBodyH;
+                  body.style.minHeight = origBodyMin;
                   if (h !== lastHeight) {
                     lastHeight = h;
                     window.parent.postMessage({ type: 'resize-iframe', height: h }, '*');

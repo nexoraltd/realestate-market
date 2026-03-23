@@ -102,9 +102,9 @@ html.in-iframe {
   overflow: hidden;
 }
 html.in-iframe body {
-  overflow: visible;
-  height: auto;
-  min-height: auto;
+  overflow: visible !important;
+  height: auto !important;
+  min-height: 0 !important;
 }
 
 /* Card hover */
