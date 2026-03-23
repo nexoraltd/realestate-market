@@ -13,22 +13,24 @@ const iframeScript = `
   document.documentElement.classList.add('in-iframe');
   var lastHeight = 0;
   var measuring = false;
+  function getContentHeight() {
+    var body = document.body;
+    if (!body || !body.children.length) return 0;
+    var maxBottom = 0;
+    for (var i = 0; i < body.children.length; i++) {
+      var rect = body.children[i].getBoundingClientRect();
+      var bottom = rect.bottom;
+      if (bottom > maxBottom) maxBottom = bottom;
+    }
+    var bodyStyle = getComputedStyle(body);
+    var marginBottom = parseInt(bodyStyle.marginBottom) || 0;
+    var paddingBottom = parseInt(bodyStyle.paddingBottom) || 0;
+    return Math.ceil(maxBottom + marginBottom + paddingBottom);
+  }
   function sendHeight() {
     if (measuring) return;
-    var body = document.body;
-    if (!body) return;
     measuring = true;
-    var doc = document.documentElement;
-    var origDocH = doc.style.height;
-    var origBodyH = body.style.height;
-    var origBodyMin = body.style.minHeight;
-    doc.style.height = '0';
-    body.style.height = '0';
-    body.style.minHeight = '0';
-    var h = body.scrollHeight;
-    doc.style.height = origDocH;
-    body.style.height = origBodyH;
-    body.style.minHeight = origBodyMin;
+    var h = getContentHeight();
     measuring = false;
     if (h > 0 && h !== lastHeight) {
       lastHeight = h;
