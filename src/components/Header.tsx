@@ -18,7 +18,7 @@ export default function Header() {
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
           ? "bg-slate-900/95 backdrop-blur-md shadow-lg shadow-black/10"
-          : "bg-transparent"
+          : "bg-slate-900"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
