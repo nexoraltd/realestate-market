@@ -9,12 +9,8 @@ import PopularAreas from "@/components/PopularAreas";
 import HowItWorks from "@/components/HowItWorks";
 import MapSection from "@/components/MapSection";
 import DetailedDataPreview from "@/components/DetailedDataPreview";
-import { getSiteSettings } from "@/lib/microcms";
 
-export const revalidate = 60; // ISR: 60秒ごとに再検証
-
-export default async function Home() {
-  const settings = await getSiteSettings();
+export default function Home() {
   return (
     <>
       <Header />
@@ -54,7 +50,8 @@ export default async function Home() {
                 </h1>
 
                 <p className="text-slate-400 mb-8 leading-relaxed text-sm md:text-base">
-                  {settings.heroDescription}
+                  首都圏の不動産取引データをマップで直感的に検索。
+                  買いたい方も売りたい方も、相場を知ることが第一歩です。
                 </p>
               </div>
 
@@ -130,23 +127,25 @@ export default async function Home() {
         </div>
         <div className="relative max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            {settings.ctaTitle}
+            売却をお考えですか？
           </h2>
           <p className="text-slate-300 mb-8 leading-relaxed">
-            {settings.ctaDescription}
+            相場データを確認したら、次は無料査定でより正確な価格をお確かめください。
+            <br className="hidden md:block" />
+            経験豊富なスタッフが丁寧にご対応いたします。
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href={`mailto:${settings.contactEmail}`}
+              href="mailto:info@next-aura.com"
               className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 px-8 rounded-xl text-lg transition shadow-lg hover:shadow-xl animate-pulse-glow"
             >
               無料査定を依頼する
             </a>
             <a
-              href={`mailto:${settings.contactEmail}`}
+              href="mailto:info@next-aura.com"
               className="inline-block glass hover:bg-white/10 text-white font-bold py-3.5 px-8 rounded-xl text-lg transition"
             >
-              {settings.contactEmail}
+              info@next-aura.com
             </a>
           </div>
         </div>
@@ -156,7 +155,7 @@ export default async function Home() {
       <section className="py-12 bg-white">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-xl font-bold mb-4 text-slate-800">
-            {settings.seoTitle}
+            不動産相場ナビとは
           </h2>
           <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
             <p>
