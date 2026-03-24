@@ -5,6 +5,7 @@ import { useEffect, useState, useMemo } from "react";
 import TransactionTable from "@/components/TransactionTable";
 import PaywallOverlay from "@/components/PaywallOverlay";
 import { PREFECTURES } from "@/lib/prefectures";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 interface Transaction {
   Type: string;
@@ -98,7 +99,7 @@ export default function SearchResults() {
     if (city) query.set("city", city);
     else if (area) query.set("area", area);
 
-    fetch(`/api/transactions?${query.toString()}`)
+    fetchWithAuth(`/api/transactions?${query.toString()}`)
       .then((r) => {
         if (!r.ok) throw new Error("取得に失敗しました");
         return r.json();

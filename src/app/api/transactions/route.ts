@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTransactions } from "@/lib/api";
+import { checkApiAuth } from "@/lib/apiAuth";
 
 export async function GET(request: NextRequest) {
+  const authError = checkApiAuth(request);
+  if (authError) return authError;
+
   const params = request.nextUrl.searchParams;
   const year = params.get("year");
   const quarter = params.get("quarter");
