@@ -9,7 +9,7 @@ export default function PaywallOverlay({
 }) {
   return (
     <div className="relative">
-      <div className="filter blur-sm pointer-events-none select-none">
+      <div className="filter blur-sm pointer-events-none select-none w-full overflow-hidden">
         {children}
       </div>
       <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-xl">

@@ -58,7 +58,7 @@ export default function PriceChart({
   }
 
   return (
-    <div className="w-full h-80" style={{ minWidth: 0, minHeight: 0 }}>
+    <div className="w-full h-80" style={{ minWidth: 200, minHeight: 100 }}>
       <ResponsiveContainer width="100%" height="100%" minWidth={200} minHeight={100}>
         <BarChart data={chartData} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />

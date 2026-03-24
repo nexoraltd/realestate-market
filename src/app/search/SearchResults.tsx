@@ -2,8 +2,6 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
-import PriceChart from "@/components/PriceChart";
-import TrendChart from "@/components/TrendChart";
 import TransactionTable from "@/components/TransactionTable";
 import PaywallOverlay from "@/components/PaywallOverlay";
 import { PREFECTURES } from "@/lib/prefectures";
@@ -406,7 +404,7 @@ export default function SearchResults() {
           <h3 className="font-bold text-lg mb-4 text-slate-800">
             種別ごとの平均取引価格
           </h3>
-          <PriceChart transactions={filtered} />
+          <div className="w-full h-80 bg-slate-100 rounded-lg" />
         </div>
       </PaywallOverlay>
 
@@ -416,7 +414,7 @@ export default function SearchResults() {
           <h3 className="font-bold text-lg mb-4 text-slate-800">
             価格推移トレンド
           </h3>
-          <TrendChart transactions={filtered} />
+          <div className="w-full h-72 bg-slate-100 rounded-lg" />
         </div>
       </PaywallOverlay>
 
