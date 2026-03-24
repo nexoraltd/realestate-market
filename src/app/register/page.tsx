@@ -121,7 +121,7 @@ export default async function RegisterPage({
                       { icon: "🔒", text: "SSL暗号化・Stripe決済で安全" },
                       { icon: "🔄", text: "14日間無料トライアル付き" },
                       { icon: "✖️", text: "いつでも解約OK・解約手数料なし" },
-                      { icon: "💬", text: "メール・チャットサポート対応" },
+                      { icon: "💬", text: "メールサポート対応" },
                     ].map((item) => (
                       <div key={item.text} className="flex items-center gap-3 text-sm">
                         <span className="text-lg">{item.icon}</span>
