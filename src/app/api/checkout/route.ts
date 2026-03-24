@@ -1,17 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-02-25.clover",
-});
-
 const PRICE_IDS: Record<string, string> = {
   standard: "price_1TESR9HRmdlq3dCd5oE0LfDQ",
   professional: "price_1TESSCHRmdlq3dCdKIjdznwZ",
 };
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: "2026-02-25.clover",
+    });
+
     const { plan, email } = await req.json();
 
     const priceId = PRICE_IDS[plan];
