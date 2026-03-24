@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "不動産相場ナビ | エリアの取引価格・地価がすぐわかる | ネクソラ不動産",
   description:
     "不動産取引価格・相場情報を市区町村レベルで検索。売却・購入の参考に、エリアの相場を無料でチェック。ネクソラ不動産運営。",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 const iframeScript = `
