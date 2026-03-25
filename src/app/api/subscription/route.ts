@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { STRIPE_PRICE_IDS } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
 
@@ -58,8 +59,8 @@ export async function GET(req: NextRequest) {
     const priceId = activeSub.items.data[0]?.price?.id;
     let plan = activeSub.metadata?.plan || null;
     if (!plan && priceId) {
-      if (priceId === "price_1TEY8xRoGbypKtRLTCar48k2") plan = "standard";
-      else if (priceId === "price_1TEY9mRoGbypKtRLIcj7uMkG") plan = "professional";
+      const priceToplan = Object.entries(STRIPE_PRICE_IDS).find(([, id]) => id === priceId);
+      if (priceToplan) plan = priceToplan[0];
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

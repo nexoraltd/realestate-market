@@ -9,15 +9,25 @@ interface CheckoutButtonProps {
 export default function CheckoutButton({ plan }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleCheckout = async () => {
+    if (!email.trim()) {
+      setError("メールアドレスを入力してください");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("正しいメールアドレスを入力してください");
+      return;
+    }
+
     setLoading(true);
     setError("");
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify({ plan, email }),
       });
       const data = await res.json();
       if (data.url) {
@@ -34,6 +44,17 @@ export default function CheckoutButton({ plan }: CheckoutButtonProps) {
 
   return (
     <div>
+      <label className="block text-sm font-medium text-slate-700 mb-1.5">
+        メールアドレス
+      </label>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="info@example.com"
+        className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none mb-4"
+        onKeyDown={(e) => e.key === "Enter" && handleCheckout()}
+      />
       <button
         onClick={handleCheckout}
         disabled={loading}

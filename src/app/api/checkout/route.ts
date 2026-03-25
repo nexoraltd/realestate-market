@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-
-const PRICE_IDS: Record<string, string> = {
-  standard: "price_1TEY8xRoGbypKtRLTCar48k2",
-  professional: "price_1TEY9mRoGbypKtRLIcj7uMkG",
-};
+import { STRIPE_PRICE_IDS } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +12,7 @@ export async function POST(req: NextRequest) {
 
     const { plan, email } = await req.json();
 
-    const priceId = PRICE_IDS[plan];
+    const priceId = STRIPE_PRICE_IDS[plan];
     if (!priceId) {
       return NextResponse.json({ error: "無効なプランです" }, { status: 400 });
     }
