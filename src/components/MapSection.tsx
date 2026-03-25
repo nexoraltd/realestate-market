@@ -15,7 +15,7 @@ export default function MapSection() {
   return (
     <div className="h-[420px] md:h-[520px]">
       <div className="text-center text-xs text-slate-500 mb-2">
-        市区町村をクリックして相場を確認
+        都道府県をクリックして相場を確認
       </div>
       <LeafletMap />
     </div>
