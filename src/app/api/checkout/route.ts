@@ -6,7 +6,8 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    const key = (process.env.STRIPE_SECRET_KEY || "").trim();
+    const stripe = new Stripe(key, {
       apiVersion: "2026-02-25.clover",
     });
 
