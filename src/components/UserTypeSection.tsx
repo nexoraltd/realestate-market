@@ -56,7 +56,7 @@ const userTypes = [
       "トレンド分析・エリア比較レポート",
     ],
     cta: "プロプランを見る",
-    ctaLink: "/#pricing",
+    ctaLink: "/pricing",
     ctaSub: "API連携について相談",
     ctaSubLink: "mailto:info@next-aura.com",
     gradient: "from-violet-600 to-violet-800",

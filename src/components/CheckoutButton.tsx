@@ -31,7 +31,9 @@ export default function CheckoutButton({ plan }: CheckoutButtonProps) {
       });
       const data = await res.json();
       if (data.url) {
-        window.location.href = data.url;
+        // iframe内の場合は親ウィンドウをリダイレクト（Stripeはiframe内で動作しない）
+        const top = window.top || window.self;
+        top.location.href = data.url;
       } else {
         setError(data.error || "エラーが発生しました");
         setLoading(false);

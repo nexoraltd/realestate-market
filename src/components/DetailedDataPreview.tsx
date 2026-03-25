@@ -282,7 +282,7 @@ export default function DetailedDataPreview() {
                 500万件超の取引データ・CSV出力・トレンド分析を利用可能
               </p>
               <a
-                href="#pricing"
+                href="/pricing"
                 className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm py-2.5 px-6 rounded-xl transition shadow-md hover:shadow-lg"
               >
                 プランを見る →

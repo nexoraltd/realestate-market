@@ -53,7 +53,8 @@ export default function SubscriptionPanel() {
       });
       const data = await res.json();
       if (data.url) {
-        window.location.href = data.url;
+        const top = window.top || window.self;
+        top.location.href = data.url;
       }
     } catch {
       alert("ポータルを開けませんでした。再度お試しください。");
