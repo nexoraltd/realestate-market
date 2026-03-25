@@ -11,8 +11,6 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   try {
     const key = (process.env.STRIPE_SECRET_KEY || "").trim();
-    console.log("[subscription] key prefix:", key.substring(0, 8), "length:", key.length);
-
     if (!key) {
       return NextResponse.json({ error: "STRIPE_SECRET_KEY is not set" }, { status: 500 });
     }
@@ -85,10 +83,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    const errType = err?.constructor?.name || "Unknown";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const errCode = (err as any)?.code || (err as any)?.type || "no-code";
-    console.error("[subscription] error:", errType, errCode, message);
+    console.error("[subscription] error:", message);
     return NextResponse.json(
       { error: "サブスクリプション情報の取得に失敗しました" },
       { status: 500 }
