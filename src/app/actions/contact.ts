@@ -1,5 +1,7 @@
 "use server";
 
+import { sendContactEmail } from "@/lib/email";
+
 export interface ContactFormState {
   success: boolean;
   message: string;
@@ -28,18 +30,15 @@ export async function submitContactForm(
     return { success: false, message: "正しいメールアドレスを入力してください" };
   }
 
-  // TODO: Resend/SendGrid等のメール送信サービスと連携
-  console.log("=== お問い合わせ受信 ===");
-  console.log({
-    formType,
-    name,
-    email,
-    phone,
-    company,
-    plan,
-    message,
-    timestamp: new Date().toISOString(),
-  });
+  try {
+    await sendContactEmail({ name, email, phone, company, plan, formType, message });
+  } catch (e) {
+    console.error("[contact] メール送信失敗:", e);
+    return {
+      success: false,
+      message: "送信に失敗しました。お手数ですが info@next-aura.com まで直接ご連絡ください。",
+    };
+  }
 
   return {
     success: true,

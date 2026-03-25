@@ -46,7 +46,7 @@ export const PREFECTURE_GEO: PrefectureGeo[] = [
   { code: "36", name: "徳島県", lat: 34.07, lng: 134.56, region: "四国", avgPrice: 720 },
   { code: "37", name: "香川県", lat: 34.34, lng: 134.04, region: "四国", avgPrice: 980 },
   { code: "38", name: "愛媛県", lat: 33.84, lng: 132.77, region: "四国", avgPrice: 880 },
-  { code: "39", name: "高知県", lat: 33.56, lng: 133.53, region: "四国", avgPrice: 650 },
+  { code: "39", name: "高知県", lat: 33.56, lng: 133.53, region: "四国", avgPrice: 1660 },
   { code: "40", name: "福岡県", lat: 33.59, lng: 130.42, region: "九州", avgPrice: 2890 },
   { code: "41", name: "佐賀県", lat: 33.25, lng: 130.30, region: "九州", avgPrice: 820 },
   { code: "42", name: "長崎県", lat: 32.74, lng: 129.87, region: "九州", avgPrice: 920 },

@@ -4,6 +4,7 @@ import { useState } from "react";
 import SearchForm from "@/components/SearchForm";
 import TrendChart from "@/components/TrendChart";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import SubscriptionPanel from "@/components/SubscriptionPanel";
 
 const prefectures: Record<string, string> = {
   "01": "北海道", "02": "青森県", "03": "岩手県", "04": "宮城県", "05": "秋田県",
@@ -537,30 +538,8 @@ export default function DashboardContent() {
           )}
         </div>
 
-        {/* Plan Info */}
-        <div className="mt-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div>
-              <p className="text-sm text-slate-500">ご利用中のプラン</p>
-              <p className="font-bold text-slate-800">スタンダードプラン</p>
-            </div>
-            <div className="flex gap-3">
-              <a
-                href="/pricing"
-                className="text-sm text-amber-600 hover:text-amber-700 font-medium transition"
-              >
-                プランを変更
-              </a>
-              <span className="text-slate-300">|</span>
-              <a
-                href="mailto:info@next-aura.com"
-                className="text-sm text-slate-500 hover:text-slate-700 font-medium transition"
-              >
-                サポートに連絡
-              </a>
-            </div>
-          </div>
-        </div>
+        {/* Subscription Panel */}
+        <SubscriptionPanel />
       </div>
     </section>
   );

@@ -65,7 +65,7 @@ export const plans: Plan[] = [
       "優先サポート",
     ],
     limited: [],
-    cta: "お問い合わせ",
+    cta: "14日間無料で試す",
     ctaLink: "/register?plan=professional",
     popular: false,
   },
@@ -83,5 +83,5 @@ export const featureComparison = [
   { feature: "API連携", free: false, standard: false, pro: true },
   { feature: "カスタムレポート", free: false, standard: false, pro: true },
   { feature: "チームアカウント", free: false, standard: false, pro: "5名まで" },
-  { feature: "サポート", free: "メール", standard: "メール・チャット", pro: "優先サポート" },
+  { feature: "サポート", free: "メール", standard: "メール", pro: "優先サポート" },
 ];

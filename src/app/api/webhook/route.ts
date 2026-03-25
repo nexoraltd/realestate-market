@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import {
+  sendCheckoutCompleteEmail,
+  sendCancellationEmail,
+  sendPaymentFailedEmail,
+} from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -27,19 +32,38 @@ export async function POST(req: NextRequest) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
-      console.log(`[webhook] チェックアウト完了: ${session.id} customer=${session.customer_email} plan=${session.metadata?.plan}`);
-      // TODO: DBにサブスクリプション状態を保存
+      const email = session.customer_email;
+      const plan = session.metadata?.plan || "standard";
+      console.log(
+        `[webhook] チェックアウト完了: ${session.id} customer=${email} plan=${plan}`
+      );
+      if (email) {
+        try {
+          await sendCheckoutCompleteEmail(email, plan);
+        } catch (e) {
+          console.error("[webhook] メール送信失敗:", e);
+        }
+      }
       break;
     }
     case "customer.subscription.deleted": {
       const sub = event.data.object as Stripe.Subscription;
       console.log(`[webhook] サブスクリプション解約: ${sub.id}`);
-      // TODO: DBのサブスクリプション状態を更新
+      try {
+        await sendCancellationEmail(sub.id);
+      } catch (e) {
+        console.error("[webhook] 解約通知メール送信失敗:", e);
+      }
       break;
     }
     case "invoice.payment_failed": {
       const invoice = event.data.object as Stripe.Invoice;
       console.log(`[webhook] 支払い失敗: ${invoice.id}`);
+      try {
+        await sendPaymentFailedEmail(invoice.id);
+      } catch (e) {
+        console.error("[webhook] 支払い失敗通知メール送信失敗:", e);
+      }
       break;
     }
     default:
