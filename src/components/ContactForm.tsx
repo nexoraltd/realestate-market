@@ -122,7 +122,7 @@ export default function ContactForm({
           >
             <option value="">選択してください</option>
             <option value="standard">スタンダード（¥2,980/月）</option>
-            <option value="professional">プロフェッショナル（¥9,800/月）</option>
+            <option value="professional">プロフェッショナル（¥6,800/月）</option>
           </select>
         </div>
       )}

@@ -2,7 +2,7 @@
  * プランごとの機能権限定義
  *
  * standard: スタンダード（2,980円/月）
- * professional: プロフェッショナル（9,800円/月）
+ * professional: プロフェッショナル（6,800円/月）
  */
 
 export type PlanKey = "standard" | "professional";
@@ -10,8 +10,6 @@ export type PlanKey = "standard" | "professional";
 export interface PlanPermissions {
   /** CSVダウンロード月間上限（-1 = 無制限） */
   csvMonthlyLimit: number;
-  /** API連携の利用可否 */
-  apiAccess: boolean;
   /** カスタムレポートの利用可否 */
   customReport: boolean;
   /** チームアカウントの利用可否 */
@@ -23,14 +21,12 @@ export interface PlanPermissions {
 const PERMISSIONS: Record<PlanKey, PlanPermissions> = {
   standard: {
     csvMonthlyLimit: 100,
-    apiAccess: false,
     customReport: false,
     teamAccount: false,
     teamMaxMembers: 0,
   },
   professional: {
     csvMonthlyLimit: -1, // 無制限
-    apiAccess: true,
     customReport: true,
     teamAccount: true,
     teamMaxMembers: 5,
@@ -63,12 +59,6 @@ export function csvRemainingDownloads(
  * プロ限定機能の一覧（ダッシュボード表示用）
  */
 export const PRO_ONLY_FEATURES = [
-  {
-    id: "api" as const,
-    label: "API連携",
-    description: "外部システムと連携して取引データを自動取得。独自ツールや社内システムとの統合が可能です。",
-    icon: "api",
-  },
   {
     id: "customReport" as const,
     label: "カスタムレポート",

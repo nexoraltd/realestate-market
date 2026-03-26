@@ -59,13 +59,12 @@ export const plans: Plan[] = [
   },
   {
     name: "プロフェッショナル",
-    price: "9,800",
+    price: "6,800",
     unit: "円/月",
     desc: "法人・大量データ利用向け",
     features: [
       "スタンダードの全機能",
       "CSVダウンロード 無制限",
-      "API連携",
       "カスタムレポート生成",
       "チームアカウント (5名)",
       "優先サポート",
@@ -86,7 +85,7 @@ export const featureComparison = [
   { feature: "相場トレンド分析", free: false, standard: true, pro: true },
   { feature: "エリア比較レポート", free: false, standard: true, pro: true },
   { feature: "CSVダウンロード", free: false, standard: "月100件", pro: "無制限" },
-  { feature: "API連携", free: false, standard: false, pro: true },
+  { feature: "API連携", free: false, standard: false, pro: false },
   { feature: "カスタムレポート", free: false, standard: false, pro: true },
   { feature: "チームアカウント", free: false, standard: false, pro: "5名まで" },
   { feature: "サポート", free: "メール", standard: "メール", pro: "優先サポート" },

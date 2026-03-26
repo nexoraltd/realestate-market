@@ -57,7 +57,7 @@ const userTypes = [
     ],
     cta: "プロプランを見る",
     ctaLink: "/pricing",
-    ctaSub: "API連携について相談",
+    ctaSub: "プロプランについて相談",
     ctaSubLink: "mailto:info@next-aura.com",
     gradient: "from-violet-600 to-violet-800",
   },

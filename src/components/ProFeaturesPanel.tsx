@@ -18,7 +18,7 @@ const prefectures: Record<string, string> = {
   "46": "鹿児島県", "47": "沖縄県",
 };
 
-type ProTab = "api" | "report" | "team";
+type ProTab = "report" | "team";
 
 interface Props {
   planKey: PlanKey;
@@ -28,184 +28,6 @@ interface Props {
 // ============================================================
 // Sub-components
 // ============================================================
-
-/** API連携パネル */
-function ApiPanel({ email }: { email: string }) {
-  const [apiKey, setApiKey] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [generating, setGenerating] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [showKey, setShowKey] = useState(false);
-
-  const fetchKey = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetchWithAuth(`/api/api-keys?email=${encodeURIComponent(email)}`);
-      const data = await res.json();
-      setApiKey(data.apiKey || null);
-    } catch {
-      setApiKey(null);
-    } finally {
-      setLoading(false);
-    }
-  }, [email]);
-
-  useEffect(() => { fetchKey(); }, [fetchKey]);
-
-  async function generateKey() {
-    setGenerating(true);
-    try {
-      const res = await fetchWithAuth("/api/api-keys", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      const data = await res.json();
-      if (data.apiKey) {
-        setApiKey(data.apiKey);
-        setShowKey(true);
-      }
-    } catch {
-      alert("APIキーの生成に失敗しました。");
-    } finally {
-      setGenerating(false);
-    }
-  }
-
-  async function revokeKey() {
-    if (!confirm("APIキーを無効化しますか？既存の連携が使えなくなります。")) return;
-    try {
-      await fetchWithAuth("/api/api-keys", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      setApiKey(null);
-      setShowKey(false);
-    } catch {
-      alert("APIキーの無効化に失敗しました。");
-    }
-  }
-
-  function copyKey() {
-    if (!apiKey) return;
-    navigator.clipboard.writeText(apiKey);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
-  if (loading) {
-    return <div className="text-center py-8 text-sm text-slate-400">読み込み中...</div>;
-  }
-
-  return (
-    <div className="space-y-6">
-      {/* APIキー管理 */}
-      <div className="bg-slate-50 rounded-xl p-5">
-        <h3 className="text-sm font-bold text-slate-800 mb-3">APIキー</h3>
-        {apiKey ? (
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <code className="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-2.5 text-sm font-mono text-slate-700 truncate">
-                {showKey ? apiKey : "••••••••••••••••••••••••••••••••"}
-              </code>
-              <button
-                onClick={() => setShowKey(!showKey)}
-                className="p-2.5 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition"
-                title={showKey ? "非表示" : "表示"}
-              >
-                <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  {showKey ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
-                  ) : (
-                    <>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </>
-                  )}
-                </svg>
-              </button>
-              <button
-                onClick={copyKey}
-                className="p-2.5 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition"
-                title="コピー"
-              >
-                {copied ? (
-                  <svg className="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                ) : (
-                  <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
-                  </svg>
-                )}
-              </button>
-            </div>
-            <button
-              onClick={revokeKey}
-              className="text-xs text-red-500 hover:text-red-700 font-medium transition"
-            >
-              APIキーを無効化
-            </button>
-          </div>
-        ) : (
-          <div>
-            <p className="text-sm text-slate-500 mb-3">
-              APIキーを発行して外部システムからデータにアクセスできます。
-            </p>
-            <button
-              onClick={generateKey}
-              disabled={generating}
-              className="bg-slate-800 hover:bg-slate-700 disabled:bg-slate-300 text-white font-bold py-2.5 px-5 rounded-lg transition text-sm"
-            >
-              {generating ? "生成中..." : "APIキーを発行する"}
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* APIドキュメント */}
-      <div className="bg-slate-50 rounded-xl p-5">
-        <h3 className="text-sm font-bold text-slate-800 mb-3">APIエンドポイント</h3>
-        <div className="space-y-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded">GET</span>
-              <code className="text-xs text-slate-600 font-mono">/api/public/transactions</code>
-            </div>
-            <p className="text-xs text-slate-500 mb-2">取引データを取得します。</p>
-            <div className="bg-white rounded-lg border border-slate-200 p-3 text-xs font-mono text-slate-600 overflow-x-auto">
-              <div className="text-slate-400 mb-1"># リクエスト例</div>
-              <div>curl -H &quot;x-api-key: YOUR_API_KEY&quot; \</div>
-              <div className="pl-4">&quot;https://realestate-market.vercel.app/api/public/transactions?area=13&amp;year=2025&amp;quarter=1&quot;</div>
-            </div>
-          </div>
-          <div>
-            <p className="text-xs font-medium text-slate-700 mb-1">パラメータ</p>
-            <table className="w-full text-xs border-collapse">
-              <thead>
-                <tr className="bg-white">
-                  <th className="text-left px-2 py-1.5 font-medium text-slate-600 border-b border-slate-100">パラメータ</th>
-                  <th className="text-left px-2 py-1.5 font-medium text-slate-600 border-b border-slate-100">必須</th>
-                  <th className="text-left px-2 py-1.5 font-medium text-slate-600 border-b border-slate-100">説明</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td className="px-2 py-1.5 font-mono text-slate-700 border-b border-slate-50">area</td><td className="px-2 py-1.5 border-b border-slate-50">✅</td><td className="px-2 py-1.5 text-slate-500 border-b border-slate-50">都道府県コード（01〜47）</td></tr>
-                <tr><td className="px-2 py-1.5 font-mono text-slate-700 border-b border-slate-50">year</td><td className="px-2 py-1.5 border-b border-slate-50">任意</td><td className="px-2 py-1.5 text-slate-500 border-b border-slate-50">対象年度（デフォルト: 2024）</td></tr>
-                <tr><td className="px-2 py-1.5 font-mono text-slate-700 border-b border-slate-50">quarter</td><td className="px-2 py-1.5 border-b border-slate-50">任意</td><td className="px-2 py-1.5 text-slate-500 border-b border-slate-50">四半期（1〜4、デフォルト: 1）</td></tr>
-                <tr><td className="px-2 py-1.5 font-mono text-slate-700">city</td><td className="px-2 py-1.5">任意</td><td className="px-2 py-1.5 text-slate-500">市区町村コード</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-700">
-            <strong>レート制限:</strong> 1日あたり100リクエスト。ヘッダーに <code className="bg-amber-100 px-1 rounded">x-api-key</code> を含めてください。
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /** カスタムレポートパネル */
 function ReportPanel({ email }: { email: string }) {
@@ -656,7 +478,7 @@ interface ReportData {
 // ============================================================
 
 export default function ProFeaturesPanel({ planKey, email }: Props) {
-  const [activeProTab, setActiveProTab] = useState<ProTab>("api");
+  const [activeProTab, setActiveProTab] = useState<ProTab>("report");
   const isPro = planKey === "professional";
 
   if (!isPro) {
@@ -669,7 +491,6 @@ export default function ProFeaturesPanel({ planKey, email }: Props) {
 
         <div className="space-y-4 mb-8">
           {[
-            { icon: "🔗", label: "API連携", desc: "外部システムと連携して取引データをプログラムから取得。社内ツールやBIとの統合が可能。" },
             { icon: "📊", label: "カスタムレポート", desc: "複数エリア×複数年度を横断する詳細分析レポートを自動生成。印刷・PDF保存対応。" },
             { icon: "👥", label: "チームアカウント", desc: "最大5名のメンバーを招待し、同じプランの全機能を共有。" },
           ].map((f) => (
@@ -689,7 +510,7 @@ export default function ProFeaturesPanel({ planKey, email }: Props) {
         <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 text-center">
           <h3 className="text-lg font-bold text-white mb-2">プロフェッショナルプランにアップグレード</h3>
           <p className="text-sm text-slate-300 mb-4">
-            月額9,800円で全機能が利用可能。CSVダウンロード無制限、API連携、カスタムレポート、チームアカウントが使えます。
+            月額6,800円で全機能が利用可能。CSVダウンロード無制限、カスタムレポート、チームアカウントが使えます。
           </p>
           <Link href="/register?plan=professional" className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-xl transition text-sm">
             14日間無料で試す
@@ -700,7 +521,6 @@ export default function ProFeaturesPanel({ planKey, email }: Props) {
   }
 
   const proTabs: { id: ProTab; label: string; icon: string }[] = [
-    { id: "api", label: "API連携", icon: "🔗" },
     { id: "report", label: "カスタムレポート", icon: "📊" },
     { id: "team", label: "チームアカウント", icon: "👥" },
   ];
@@ -708,7 +528,7 @@ export default function ProFeaturesPanel({ planKey, email }: Props) {
   return (
     <div>
       <h2 className="text-xl font-bold text-slate-800 mb-2">プロフェッショナル機能</h2>
-      <p className="text-sm text-slate-500 mb-6">API連携・カスタムレポート・チーム管理をご利用いただけます。</p>
+      <p className="text-sm text-slate-500 mb-6">カスタムレポート・チーム管理をご利用いただけます。</p>
 
       {/* Pro sub-tabs */}
       <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
@@ -728,7 +548,6 @@ export default function ProFeaturesPanel({ planKey, email }: Props) {
         ))}
       </div>
 
-      {activeProTab === "api" && <ApiPanel email={email} />}
       {activeProTab === "report" && <ReportPanel email={email} />}
       {activeProTab === "team" && <TeamPanel email={email} />}
     </div>
