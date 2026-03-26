@@ -27,6 +27,7 @@ export default function Footer() {
               <li><Link href="/sell" className="hover:text-white transition">売りたい方</Link></li>
               <li><Link href="/buy" className="hover:text-white transition">買いたい方</Link></li>
               <li><Link href="/pricing" className="hover:text-white transition">料金プラン</Link></li>
+              <li><Link href="/account" className="hover:text-white transition">アカウント管理・解約</Link></li>
               <li><a href="mailto:info@next-aura.com" className="hover:text-white transition">お問い合わせ</a></li>
             </ul>
           </div>

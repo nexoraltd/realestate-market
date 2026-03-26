@@ -30,7 +30,13 @@ export async function sendCheckoutCompleteEmail(
              style="display:inline-block;background:#f59e0b;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:16px">
             ダッシュボードを開く
           </a>
-          <p style="color:#94a3b8;font-size:12px;margin-top:24px">
+          <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0" />
+          <p style="color:#94a3b8;font-size:12px">
+            プラン変更・解約は
+            <a href="https://realestate-market.vercel.app/account" style="color:#f59e0b">アカウント管理ページ</a>
+            からいつでも行えます。
+          </p>
+          <p style="color:#94a3b8;font-size:12px;margin-top:8px">
             ご不明な点がございましたら info@next-aura.com までお気軽にご連絡ください。
           </p>
         </div>
