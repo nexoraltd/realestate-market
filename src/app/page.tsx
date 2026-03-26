@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TrustBadges from "@/components/TrustBadges";
@@ -202,12 +203,12 @@ export default function Home() {
             >
               無料で相談する
             </a>
-            <a
+            <Link
               href="/pricing"
               className="inline-block glass hover:bg-white/10 text-white font-bold py-3.5 px-8 rounded-xl text-lg transition"
             >
               料金プランを見る
-            </a>
+            </Link>
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 const SAMPLE_DATA = [
   {
@@ -281,12 +282,12 @@ export default function DetailedDataPreview() {
               <p className="text-xs text-slate-500 mb-3">
                 500万件超の取引データ・CSV出力・トレンド分析を利用可能
               </p>
-              <a
+              <Link
                 href="/pricing"
                 className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm py-2.5 px-6 rounded-xl transition shadow-md hover:shadow-lg"
               >
                 プランを見る →
-              </a>
+              </Link>
             </div>
           </div>
         </div>

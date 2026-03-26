@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
+import Link from "next/link";
 import TransactionTable from "@/components/TransactionTable";
 import PaywallOverlay from "@/components/PaywallOverlay";
 import { PREFECTURES } from "@/lib/prefectures";
@@ -241,9 +242,9 @@ export default function SearchResults() {
         {isLimited && (
           <div className="hidden md:block bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-800">
             無料プラン: {FREE_LIMIT}件まで表示中
-            <a href="/pricing" className="ml-2 font-bold underline">
+            <Link href="/pricing" className="ml-2 font-bold underline">
               全件表示 &rarr;
-            </a>
+            </Link>
           </div>
         )}
       </div>
@@ -457,12 +458,12 @@ export default function SearchResults() {
             <p className="text-slate-300 text-sm mb-4">
               スタンダードプランで全件表示・CSVダウンロード・トレンド分析が利用可能
             </p>
-            <a
+            <Link
               href="/pricing"
               className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-8 rounded-lg transition"
             >
               プランを見る
-            </a>
+            </Link>
           </div>
         )}
       </div>
