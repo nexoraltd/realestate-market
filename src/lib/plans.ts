@@ -1,7 +1,7 @@
 /** Stripe Price ID マッピング（一元管理） */
 export const STRIPE_PRICE_IDS: Record<string, string> = {
   standard: "price_1TEY8xRoGbypKtRLTCar48k2",
-  professional: "price_1TEY9mRoGbypKtRLIcj7uMkG",
+  professional: "price_1TF4pnRoGbypKtRL5GKebMrj",
 };
 
 export interface Plan {
