@@ -1,10 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import SearchForm from "@/components/SearchForm";
 import TrendChart from "@/components/TrendChart";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import SubscriptionPanel from "@/components/SubscriptionPanel";
+
+const SESSION_KEY = "realestate_verified_email";
+
+type AuthState = "idle" | "checking" | "active" | "inactive" | "error";
 
 const prefectures: Record<string, string> = {
   "01": "北海道", "02": "青森県", "03": "岩手県", "04": "宮城県", "05": "秋田県",
@@ -62,6 +67,162 @@ const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
 
 export default function DashboardContent() {
   const [activeTab, setActiveTab] = useState<Tab>("search");
+
+  // Subscription gate state
+  const [gateEmail, setGateEmail] = useState("");
+  const [authState, setAuthState] = useState<AuthState>("idle");
+  const [verifiedEmail, setVerifiedEmail] = useState<string | null>(null);
+  const [planLabel, setPlanLabel] = useState<string>("");
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem(SESSION_KEY);
+    if (saved) {
+      try {
+        const { email, plan } = JSON.parse(saved);
+        setVerifiedEmail(email);
+        setPlanLabel(plan === "professional" ? "プロフェッショナル" : "スタンダード");
+        setAuthState("active");
+        return;
+      } catch {
+        sessionStorage.removeItem(SESSION_KEY);
+      }
+    }
+
+    // Stripeチェックアウト完了後: session_idからメール自動取得→自動認証
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+    if (sessionId) {
+      setAuthState("checking");
+      fetch(`/api/checkout-session?session_id=${encodeURIComponent(sessionId)}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.email) {
+            // サブスクリプション状態を確認
+            return fetch(`/api/subscription?email=${encodeURIComponent(data.email)}`)
+              .then((r) => r.json())
+              .then((subData) => {
+                if (subData.active) {
+                  const plan = subData.plan || data.plan || "standard";
+                  const label = plan === "professional" ? "プロフェッショナル" : "スタンダード";
+                  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email: data.email, plan }));
+                  setVerifiedEmail(data.email);
+                  setPlanLabel(label);
+                  setAuthState("active");
+                } else {
+                  // Stripeで決済完了直後はまだサブスクリプションが反映されていない場合がある
+                  // その場合はセッション情報だけで認証する
+                  const plan = data.plan || "standard";
+                  const label = plan === "professional" ? "プロフェッショナル" : "スタンダード";
+                  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email: data.email, plan }));
+                  setVerifiedEmail(data.email);
+                  setPlanLabel(label);
+                  setAuthState("active");
+                }
+              });
+          } else {
+            setAuthState("idle");
+          }
+        })
+        .catch(() => {
+          setAuthState("idle");
+        });
+    }
+  }, []);
+
+  async function handleGateCheck() {
+    if (!gateEmail) return;
+    setAuthState("checking");
+    try {
+      const res = await fetch(`/api/subscription?email=${encodeURIComponent(gateEmail)}`);
+      const data = await res.json();
+      if (data.active) {
+        const label = data.plan === "professional" ? "プロフェッショナル" : "スタンダード";
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email: gateEmail, plan: data.plan }));
+        setVerifiedEmail(gateEmail);
+        setPlanLabel(label);
+        setAuthState("active");
+      } else {
+        setAuthState("inactive");
+      }
+    } catch {
+      setAuthState("error");
+    }
+  }
+
+  function handleLogout() {
+    sessionStorage.removeItem(SESSION_KEY);
+    setVerifiedEmail(null);
+    setGateEmail("");
+    setAuthState("idle");
+  }
+
+  // Show gate if not verified
+  if (authState !== "active") {
+    return (
+      <section className="py-16 bg-slate-50 min-h-[60vh] flex items-start justify-center">
+        <div className="w-full max-w-md mx-auto px-4">
+          {authState === "inactive" ? (
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-amber-100 flex items-center justify-center">
+                <svg className="w-7 h-7 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold text-slate-800 text-center mb-2">有料プランが未登録です</h2>
+              <p className="text-sm text-slate-500 text-center mb-6">
+                <span className="font-medium text-slate-700">{gateEmail}</span> には有効なサブスクリプションが見つかりませんでした。
+              </p>
+              <Link
+                href="/register?plan=standard"
+                className="block text-center bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-6 rounded-xl transition mb-3"
+              >
+                14日間無料で申し込む
+              </Link>
+              <button
+                onClick={() => setAuthState("idle")}
+                className="block w-full text-center text-sm text-slate-500 hover:text-slate-700 py-2 transition"
+              >
+                別のメールで確認する
+              </button>
+            </div>
+          ) : (
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-slate-800 flex items-center justify-center">
+                <svg className="w-7 h-7 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold text-slate-800 text-center mb-1">会員ダッシュボード</h2>
+              <p className="text-sm text-slate-500 text-center mb-6">登録メールアドレスを入力してください</p>
+              <input
+                type="email"
+                value={gateEmail}
+                onChange={(e) => setGateEmail(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleGateCheck()}
+                placeholder="info@example.com"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none mb-3"
+              />
+              {authState === "error" && (
+                <p className="text-xs text-red-500 mb-3">エラーが発生しました。再度お試しください。</p>
+              )}
+              <button
+                onClick={handleGateCheck}
+                disabled={!gateEmail || authState === "checking"}
+                className="w-full bg-slate-800 hover:bg-slate-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold py-3 rounded-xl transition"
+              >
+                {authState === "checking" ? "確認中..." : "ダッシュボードに入る"}
+              </button>
+              <div className="mt-4 text-center">
+                <Link href="/register?plan=standard" className="text-xs text-amber-600 hover:text-amber-700 font-medium">
+                  まだ登録していない方はこちら →
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  }
 
   // CSV tab state
   const [csvArea, setCsvArea] = useState("");
@@ -198,6 +359,20 @@ export default function DashboardContent() {
   return (
     <section className="py-8 md:py-12 bg-slate-50 min-h-[60vh]">
       <div className="max-w-6xl mx-auto px-4">
+        {/* User info bar */}
+        <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 mb-6">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              {planLabel}プラン
+            </span>
+            <span className="text-sm text-slate-600">{verifiedEmail}</span>
+          </div>
+          <button onClick={handleLogout} className="text-xs text-slate-400 hover:text-slate-600 transition">
+            ログアウト
+          </button>
+        </div>
+
         {/* Tab Navigation */}
         <div className="flex gap-2 overflow-x-auto pb-2 mb-6 -mx-4 px-4 md:mx-0 md:px-0">
           {tabs.map((tab) => (
@@ -538,8 +713,6 @@ export default function DashboardContent() {
           )}
         </div>
 
-        {/* Subscription Panel */}
-        <SubscriptionPanel />
       </div>
     </section>
   );
