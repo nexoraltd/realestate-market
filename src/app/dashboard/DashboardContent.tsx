@@ -74,6 +74,23 @@ export default function DashboardContent() {
   const [verifiedEmail, setVerifiedEmail] = useState<string | null>(null);
   const [planLabel, setPlanLabel] = useState<string>("");
 
+  // CSV tab state (must be before any conditional return to respect Rules of Hooks)
+  const [csvArea, setCsvArea] = useState("");
+  const [csvYear, setCsvYear] = useState("2024");
+  const [csvLoading, setCsvLoading] = useState(false);
+
+  // Trend tab state
+  const [trendArea, setTrendArea] = useState("");
+  const [trendType, setTrendType] = useState("all");
+  const [trendLoading, setTrendLoading] = useState(false);
+  const [trendData, setTrendData] = useState<{ TradePrice: string; Type: string; Period: string }[] | null>(null);
+
+  // Compare tab state
+  const [compareAreas, setCompareAreas] = useState<string[]>([]);
+  const [compareToggle, setCompareToggle] = useState("");
+  const [compareLoading, setCompareLoading] = useState(false);
+  const [compareData, setCompareData] = useState<Record<string, { TradePrice: string; Type: string; Period: string }[]> | null>(null);
+
   useEffect(() => {
     const saved = sessionStorage.getItem(SESSION_KEY);
     if (saved) {
@@ -223,23 +240,6 @@ export default function DashboardContent() {
       </section>
     );
   }
-
-  // CSV tab state
-  const [csvArea, setCsvArea] = useState("");
-  const [csvYear, setCsvYear] = useState("2024");
-  const [csvLoading, setCsvLoading] = useState(false);
-
-  // Trend tab state
-  const [trendArea, setTrendArea] = useState("");
-  const [trendType, setTrendType] = useState("all");
-  const [trendLoading, setTrendLoading] = useState(false);
-  const [trendData, setTrendData] = useState<{ TradePrice: string; Type: string; Period: string }[] | null>(null);
-
-  // Compare tab state
-  const [compareAreas, setCompareAreas] = useState<string[]>([]);
-  const [compareToggle, setCompareToggle] = useState("");
-  const [compareLoading, setCompareLoading] = useState(false);
-  const [compareData, setCompareData] = useState<Record<string, { TradePrice: string; Type: string; Period: string }[]> | null>(null);
 
   const years = Array.from({ length: 20 }, (_, i) => String(2024 - i));
 
