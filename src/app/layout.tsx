@@ -1,12 +1,46 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const BASE_URL = 'https://realestate-market.vercel.app'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: "不動産相場ナビ | エリアの取引価格・地価がすぐわかる | ネクソラ不動産",
   description:
-    "不動産取引価格・相場情報を市区町村レベルで検索。売却・購入の参考に、エリアの相場を無料でチェック。ネクソラ不動産運営。",
+    "不動産取引価格・相場情報を市区町村レベルで検索。売却・購入の参考に、エリアの相場を無料でチェック。500万件以上の取引データ・20年分・全47都道府県対応。ネクソラ不動産運営。",
+  keywords: ['不動産相場', '不動産取引価格', '地価', '土地価格', '不動産検索', 'マンション相場', '一戸建て相場', '土地相場', '売却相場', '購入相場', '不動産データ'],
   icons: {
     icon: "/favicon.svg",
+  },
+  openGraph: {
+    type: 'website',
+    url: BASE_URL,
+    siteName: '不動産相場ナビ',
+    title: '不動産相場ナビ | マップで見る不動産取引価格データベース',
+    description: '500万件以上の不動産取引データをマップで検索。売りたい方も買いたい方も、エリアの相場を無料でチェック。全47都道府県・20年分対応。',
+    images: [
+      {
+        url: '/api/og-default',
+        width: 1200,
+        height: 630,
+        alt: '不動産相場ナビ — マップで見る不動産取引価格データベース',
+      },
+    ],
+    locale: 'ja_JP',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '不動産相場ナビ | マップで見る不動産取引価格データベース',
+    description: '500万件以上の不動産取引データをマップで検索。エリアの相場を無料でチェック。',
+    images: ['/api/og-default'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
+  alternates: {
+    canonical: BASE_URL,
   },
 };
 
@@ -55,6 +89,40 @@ const iframeScript = `
 })();
 `;
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: '不動産相場ナビ',
+  url: 'https://realestate-market.vercel.app',
+  description: '不動産取引価格・相場情報を市区町村レベルで検索。500万件以上の取引データ・20年分・全47都道府県対応。',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Web',
+  offers: [
+    {
+      '@type': 'Offer',
+      name: '無料プラン',
+      price: '0',
+      priceCurrency: 'JPY',
+      description: '基本的な相場検索を無料で利用できます',
+    },
+    {
+      '@type': 'Offer',
+      name: 'スタンダードプラン',
+      price: '980',
+      priceCurrency: 'JPY',
+      billingIncrement: 'P1M',
+      description: '詳細データ・CSVダウンロード・トレンド分析が利用できます',
+    },
+  ],
+  provider: {
+    '@type': 'Organization',
+    name: 'ネクソラ不動産',
+    url: 'https://realestate-market.vercel.app',
+  },
+  inLanguage: 'ja',
+  isAccessibleForFree: true,
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -63,6 +131,10 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <link
           rel="stylesheet"
           href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"

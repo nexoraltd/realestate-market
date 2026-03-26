@@ -1,9 +1,40 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SearchForm from "@/components/SearchForm";
 import LegalNotice from "@/components/LegalNotice";
 import SearchResults from "./SearchResults";
+
+interface SearchPageProps {
+  searchParams: Promise<{ prefecture?: string; city?: string; type?: string }>
+}
+
+export async function generateMetadata({ searchParams }: SearchPageProps): Promise<Metadata> {
+  const params = await searchParams
+  const { prefecture, city } = params
+
+  const areaLabel = city ? `${prefecture}${city}` : prefecture ?? 'エリア'
+  const title = `${areaLabel}の不動産相場 | 不動産相場ナビ`
+  const description = `${areaLabel}の不動産取引価格・相場情報。マンション・一戸建て・土地の売買実績データを無料で検索。`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: `📍 ${areaLabel}の不動産相場 | 不動産相場ナビ`,
+      description,
+    },
+    twitter: {
+      card: 'summary',
+      title: `📍 ${areaLabel}の不動産相場 | 不動産相場ナビ`,
+      description,
+    },
+    alternates: {
+      canonical: `https://realestate-market.vercel.app/search${prefecture ? `?prefecture=${encodeURIComponent(prefecture)}` : ''}`,
+    },
+  }
+}
 
 export default function SearchPage() {
   return (
