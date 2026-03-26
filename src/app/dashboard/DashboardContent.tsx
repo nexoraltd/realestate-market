@@ -6,7 +6,8 @@ import SearchForm from "@/components/SearchForm";
 import TrendChart from "@/components/TrendChart";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import SubscriptionPanel from "@/components/SubscriptionPanel";
-import { getPermissions, PRO_ONLY_FEATURES, type PlanKey } from "@/lib/planPermissions";
+import { getPermissions, type PlanKey } from "@/lib/planPermissions";
+import ProFeaturesPanel from "@/components/ProFeaturesPanel";
 
 const SESSION_KEY = "realestate_verified_email";
 
@@ -446,9 +447,14 @@ export default function DashboardContent() {
             </span>
             <span className="text-sm text-slate-600">{verifiedEmail}</span>
           </div>
-          <button onClick={handleLogout} className="text-xs text-slate-400 hover:text-slate-600 transition">
-            ログアウト
-          </button>
+          <div className="flex items-center gap-3">
+            <Link href="/account" className="text-xs text-amber-600 hover:text-amber-700 font-medium transition">
+              アカウント管理
+            </Link>
+            <button onClick={handleLogout} className="text-xs text-slate-400 hover:text-slate-600 transition">
+              ログアウト
+            </button>
+          </div>
         </div>
 
         {/* Tab Navigation */}
@@ -841,91 +847,8 @@ export default function DashboardContent() {
           )}
 
           {/* プロ限定機能 */}
-          {activeTab === "pro" && (
-            <div>
-              <h2 className="text-xl font-bold text-slate-800 mb-2">プロフェッショナル限定機能</h2>
-              <p className="text-sm text-slate-500 mb-6">
-                {planKey === "professional"
-                  ? "プロフェッショナルプランの高度な機能をご利用いただけます。"
-                  : "プロフェッショナルプランにアップグレードすると、以下の高度な機能が利用可能になります。"}
-              </p>
-
-              <div className="space-y-4">
-                {PRO_ONLY_FEATURES.map((feature) => {
-                  const isAvailable = planKey === "professional";
-                  return (
-                    <div
-                      key={feature.id}
-                      className={`rounded-xl border p-5 ${
-                        isAvailable
-                          ? "border-emerald-200 bg-emerald-50"
-                          : "border-slate-200 bg-slate-50"
-                      }`}
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                          isAvailable ? "bg-emerald-200" : "bg-slate-200"
-                        }`}>
-                          {feature.icon === "api" && (
-                            <svg className={`w-5 h-5 ${isAvailable ? "text-emerald-700" : "text-slate-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-                            </svg>
-                          )}
-                          {feature.icon === "report" && (
-                            <svg className={`w-5 h-5 ${isAvailable ? "text-emerald-700" : "text-slate-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                            </svg>
-                          )}
-                          {feature.icon === "team" && (
-                            <svg className={`w-5 h-5 ${isAvailable ? "text-emerald-700" : "text-slate-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-                            </svg>
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="text-sm font-bold text-slate-800">{feature.label}</h3>
-                            {isAvailable ? (
-                              <span className="text-[10px] font-bold bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-md">
-                                利用可能
-                              </span>
-                            ) : (
-                              <span className="text-[10px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md">
-                                PRO限定
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-sm text-slate-500">{feature.description}</p>
-                          {isAvailable && (
-                            <p className="text-xs text-emerald-600 mt-2 font-medium">
-                              {feature.id === "api" && "準備中 — 近日公開予定です。公開時にメールでお知らせします。"}
-                              {feature.id === "customReport" && "準備中 — 近日公開予定です。公開時にメールでお知らせします。"}
-                              {feature.id === "team" && "準備中 — 近日公開予定です。公開時にメールでお知らせします。"}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* スタンダードユーザーへのアップグレード訴求 */}
-              {planKey !== "professional" && (
-                <div className="mt-8 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 text-center">
-                  <h3 className="text-lg font-bold text-white mb-2">プロフェッショナルプランにアップグレード</h3>
-                  <p className="text-sm text-slate-300 mb-4">
-                    月額9,800円で全機能が利用可能。CSVダウンロード無制限、API連携、カスタムレポート、チームアカウントが使えます。
-                  </p>
-                  <Link
-                    href="/register?plan=professional"
-                    className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-xl transition text-sm"
-                  >
-                    14日間無料で試す
-                  </Link>
-                </div>
-              )}
-            </div>
+          {activeTab === "pro" && verifiedEmail && (
+            <ProFeaturesPanel planKey={planKey} email={verifiedEmail} />
           )}
         </div>
 
