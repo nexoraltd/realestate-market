@@ -4,6 +4,7 @@ import {
   sendCheckoutCompleteEmail,
   sendCancellationEmail,
   sendPaymentFailedEmail,
+  sendSetPasswordEmail,
 } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
@@ -34,6 +35,7 @@ export async function POST(req: NextRequest) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
       const email = session.customer_email;
+      const customerId = session.customer as string | null;
       const plan = session.metadata?.plan || "standard";
       console.log(
         `[webhook] チェックアウト完了: ${session.id} customer=${email} plan=${plan}`
@@ -43,6 +45,20 @@ export async function POST(req: NextRequest) {
           await sendCheckoutCompleteEmail(email, plan);
         } catch (e) {
           console.error("[webhook] メール送信失敗:", e);
+        }
+
+        // パスワード設定リンクを生成・送信
+        if (customerId) {
+          try {
+            const token = crypto.randomUUID();
+            const expiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+            await stripe.customers.update(customerId, {
+              metadata: { reset_token: token, reset_token_exp: expiry },
+            });
+            await sendSetPasswordEmail(email, token);
+          } catch (e) {
+            console.error("[webhook] パスワード設定メール送信失敗:", e);
+          }
         }
       }
       break;
