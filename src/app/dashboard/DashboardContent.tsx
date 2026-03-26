@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import SearchForm from "@/components/SearchForm";
 import TrendChart from "@/components/TrendChart";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import SubscriptionPanel from "@/components/SubscriptionPanel";
+import { getPermissions, PRO_ONLY_FEATURES, type PlanKey } from "@/lib/planPermissions";
 
 const SESSION_KEY = "realestate_verified_email";
 
@@ -24,46 +25,7 @@ const prefectures: Record<string, string> = {
   "46": "鹿児島県", "47": "沖縄県",
 };
 
-type Tab = "search" | "csv" | "trend" | "compare";
-
-const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
-  {
-    id: "search",
-    label: "詳細データ検索",
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-      </svg>
-    ),
-  },
-  {
-    id: "csv",
-    label: "CSVダウンロード",
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-      </svg>
-    ),
-  },
-  {
-    id: "trend",
-    label: "トレンド分析",
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
-      </svg>
-    ),
-  },
-  {
-    id: "compare",
-    label: "エリア比較レポート",
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
-      </svg>
-    ),
-  },
-];
+type Tab = "search" | "csv" | "trend" | "compare" | "pro";
 
 export default function DashboardContent() {
   const [activeTab, setActiveTab] = useState<Tab>("search");
@@ -73,11 +35,15 @@ export default function DashboardContent() {
   const [authState, setAuthState] = useState<AuthState>("idle");
   const [verifiedEmail, setVerifiedEmail] = useState<string | null>(null);
   const [planLabel, setPlanLabel] = useState<string>("");
+  const [planKey, setPlanKey] = useState<PlanKey>("standard");
 
   // CSV tab state (must be before any conditional return to respect Rules of Hooks)
   const [csvArea, setCsvArea] = useState("");
   const [csvYear, setCsvYear] = useState("2024");
   const [csvLoading, setCsvLoading] = useState(false);
+  const [csvUsed, setCsvUsed] = useState<number>(0);
+  const [csvLimit, setCsvLimit] = useState<number>(100);
+  const [csvUsageLoading, setCsvUsageLoading] = useState(false);
 
   // Trend tab state
   const [trendArea, setTrendArea] = useState("");
@@ -91,14 +57,36 @@ export default function DashboardContent() {
   const [compareLoading, setCompareLoading] = useState(false);
   const [compareData, setCompareData] = useState<Record<string, { TradePrice: string; Type: string; Period: string }[]> | null>(null);
 
+  const perms = getPermissions(planKey);
+
+  /** CSV使用状況を取得 */
+  const fetchCsvUsage = useCallback(async (email: string) => {
+    setCsvUsageLoading(true);
+    try {
+      const res = await fetchWithAuth(`/api/csv-usage?email=${encodeURIComponent(email)}`);
+      if (res.ok) {
+        const data = await res.json();
+        setCsvUsed(data.used ?? 0);
+        setCsvLimit(data.limit ?? 100);
+      }
+    } catch {
+      // サイレントフェイル — 使用状況が取得できなくても操作は可能
+    } finally {
+      setCsvUsageLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     const saved = sessionStorage.getItem(SESSION_KEY);
     if (saved) {
       try {
         const { email, plan } = JSON.parse(saved);
         setVerifiedEmail(email);
-        setPlanLabel(plan === "professional" ? "プロフェッショナル" : "スタンダード");
+        const key = plan === "professional" ? "professional" : "standard";
+        setPlanKey(key);
+        setPlanLabel(key === "professional" ? "プロフェッショナル" : "スタンダード");
         setAuthState("active");
+        fetchCsvUsage(email);
         return;
       } catch {
         sessionStorage.removeItem(SESSION_KEY);
@@ -120,20 +108,26 @@ export default function DashboardContent() {
               .then((subData) => {
                 if (subData.active) {
                   const plan = subData.plan || data.plan || "standard";
-                  const label = plan === "professional" ? "プロフェッショナル" : "スタンダード";
-                  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email: data.email, plan }));
+                  const key = plan === "professional" ? "professional" : "standard";
+                  const label = key === "professional" ? "プロフェッショナル" : "スタンダード";
+                  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email: data.email, plan: key }));
                   setVerifiedEmail(data.email);
+                  setPlanKey(key);
                   setPlanLabel(label);
                   setAuthState("active");
+                  fetchCsvUsage(data.email);
                 } else {
                   // Stripeで決済完了直後はまだサブスクリプションが反映されていない場合がある
                   // その場合はセッション情報だけで認証する
                   const plan = data.plan || "standard";
-                  const label = plan === "professional" ? "プロフェッショナル" : "スタンダード";
-                  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email: data.email, plan }));
+                  const key = plan === "professional" ? "professional" : "standard";
+                  const label = key === "professional" ? "プロフェッショナル" : "スタンダード";
+                  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email: data.email, plan: key }));
                   setVerifiedEmail(data.email);
+                  setPlanKey(key);
                   setPlanLabel(label);
                   setAuthState("active");
+                  fetchCsvUsage(data.email);
                 }
               });
           } else {
@@ -144,7 +138,7 @@ export default function DashboardContent() {
           setAuthState("idle");
         });
     }
-  }, []);
+  }, [fetchCsvUsage]);
 
   async function handleGateCheck() {
     if (!gateEmail) return;
@@ -153,11 +147,14 @@ export default function DashboardContent() {
       const res = await fetch(`/api/subscription?email=${encodeURIComponent(gateEmail)}`);
       const data = await res.json();
       if (data.active) {
-        const label = data.plan === "professional" ? "プロフェッショナル" : "スタンダード";
-        sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email: gateEmail, plan: data.plan }));
+        const key = data.plan === "professional" ? "professional" : "standard";
+        const label = key === "professional" ? "プロフェッショナル" : "スタンダード";
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email: gateEmail, plan: key }));
         setVerifiedEmail(gateEmail);
+        setPlanKey(key);
         setPlanLabel(label);
         setAuthState("active");
+        fetchCsvUsage(gateEmail);
       } else {
         setAuthState("inactive");
       }
@@ -171,6 +168,7 @@ export default function DashboardContent() {
     setVerifiedEmail(null);
     setGateEmail("");
     setAuthState("idle");
+    setPlanKey("standard");
   }
 
   // Show gate if not verified
@@ -245,10 +243,31 @@ export default function DashboardContent() {
 
   async function handleCsvDownload() {
     if (!csvArea) return;
+
+    // スタンダードプランの制限チェック（フロントエンド側の先行チェック）
+    if (csvLimit !== -1 && csvUsed >= csvLimit) {
+      alert(`今月のCSVダウンロード上限（${csvLimit}件）に達しました。\nプロフェッショナルプランにアップグレードすると無制限にダウンロードできます。`);
+      return;
+    }
+
     setCsvLoading(true);
     try {
-      const res = await fetchWithAuth(`/api/csv?area=${csvArea}&year=${csvYear}`);
+      const emailParam = verifiedEmail ? `&email=${encodeURIComponent(verifiedEmail)}` : "";
+      const res = await fetchWithAuth(`/api/csv?area=${csvArea}&year=${csvYear}${emailParam}`);
+
+      if (res.status === 429) {
+        const data = await res.json();
+        alert(data.message || "CSVダウンロード上限に達しました。");
+        setCsvUsed(data.used ?? csvUsed);
+        return;
+      }
+
       if (!res.ok) throw new Error("ダウンロード失敗");
+
+      // レスポンスヘッダーから使用状況を更新
+      const usedHeader = res.headers.get("X-Csv-Downloads-Used");
+      if (usedHeader) setCsvUsed(Number(usedHeader));
+
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -356,6 +375,65 @@ export default function DashboardContent() {
 
   const CHART_COLORS = ["#2b6cb0", "#c05621", "#276749", "#6b46c1", "#b7791f"];
 
+  // タブ定義（プロ限定機能タブはスタンダードユーザーにも表示）
+  const tabDefs: { id: Tab; label: string; icon: React.ReactNode; badge?: string }[] = [
+    {
+      id: "search",
+      label: "詳細データ検索",
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+        </svg>
+      ),
+    },
+    {
+      id: "csv",
+      label: "CSVダウンロード",
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+        </svg>
+      ),
+    },
+    {
+      id: "trend",
+      label: "トレンド分析",
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+        </svg>
+      ),
+    },
+    {
+      id: "compare",
+      label: "エリア比較レポート",
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
+        </svg>
+      ),
+    },
+    {
+      id: "pro",
+      label: "プロ限定機能",
+      badge: planKey === "professional" ? undefined : "PRO",
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
+        </svg>
+      ),
+    },
+  ];
+
+  /** CSV残り件数の表示テキスト */
+  const csvRemainingText = csvLimit === -1
+    ? "無制限"
+    : csvUsageLoading
+      ? "確認中..."
+      : `残り ${Math.max(0, csvLimit - csvUsed)}/${csvLimit} 件`;
+
+  const csvLimitReached = csvLimit !== -1 && csvUsed >= csvLimit;
+
   return (
     <section className="py-8 md:py-12 bg-slate-50 min-h-[60vh]">
       <div className="max-w-6xl mx-auto px-4">
@@ -375,7 +453,7 @@ export default function DashboardContent() {
 
         {/* Tab Navigation */}
         <div className="flex gap-2 overflow-x-auto pb-2 mb-6 -mx-4 px-4 md:mx-0 md:px-0">
-          {tabs.map((tab) => (
+          {tabDefs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -387,6 +465,11 @@ export default function DashboardContent() {
             >
               {tab.icon}
               {tab.label}
+              {tab.badge && (
+                <span className="ml-1 text-[10px] font-extrabold bg-amber-400 text-amber-900 px-1.5 py-0.5 rounded-md leading-none">
+                  {tab.badge}
+                </span>
+              )}
             </button>
           ))}
         </div>
@@ -424,10 +507,55 @@ export default function DashboardContent() {
           {/* CSVダウンロード */}
           {activeTab === "csv" && (
             <div>
-              <h2 className="text-xl font-bold text-slate-800 mb-2">CSVダウンロード</h2>
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-xl font-bold text-slate-800">CSVダウンロード</h2>
+                <span className={`text-xs font-bold px-3 py-1.5 rounded-lg ${
+                  csvLimit === -1
+                    ? "bg-emerald-50 text-emerald-700"
+                    : csvLimitReached
+                      ? "bg-red-50 text-red-600"
+                      : "bg-blue-50 text-blue-700"
+                }`}>
+                  {csvRemainingText}
+                </span>
+              </div>
               <p className="text-sm text-slate-500 mb-6">
                 取引データをCSV形式でダウンロードし、Excel等で自由に分析できます。
               </p>
+
+              {/* スタンダードプランの制限表示 */}
+              {csvLimit !== -1 && (
+                <div className="mb-6">
+                  <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
+                    <span>今月の使用状況</span>
+                    <span>{csvUsed} / {csvLimit} 件</span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full transition-all ${
+                        csvLimitReached ? "bg-red-500" : csvUsed / csvLimit > 0.8 ? "bg-amber-500" : "bg-blue-500"
+                      }`}
+                      style={{ width: `${Math.min(100, (csvUsed / csvLimit) * 100)}%` }}
+                    />
+                  </div>
+                  {csvLimitReached && (
+                    <div className="mt-3 bg-red-50 border border-red-100 rounded-xl p-4">
+                      <p className="text-sm font-bold text-red-700 mb-1">今月の上限に達しました</p>
+                      <p className="text-xs text-red-600 mb-3">
+                        スタンダードプランでは月{csvLimit}件までのCSVダウンロードが可能です。
+                        プロフェッショナルプランにアップグレードすると無制限にダウンロードできます。
+                      </p>
+                      <Link
+                        href="/register?plan=professional"
+                        className="inline-block text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg transition"
+                      >
+                        プロフェッショナルにアップグレード
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="space-y-4 mb-6">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">都道府県</label>
@@ -456,7 +584,7 @@ export default function DashboardContent() {
                 </div>
                 <button
                   onClick={handleCsvDownload}
-                  disabled={!csvArea || csvLoading}
+                  disabled={!csvArea || csvLoading || csvLimitReached}
                   className="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2"
                 >
                   {csvLoading ? (
@@ -707,6 +835,94 @@ export default function DashboardContent() {
                     </svg>
                   </div>
                   <p className="text-sm text-slate-500">2つ以上のエリアを選択してレポートを生成してください</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* プロ限定機能 */}
+          {activeTab === "pro" && (
+            <div>
+              <h2 className="text-xl font-bold text-slate-800 mb-2">プロフェッショナル限定機能</h2>
+              <p className="text-sm text-slate-500 mb-6">
+                {planKey === "professional"
+                  ? "プロフェッショナルプランの高度な機能をご利用いただけます。"
+                  : "プロフェッショナルプランにアップグレードすると、以下の高度な機能が利用可能になります。"}
+              </p>
+
+              <div className="space-y-4">
+                {PRO_ONLY_FEATURES.map((feature) => {
+                  const isAvailable = planKey === "professional";
+                  return (
+                    <div
+                      key={feature.id}
+                      className={`rounded-xl border p-5 ${
+                        isAvailable
+                          ? "border-emerald-200 bg-emerald-50"
+                          : "border-slate-200 bg-slate-50"
+                      }`}
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                          isAvailable ? "bg-emerald-200" : "bg-slate-200"
+                        }`}>
+                          {feature.icon === "api" && (
+                            <svg className={`w-5 h-5 ${isAvailable ? "text-emerald-700" : "text-slate-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+                            </svg>
+                          )}
+                          {feature.icon === "report" && (
+                            <svg className={`w-5 h-5 ${isAvailable ? "text-emerald-700" : "text-slate-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            </svg>
+                          )}
+                          {feature.icon === "team" && (
+                            <svg className={`w-5 h-5 ${isAvailable ? "text-emerald-700" : "text-slate-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                            </svg>
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-sm font-bold text-slate-800">{feature.label}</h3>
+                            {isAvailable ? (
+                              <span className="text-[10px] font-bold bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-md">
+                                利用可能
+                              </span>
+                            ) : (
+                              <span className="text-[10px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md">
+                                PRO限定
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-slate-500">{feature.description}</p>
+                          {isAvailable && (
+                            <p className="text-xs text-emerald-600 mt-2 font-medium">
+                              {feature.id === "api" && "準備中 — 近日公開予定です。公開時にメールでお知らせします。"}
+                              {feature.id === "customReport" && "準備中 — 近日公開予定です。公開時にメールでお知らせします。"}
+                              {feature.id === "team" && "準備中 — 近日公開予定です。公開時にメールでお知らせします。"}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* スタンダードユーザーへのアップグレード訴求 */}
+              {planKey !== "professional" && (
+                <div className="mt-8 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 text-center">
+                  <h3 className="text-lg font-bold text-white mb-2">プロフェッショナルプランにアップグレード</h3>
+                  <p className="text-sm text-slate-300 mb-4">
+                    月額9,800円で全機能が利用可能。CSVダウンロード無制限、API連携、カスタムレポート、チームアカウントが使えます。
+                  </p>
+                  <Link
+                    href="/register?plan=professional"
+                    className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-xl transition text-sm"
+                  >
+                    14日間無料で試す
+                  </Link>
                 </div>
               )}
             </div>
