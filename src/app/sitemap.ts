@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
-import { getAllPosts } from '@/lib/blog'
+import fs from 'fs'
+import path from 'path'
 
 const BASE_URL = 'https://souba.next-aura.com'
 
@@ -9,6 +10,18 @@ const MAJOR_PREFECTURES = [
   '京都府', '広島県', '宮城県', '新潟県', '長野県',
 ]
 
+function getBlogSlugs(): string[] {
+  try {
+    const blogDir = path.join(process.cwd(), 'content', 'blog')
+    if (!fs.existsSync(blogDir)) return []
+    return fs.readdirSync(blogDir)
+      .filter((f) => f.endsWith('.mdx'))
+      .map((f) => f.replace(/\.mdx$/, ''))
+  } catch {
+    return []
+  }
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const prefectureUrls: MetadataRoute.Sitemap = MAJOR_PREFECTURES.map((pref) => ({
     url: `${BASE_URL}/search?prefecture=${encodeURIComponent(pref)}`,
@@ -17,10 +30,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }))
 
-  const blogPosts = getAllPosts()
-  const blogUrls: MetadataRoute.Sitemap = blogPosts.map((post) => ({
-    url: `${BASE_URL}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
+  const blogSlugs = getBlogSlugs()
+  const blogUrls: MetadataRoute.Sitemap = blogSlugs.map((slug) => ({
+    url: `${BASE_URL}/blog/${slug}`,
+    lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))
