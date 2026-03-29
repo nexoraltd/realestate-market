@@ -36,6 +36,9 @@ export const metadata: Metadata = {
     description: '500万件以上の不動産取引データをマップで検索。エリアの相場を無料でチェック。',
     images: ['/api/og-default'],
   },
+  verification: {
+    google: 'hOV40fQ8hsaEnL0TM0GPzUW-HR9QwhUCBRVgS4P9O_w',
+  },
   robots: {
     index: true,
     follow: true,
