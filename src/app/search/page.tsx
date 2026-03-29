@@ -31,7 +31,7 @@ export async function generateMetadata({ searchParams }: SearchPageProps): Promi
       description,
     },
     alternates: {
-      canonical: `https://realestate-market.vercel.app/search${prefecture ? `?prefecture=${encodeURIComponent(prefecture)}` : ''}`,
+      canonical: `https://market.next-aura.com/search${prefecture ? `?prefecture=${encodeURIComponent(prefecture)}` : ''}`,
     },
   }
 }

@@ -361,7 +361,8 @@ export default function DashboardContent() {
     setTrendLoading(true);
     setTrendData(null);
     try {
-      const res = await fetchWithAuth(`/api/trend?area=${trendArea}&type=${trendType}`);
+      const emailParam = verifiedEmail ? `&email=${encodeURIComponent(verifiedEmail)}` : "";
+      const res = await fetchWithAuth(`/api/trend?area=${trendArea}&type=${trendType}${emailParam}`);
       if (!res.ok) throw new Error("取得失敗");
       const data = await res.json();
       setTrendData(data);
@@ -395,7 +396,8 @@ export default function DashboardContent() {
     try {
       const results = await Promise.all(
         compareAreas.map(async (area) => {
-          const res = await fetchWithAuth(`/api/trend?area=${area}&type=all`);
+          const emailParam = verifiedEmail ? `&email=${encodeURIComponent(verifiedEmail)}` : "";
+          const res = await fetchWithAuth(`/api/trend?area=${area}&type=all${emailParam}`);
           if (!res.ok) throw new Error("取得失敗");
           const data = await res.json();
           return { area, data };

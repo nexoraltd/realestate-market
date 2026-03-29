@@ -32,6 +32,14 @@ export default function Footer() {
             </ul>
           </div>
 
+          <div>
+            <h4 className="font-bold text-sm mb-3 text-slate-300">お役立ちツール</h4>
+            <ul className="space-y-2 text-sm text-slate-400">
+              <li><Link href="/lp/moving-date" className="hover:text-white transition">引っ越しに良い日カレンダー</Link></li>
+              <li><Link href="/blog" className="hover:text-white transition">コラム・記事</Link></li>
+            </ul>
+          </div>
+
           <div id="contact">
             <h4 className="font-bold text-sm mb-3 text-slate-300">無料査定のご相談</h4>
             <p className="text-sm text-slate-400 mb-3">

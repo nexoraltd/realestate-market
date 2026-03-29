@@ -1,0 +1,374 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { PREFECTURES } from "@/lib/prefectures";
+
+interface City {
+  id: string;
+  name: string;
+}
+
+interface EstimateResult {
+  count: number;
+  estimate: { low: number; mid: number; high: number };
+  pricePerSqm: { low: number; mid: number; high: number };
+  samples: {
+    period: string;
+    municipality: string;
+    district: string;
+    price: number;
+    area: number;
+    pricePerSqm: number;
+    buildingYear: string | null;
+    station: string | null;
+    stationMin: string | null;
+    floorPlan: string | null;
+  }[];
+}
+
+function fmtPrice(yen: number): string {
+  if (yen >= 100_000_000) {
+    const oku = yen / 100_000_000;
+    return oku % 1 === 0 ? `${oku}億円` : `${oku.toFixed(1)}億円`;
+  }
+  const man = yen / 10_000;
+  return `${man.toLocaleString()}万円`;
+}
+
+function fmtPricePerSqm(yen: number): string {
+  const man = yen / 10_000;
+  return `${man.toFixed(1)}万円/㎡`;
+}
+
+export default function EstimatePage() {
+  const [type, setType] = useState("mansion");
+  const [prefCode, setPrefCode] = useState("");
+  const [cityCode, setCityCode] = useState("");
+  const [floorArea, setFloorArea] = useState("");
+  const [buildingAge, setBuildingAge] = useState("");
+  const [stationMin, setStationMin] = useState("");
+  const [floorPlan, setFloorPlan] = useState("");
+  const [cities, setCities] = useState<City[]>([]);
+  const [loadingCities, setLoadingCities] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<EstimateResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!prefCode) { setCities([]); setCityCode(""); return; }
+    setLoadingCities(true);
+    fetch(`/api/cities?area=${prefCode}`)
+      .then((r) => r.json())
+      .then((data) => { setCities(Array.isArray(data) ? data : []); setCityCode(""); })
+      .catch(() => setCities([]))
+      .finally(() => setLoadingCities(false));
+  }, [prefCode]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!prefCode || !floorArea) return;
+    setLoading(true);
+    setResult(null);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/estimate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type,
+          area: prefCode,
+          city: cityCode || undefined,
+          floorArea: parseFloat(floorArea),
+          buildingAge: buildingAge ? parseInt(buildingAge, 10) : undefined,
+          stationMin: stationMin ? parseInt(stationMin, 10) : -1,
+          floorPlan: floorPlan || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.message || data.error || "エラーが発生しました");
+      } else {
+        setResult(data);
+      }
+    } catch {
+      setError("通信エラーが発生しました");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sc = "w-full px-3 py-2.5 rounded-lg border border-slate-600 bg-slate-800/50 text-white placeholder-slate-400 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition text-sm";
+  const label = "block text-xs font-medium mb-1 text-slate-400";
+
+  return (
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-white">
+        {/* Hero */}
+        <div className="max-w-4xl mx-auto px-4 py-12">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-full px-4 py-1.5 mb-5">
+              <svg className="w-3.5 h-3.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              <span className="text-amber-400 text-xs font-semibold">AI不動産査定（無料）</span>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-extrabold mb-4 tracking-tight">
+              あなたの物件、<span className="text-amber-400">今いくら？</span>
+            </h1>
+            <p className="text-slate-400 text-sm md:text-base max-w-xl mx-auto">
+              国土交通省の実取引データ（直近2年）をもとに、類似物件の成約価格から推定価格レンジを算出します。登録不要・完全無料。
+            </p>
+          </div>
+
+          {/* Form */}
+          <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 md:p-8 mb-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Property type */}
+              <div>
+                <label className={label}>物件タイプ</label>
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { value: "mansion", label: "中古マンション", icon: "🏢" },
+                    { value: "house", label: "一戸建て", icon: "🏠" },
+                    { value: "land", label: "土地", icon: "🌿" },
+                  ].map((t) => (
+                    <button
+                      key={t.value}
+                      type="button"
+                      onClick={() => setType(t.value)}
+                      className={`py-3 px-2 rounded-xl border text-center transition font-medium text-sm ${
+                        type === t.value
+                          ? "border-amber-500 bg-amber-500/10 text-amber-400"
+                          : "border-slate-600 bg-slate-800/30 text-slate-400 hover:border-slate-500"
+                      }`}
+                    >
+                      <div className="text-xl mb-1">{t.icon}</div>
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Location */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className={label}>都道府県 <span className="text-red-400">*</span></label>
+                  <select value={prefCode} onChange={(e) => setPrefCode(e.target.value)} className={sc} required>
+                    <option value="">選択してください</option>
+                    {PREFECTURES.map((p) => (
+                      <option key={p.code} value={p.code}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className={label}>市区町村（任意・絞り込み精度向上）</label>
+                  <select value={cityCode} onChange={(e) => setCityCode(e.target.value)} className={sc} disabled={!prefCode || loadingCities}>
+                    <option value="">すべて</option>
+                    {cities.map((c) => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Area */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className={label}>専有/延床面積（㎡）<span className="text-red-400">*</span></label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="9999"
+                    step="0.1"
+                    value={floorArea}
+                    onChange={(e) => setFloorArea(e.target.value)}
+                    placeholder="例: 70"
+                    className={sc}
+                    required
+                  />
+                </div>
+                {type === "mansion" && (
+                  <div>
+                    <label className={label}>間取り <span className="text-slate-600">（任意）</span></label>
+                    <select
+                      value={floorPlan}
+                      onChange={(e) => setFloorPlan(e.target.value)}
+                      className={sc}
+                    >
+                      <option value="">指定なし</option>
+                      <option value="1R">1R・1K</option>
+                      <option value="1DK">1DK</option>
+                      <option value="1LDK">1LDK</option>
+                      <option value="2DK">2DK</option>
+                      <option value="2LDK">2LDK</option>
+                      <option value="3DK">3DK</option>
+                      <option value="3LDK">3LDK</option>
+                      <option value="4LDK">4LDK以上</option>
+                    </select>
+                  </div>
+                )}
+                {type !== "land" && (
+                  <div>
+                    <label className={label}>築年数（年）</label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={buildingAge}
+                      onChange={(e) => setBuildingAge(e.target.value)}
+                      placeholder="例: 15"
+                      className={sc}
+                    />
+                  </div>
+                )}
+                {type !== "land" && (
+                  <div>
+                    <label className={label}>最寄り駅 徒歩（分）</label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="99"
+                      value={stationMin}
+                      onChange={(e) => setStationMin(e.target.value)}
+                      placeholder="例: 5"
+                      className={sc}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading || !prefCode || !floorArea}
+                className="w-full py-4 bg-amber-500 hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-bold text-white transition text-base shadow-lg shadow-amber-900/30"
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    データ取得・計算中...
+                  </span>
+                ) : "推定価格を見る"}
+              </button>
+            </form>
+          </div>
+
+          {/* Error */}
+          {error && (
+            <div className="bg-red-900/30 border border-red-700/50 rounded-xl p-4 mb-8 text-red-300 text-sm">
+              {error}
+            </div>
+          )}
+
+          {/* Result */}
+          {result && (
+            <div className="space-y-6">
+              {/* Price range */}
+              <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 md:p-8">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="w-2 h-6 rounded-full bg-amber-500" />
+                  <h2 className="text-lg font-bold">推定価格レンジ</h2>
+                  <span className="ml-auto text-xs text-slate-500">類似事例 {result.count} 件から算出</span>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  {[
+                    { key: "low" as const, label: "下限（安め）", color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/20" },
+                    { key: "mid" as const, label: "中央値", color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/20" },
+                    { key: "high" as const, label: "上限（高め）", color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" },
+                  ].map((item) => (
+                    <div key={item.key} className={`rounded-xl border p-4 text-center ${item.bg}`}>
+                      <div className="text-xs text-slate-400 mb-2">{item.label}</div>
+                      <div className={`text-xl md:text-2xl font-extrabold ${item.color}`}>
+                        {fmtPrice(result.estimate[item.key])}
+                      </div>
+                      <div className="text-xs text-slate-500 mt-1">
+                        {fmtPricePerSqm(result.pricePerSqm[item.key])}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Price bar */}
+                <div className="relative">
+                  <div className="h-3 bg-slate-700 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-blue-500 via-amber-500 to-emerald-500 rounded-full"
+                      style={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="flex justify-between text-xs text-slate-500 mt-1">
+                    <span>{fmtPrice(result.estimate.low)}</span>
+                    <span className="font-semibold text-amber-400">{fmtPrice(result.estimate.mid)}</span>
+                    <span>{fmtPrice(result.estimate.high)}</span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-slate-500 mt-4 leading-relaxed">
+                  ※ 国土交通省「不動産情報ライブラリ」の直近2年間の実取引データに基づく統計的推定です。実際の売却価格は物件の状態・築年数・設備・市況等により異なります。参考値としてご利用ください。
+                </p>
+              </div>
+
+              {/* Comparable samples */}
+              {result.samples.length > 0 && (
+                <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-6 rounded-full bg-slate-500" />
+                    <h2 className="text-lg font-bold">参考成約事例</h2>
+                    <span className="text-xs text-slate-500">（直近・類似物件）</span>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-slate-500 text-xs border-b border-slate-700">
+                          <th className="text-left pb-2 pr-4">成約時期</th>
+                          <th className="text-left pb-2 pr-4">エリア</th>
+                          <th className="text-right pb-2 pr-4">面積</th>
+                          <th className="text-right pb-2 pr-4">成約価格</th>
+                          <th className="text-right pb-2">㎡単価</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-700/50">
+                        {result.samples.map((s, i) => (
+                          <tr key={i} className="hover:bg-slate-700/20 transition">
+                            <td className="py-3 pr-4 text-slate-400 whitespace-nowrap">{s.period}</td>
+                            <td className="py-3 pr-4 text-slate-300">
+                              {s.municipality}{s.district ? ` ${s.district}` : ""}
+                              {s.station && <span className="text-slate-500 text-xs ml-1">({s.station}{s.stationMin ? ` 徒歩${s.stationMin}分` : ""})</span>}
+                            </td>
+                            <td className="py-3 pr-4 text-right text-slate-300 whitespace-nowrap">{s.area}㎡{s.floorPlan ? ` ${s.floorPlan}` : ""}</td>
+                            <td className="py-3 pr-4 text-right font-semibold text-white whitespace-nowrap">{fmtPrice(s.price)}</td>
+                            <td className="py-3 text-right text-slate-400 whitespace-nowrap text-xs">{fmtPricePerSqm(s.pricePerSqm)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* CTA */}
+              <div className="bg-gradient-to-br from-amber-900/30 to-orange-900/20 border border-amber-700/30 rounded-2xl p-6 text-center">
+                <h3 className="font-bold text-lg mb-2">より正確な査定・売却のご相談</h3>
+                <p className="text-slate-400 text-sm mb-4">AIデータをもとにした概算です。実際の売却価格は専門家への相談で確認できます。</p>
+                <a
+                  href="mailto:info@next-aura.com"
+                  className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg"
+                >
+                  無料査定相談（メール）
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
+}

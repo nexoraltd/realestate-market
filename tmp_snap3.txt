@@ -1,0 +1,40 @@
+uid=32_0 RootWebArea "不動産相場ナビ" busy url="https://www.next-aura.com/market/"
+  uid=32_1 navigation "ツールバー"
+    uid=32_2 menu orientation="vertical"
+      uid=32_3 menuitem "WordPress について" expandable
+      uid=32_4 menuitem "不動産相場ナビ" expandable
+      uid=32_5 menuitem "カスタマイズ"
+      uid=32_6 menuitem "1件の更新が利用できます"
+      uid=32_7 menuitem "0件のコメントが承認待ちです"
+      uid=32_8 menuitem "新規" expandable
+      uid=32_9 menuitem "固定ページを編集"
+      uid=32_10 menuitem "管理メニュー" expandable
+    uid=32_11 menu orientation="vertical"
+      uid=32_12 menuitem "こんにちは、nexora さん" expandable
+      uid=32_13 menuitem
+        uid=32_14 textbox
+  uid=32_15 main
+    uid=32_16 Iframe "不動産相場データベース"
+  uid=32_17 StaticText "by Cocoon"
+  uid=32_18 StaticText "本日:"
+  uid=32_19 StaticText " "
+  uid=32_20 StaticText "1"
+  uid=32_21 StaticText "週:"
+  uid=32_22 StaticText " "
+  uid=32_23 StaticText "1"
+  uid=32_24 StaticText "月:"
+  uid=32_25 StaticText " "
+  uid=32_26 StaticText "1"
+  uid=32_27 StaticText "全体:"
+  uid=32_28 StaticText " "
+  uid=32_29 StaticText "1"
+  uid=32_30 link "編集" url="https://www.next-aura.com/market/wp-admin/post.php?post=5&action=edit"
+    uid=32_31 StaticText "編集"
+  uid=32_32 link "Responsinator" url="http://www.responsinator.com/?url=https%3A%2F%2Fwww.next-aura.com%2Fmarket%2F"
+    uid=32_33 StaticText "Responsinator"
+  uid=32_34 StaticText " "
+  uid=32_35 link "Sizzy" url="https://sizzy.co/?url=https%3A%2F%2Fwww.next-aura.com%2Fmarket%2F"
+    uid=32_36 StaticText "Sizzy"
+  uid=32_37 StaticText " "
+  uid=32_38 link "ScreenResolution" url="http://whatismyscreenresolution.net/multi-screen-test?site-url=https%3A%2F%2Fwww.next-aura.com%2Fmarket%2F&w=414&h=736"
+    uid=32_39 StaticText "ScreenResolution"

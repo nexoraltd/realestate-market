@@ -3,7 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 
 const GA_ID = 'G-1DEZ6SPVF8'
-const BASE_URL = 'https://realestate-market.vercel.app'
+const BASE_URL = 'https://market.next-aura.com'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -95,7 +95,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
   name: '不動産相場ナビ',
-  url: 'https://realestate-market.vercel.app',
+  url: 'https://market.next-aura.com',
   description: '不動産取引価格・相場情報を市区町村レベルで検索。500万件以上の取引データ・20年分・全47都道府県対応。',
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web',
@@ -119,7 +119,7 @@ const jsonLd = {
   provider: {
     '@type': 'Organization',
     name: 'ネクソラ不動産',
-    url: 'https://realestate-market.vercel.app',
+    url: 'https://market.next-aura.com',
   },
   inLanguage: 'ja',
   isAccessibleForFree: true,

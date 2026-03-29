@@ -16,6 +16,12 @@ export interface PlanPermissions {
   teamAccount: boolean;
   /** チームアカウント上限人数 */
   teamMaxMembers: number;
+  /** トレンド分析の利用可否 */
+  trendAccess: boolean;
+  /** トレンド分析の取得年数 */
+  trendYears: number;
+  /** 取引データの取得可能年数（直近N年） */
+  dataYears: number;
 }
 
 const PERMISSIONS: Record<PlanKey, PlanPermissions> = {
@@ -24,12 +30,18 @@ const PERMISSIONS: Record<PlanKey, PlanPermissions> = {
     customReport: false,
     teamAccount: false,
     teamMaxMembers: 0,
+    trendAccess: true,
+    trendYears: 20,
+    dataYears: 20,
   },
   professional: {
     csvMonthlyLimit: -1, // 無制限
     customReport: true,
     teamAccount: true,
     teamMaxMembers: 5,
+    trendAccess: true,
+    trendYears: 20,
+    dataYears: 20,
   },
 };
 

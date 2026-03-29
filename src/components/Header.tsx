@@ -47,11 +47,18 @@ export default function Header() {
           <Link href="/search" className="text-slate-300 hover:text-white transition font-medium">
             相場検索
           </Link>
+          <Link href="/estimate" className="text-amber-400 hover:text-amber-300 transition font-semibold flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+            AI査定
+          </Link>
           <Link href="/sell" className="text-slate-300 hover:text-white transition font-medium">
             売りたい方
           </Link>
           <Link href="/buy" className="text-slate-300 hover:text-white transition font-medium">
             買いたい方
+          </Link>
+          <Link href="/blog" className="text-slate-300 hover:text-white transition font-medium">
+            コラム
           </Link>
           <Link href="/pricing" className="text-slate-300 hover:text-white transition font-medium">
             料金
@@ -59,12 +66,12 @@ export default function Header() {
           <Link href="/dashboard" className="text-slate-300 hover:text-white transition font-medium">
             マイページ
           </Link>
-          <a
-            href="mailto:info@next-aura.com"
-            className="bg-amber-500 hover:bg-amber-600 px-5 py-2 rounded-lg font-bold transition text-sm text-white shadow-md"
+          <Link
+            href="/estimate"
+            className="bg-amber-500 hover:bg-amber-400 px-5 py-2 rounded-lg font-bold transition text-sm text-slate-900 shadow-md"
           >
-            無料査定相談
-          </a>
+            無料AI査定
+          </Link>
         </nav>
 
         {/* Mobile */}
@@ -89,8 +96,10 @@ export default function Header() {
           {[
             { href: "/", label: "トップ" },
             { href: "/search", label: "相場検索" },
+            { href: "/estimate", label: "AI査定" },
             { href: "/sell", label: "売りたい方" },
             { href: "/buy", label: "買いたい方" },
+            { href: "/blog", label: "コラム" },
             { href: "/pricing", label: "料金" },
             { href: "/dashboard", label: "マイページ" },
           ].map((item) => (

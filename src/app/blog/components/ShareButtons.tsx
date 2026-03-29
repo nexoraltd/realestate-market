@@ -1,6 +1,6 @@
 'use client'
 
-const BASE_URL = 'https://realestate-market.vercel.app'
+const BASE_URL = 'https://market.next-aura.com'
 
 export default function ShareButtons({
   title,

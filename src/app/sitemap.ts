@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import fs from 'fs'
 import path from 'path'
 
-const BASE_URL = 'https://souba.next-aura.com'
+const BASE_URL = 'https://market.next-aura.com'
 
 const MAJOR_PREFECTURES = [
   '東京都', '神奈川県', '大阪府', '愛知県', '埼玉県',

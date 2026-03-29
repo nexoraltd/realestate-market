@@ -7,7 +7,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { Suspense } from 'react'
 
-const BASE_URL = 'https://realestate-market.vercel.app'
+const BASE_URL = 'https://market.next-aura.com'
 
 export const metadata: Metadata = {
   title: '不動産コラム｜不動産相場ナビ ブログ',

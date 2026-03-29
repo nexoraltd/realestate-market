@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const origin = req.headers.get("origin") || "https://realestate-market.vercel.app";
+    const origin = req.headers.get("origin") || "https://market.next-aura.com";
 
     const session = await stripe.billingPortal.sessions.create({
       customer: customer_id,

@@ -11,7 +11,7 @@ import RelatedPosts from '../components/RelatedPosts'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
-const BASE_URL = 'https://realestate-market.vercel.app'
+const BASE_URL = 'https://market.next-aura.com'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -159,7 +159,8 @@ export default async function BlogPostPage({ params }: Props) {
               source={post.content}
               options={{
                 mdxOptions: {
-                  remarkPlugins: [remarkGfm],
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  remarkPlugins: [remarkGfm as any],
                 },
               }}
               components={{

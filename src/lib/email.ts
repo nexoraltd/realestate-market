@@ -26,14 +26,14 @@ export async function sendCheckoutCompleteEmail(
           <h2 style="color:#1e293b">お申し込みありがとうございます</h2>
           <p>${planLabel}プラン（14日間無料トライアル付き）のお申し込みを承りました。</p>
           <p>ダッシュボードからデータツールをご利用いただけます。</p>
-          <a href="https://realestate-market.vercel.app/dashboard"
+          <a href="https://market.next-aura.com/dashboard"
              style="display:inline-block;background:#f59e0b;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:16px">
             ダッシュボードを開く
           </a>
           <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0" />
           <p style="color:#94a3b8;font-size:12px">
             プラン変更・解約は
-            <a href="https://realestate-market.vercel.app/account" style="color:#f59e0b">アカウント管理ページ</a>
+            <a href="https://market.next-aura.com/account" style="color:#f59e0b">アカウント管理ページ</a>
             からいつでも行えます。
           </p>
           <p style="color:#94a3b8;font-size:12px;margin-top:8px">
@@ -73,7 +73,7 @@ export async function sendPaymentFailedEmail(invoiceId: string) {
   });
 }
 
-const SITE_URL = "https://realestate-market.vercel.app";
+const SITE_URL = "https://market.next-aura.com";
 
 /** 初回パスワード設定メール → 新規登録者に送信 */
 export async function sendSetPasswordEmail(customerEmail: string, token: string) {

@@ -25,7 +25,7 @@ export const plans: Plan[] = [
     features: [
       "都道府県別の相場サマリー",
       "直近1四半期のデータ閲覧",
-      "取引事例 20件まで表示",
+      "取引事例 5件まで表示",
       "種別別グラフ",
     ],
     limited: [
@@ -79,7 +79,7 @@ export const plans: Plan[] = [
 // 機能比較テーブル用データ
 export const featureComparison = [
   { feature: "取引データ閲覧", free: "直近1四半期", standard: "過去20年分", pro: "過去20年分" },
-  { feature: "取引事例表示件数", free: "20件", standard: "無制限", pro: "無制限" },
+  { feature: "取引事例表示件数", free: "5件", standard: "無制限", pro: "無制限" },
   { feature: "詳細データ（築年数・駅距離等）", free: false, standard: true, pro: true },
   { feature: "種別別グラフ", free: true, standard: true, pro: true },
   { feature: "相場トレンド分析", free: false, standard: true, pro: true },

@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 
-const BASE_URL = 'https://souba.next-aura.com'
+const BASE_URL = 'https://market.next-aura.com'
 
 export default function robots(): MetadataRoute.Robots {
   return {
