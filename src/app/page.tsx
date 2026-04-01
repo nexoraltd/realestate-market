@@ -9,6 +9,7 @@ import PopularAreas from "@/components/PopularAreas";
 import HowItWorks from "@/components/HowItWorks";
 import MapSection from "@/components/MapSection";
 import DetailedDataPreview from "@/components/DetailedDataPreview";
+import NewsletterForm from "@/components/NewsletterForm";
 
 export default function Home() {
   return (
@@ -304,7 +305,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ⑩ 最終CTA — 1箇所に集約 */}
+      {/* ⑩ メルマガ */}
+      <section className="py-12 bg-[#0f172a]">
+        <div className="max-w-lg mx-auto px-4">
+          <NewsletterForm dark />
+        </div>
+      </section>
+
+      {/* ⑪ 最終CTA — 1箇所に集約 */}
       <section className="relative bg-gradient-to-r from-[#0f172a] to-[#1e3a5f] py-16 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div

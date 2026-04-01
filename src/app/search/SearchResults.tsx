@@ -5,6 +5,7 @@ import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import TransactionTable from "@/components/TransactionTable";
 import PaywallOverlay from "@/components/PaywallOverlay";
+import ShareBar from "@/components/ShareBar";
 import { PREFECTURES } from "@/lib/prefectures";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
@@ -372,6 +373,17 @@ export default function SearchResults() {
             )}
           </div>
         )}
+      </div>
+
+      {/* Header + Share */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold text-slate-800">
+          {prefName} {year}年{QUARTER_LABELS[quarter]}
+        </h2>
+        <ShareBar
+          path={`/search?area=${area}&year=${year}&quarter=${quarter}`}
+          text={`${prefName}の不動産取引データ（${year}年${QUARTER_LABELS[quarter]}）- 不動産相場ナビ`}
+        />
       </div>
 
       {/* Stats - limited info free */}

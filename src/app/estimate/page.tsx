@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ShareBar from "@/components/ShareBar";
 import { PREFECTURES } from "@/lib/prefectures";
 
 interface City {
@@ -310,9 +311,16 @@ export default function EstimatePage() {
                   </div>
                 </div>
 
-                <p className="text-xs text-slate-500 mt-4 leading-relaxed">
-                  ※ 国土交通省「不動産情報ライブラリ」の直近2年間の実取引データに基づく統計的推定です。実際の売却価格は物件の状態・築年数・設備・市況等により異なります。参考値としてご利用ください。
-                </p>
+                <div className="flex items-center justify-between mt-4">
+                  <p className="text-xs text-slate-500 leading-relaxed flex-1">
+                    ※ 国土交通省「不動産情報ライブラリ」の直近2年間の実取引データに基づく統計的推定です。
+                  </p>
+                  <ShareBar
+                    path="/estimate"
+                    text={`AI不動産査定の結果: ${fmtPrice(result.estimate.mid)}（${PREFECTURES.find(p => p.code === prefCode)?.name || ""}）`}
+                    dark
+                  />
+                </div>
               </div>
 
               {/* Comparable samples */}
