@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
     }
 
     const priceId = activeSub.items.data[0]?.price?.id;
-    if (priceId !== STRIPE_PRICE_IDS.professional) {
+    if (priceId !== STRIPE_PRICE_IDS.professional && priceId !== STRIPE_PRICE_IDS["professional-yearly"]) {
       return NextResponse.json(
         { error: "Professional plan required for custom reports." },
         { status: 403 },

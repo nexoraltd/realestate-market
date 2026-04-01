@@ -21,6 +21,8 @@ export async function POST(req: NextRequest) {
 
     const origin = req.headers.get("origin") || "http://localhost:3002";
 
+    const isYearly = interval === "yearly";
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
@@ -29,9 +31,10 @@ export async function POST(req: NextRequest) {
       cancel_url: `${origin}/pricing`,
       locale: "ja",
       subscription_data: {
-        trial_period_days: 14,
+        // 月額は14日トライアル、年額はトライアルなし（年額は割引が特典）
+        ...(isYearly ? {} : { trial_period_days: 14 }),
       },
-      metadata: { plan },
+      metadata: { plan: priceKey },
     });
 
     return NextResponse.json({ url: session.url });

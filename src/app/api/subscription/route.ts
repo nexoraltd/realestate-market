@@ -71,9 +71,15 @@ export async function GET(req: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const periodEnd = (activeSub as any).current_period_end as number | null;
 
+    // "standard-yearly" → interval付きでフロント送信、ベースプランも含める
+    const isYearly = plan?.endsWith("-yearly") || false;
+    const basePlan = plan?.replace("-yearly", "") || plan;
+
     return NextResponse.json({
       active: true,
       plan,
+      basePlan,
+      interval: isYearly ? "yearly" : "monthly",
       customer_id: customer.id,
       trial: activeSub.status === "trialing",
       status: activeSub.status,

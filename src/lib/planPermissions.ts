@@ -47,11 +47,20 @@ const PERMISSIONS: Record<PlanKey, PlanPermissions> = {
 
 /**
  * プランキーから権限オブジェクトを取得
- * 不明なプランの場合はスタンダードとして扱う
+ * "professional" / "professional-yearly" → プロフェッショナル
+ * それ以外 → スタンダード
  */
 export function getPermissions(plan: string | null | undefined): PlanPermissions {
-  if (plan === "professional") return PERMISSIONS.professional;
+  if (plan?.startsWith("professional")) return PERMISSIONS.professional;
   return PERMISSIONS.standard;
+}
+
+/**
+ * プランキーからベースプラン名を抽出（"standard-yearly" → "standard"）
+ */
+export function basePlanKey(plan: string | null | undefined): PlanKey {
+  if (plan?.startsWith("professional")) return "professional";
+  return "standard";
 }
 
 /**
