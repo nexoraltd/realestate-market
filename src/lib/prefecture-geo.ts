@@ -58,23 +58,23 @@ export const PREFECTURE_GEO: PrefectureGeo[] = [
 ];
 
 // Price color scale (万円)
-export function getPriceColor(avgPrice: number): string {
-  if (avgPrice >= 5000) return "#dc2626"; // red - very high
-  if (avgPrice >= 3000) return "#ea580c"; // orange - high
-  if (avgPrice >= 2000) return "#d97706"; // amber - above avg
-  if (avgPrice >= 1500) return "#ca8a04"; // yellow - avg+
-  if (avgPrice >= 1000) return "#65a30d"; // lime - average
-  if (avgPrice >= 700) return "#16a34a";  // green - below avg
-  return "#0d9488";                        // teal - low
+export function getPriceColor(price: number): string {
+  if (price >= 5000) return "#dc2626"; // red
+  if (price >= 4000) return "#ea580c"; // orange
+  if (price >= 3000) return "#d97706"; // amber
+  if (price >= 2000) return "#ca8a04"; // yellow
+  if (price >= 1500) return "#65a30d"; // lime
+  if (price >= 1000) return "#16a34a"; // green
+  return "#0d9488";                     // teal
 }
 
-export function getPriceLevel(avgPrice: number): string {
-  if (avgPrice >= 5000) return "非常に高い";
-  if (avgPrice >= 3000) return "高い";
-  if (avgPrice >= 2000) return "やや高い";
-  if (avgPrice >= 1500) return "平均的";
-  if (avgPrice >= 1000) return "やや低い";
-  if (avgPrice >= 700) return "低い";
+export function getPriceLevel(price: number): string {
+  if (price >= 5000) return "非常に高い";
+  if (price >= 4000) return "高い";
+  if (price >= 3000) return "やや高い";
+  if (price >= 2000) return "平均的";
+  if (price >= 1500) return "やや低い";
+  if (price >= 1000) return "低い";
   return "非常に低い";
 }
 

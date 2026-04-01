@@ -29,19 +29,25 @@ function getRecentPeriods(n: number): { year: string; quarter: string }[] {
   return periods;
 }
 
-// 建物あり取引のみ対象（土地のみ・農地・林地は除外）
-const RESIDENTIAL_TYPES = new Set([
-  "宅地(土地と建物)",
-  "中古マンション等",
-]);
+// 中古マンションのみ対象（相場として最も参考になる）
+const TARGET_TYPE = "中古マンション等";
 
-async function fetchAvgPrice(params: { area?: string; city?: string }, periods: { year: string; quarter: string }[]): Promise<number | null> {
+function median(values: number[]): number {
+  if (values.length === 0) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0
+    ? Math.round((sorted[mid - 1] + sorted[mid]) / 2)
+    : sorted[mid];
+}
+
+async function fetchMedianPrice(params: { area?: string; city?: string }, periods: { year: string; quarter: string }[]): Promise<number | null> {
   const prices: number[] = [];
   for (const { year, quarter } of periods) {
     try {
       const rows = await getTransactions({ year, quarter, ...params });
       for (const r of rows) {
-        if (!RESIDENTIAL_TYPES.has(r.Type)) continue; // 農地・林地を除外
+        if (r.Type !== TARGET_TYPE) continue;
         const p = Number(r.TradePrice);
         if (p > 0) prices.push(Math.round(p / 10000));
       }
@@ -49,8 +55,8 @@ async function fetchAvgPrice(params: { area?: string; city?: string }, periods: 
       // skip
     }
   }
-  if (prices.length === 0) return null;
-  return Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+  if (prices.length < 3) return null; // サンプル少なすぎは除外
+  return median(prices);
 }
 
 export interface MapPricesResponse {
@@ -66,15 +72,15 @@ export async function GET() {
     // 都道府県レベル
     Promise.all(
       PREF_CODES.map(async (code) => {
-        const avg = await fetchAvgPrice({ area: code }, periods);
-        return [code, avg] as [string, number | null];
+        const med = await fetchMedianPrice({ area: code }, periods);
+        return [code, med] as [string, number | null];
       })
     ),
     // 都市レベル
     Promise.all(
       MAJOR_CITIES.map(async (city) => {
-        const avg = await fetchAvgPrice({ city: city.code }, periods);
-        return [city.code, avg] as [string, number | null];
+        const med = await fetchMedianPrice({ city: city.code }, periods);
+        return [city.code, med] as [string, number | null];
       })
     ),
   ]);

@@ -70,7 +70,7 @@ export default function LeafletMap() {
               <div style="color:${color};font-weight:800;font-size:18px;margin-bottom:2px">
                 ${price.toLocaleString()}万円
               </div>
-              <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">都道府県平均 / ${level}</div>
+              <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">中古マンション中央値 / ${level}</div>
               <div style="background:${color};color:#fff;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer" class="pref-popup-btn" data-pref="${pref.code}">
                 詳細を見る →
               </div>
@@ -104,7 +104,7 @@ export default function LeafletMap() {
               <div style="color:${color};font-weight:800;font-size:17px;margin-bottom:2px">
                 ${price.toLocaleString()}万円
               </div>
-              <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">市区町村平均</div>
+              <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">中古マンション中央値</div>
               <div style="background:${color};color:#fff;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer" class="pref-popup-btn" data-pref="${city.prefCode}">
                 詳細を見る →
               </div>
@@ -169,14 +169,14 @@ export default function LeafletMap() {
       <div ref={mapRef} className="w-full h-full" />
       {/* Legend */}
       <div className="absolute bottom-4 left-4 z-[1000] bg-slate-900/90 backdrop-blur-sm rounded-xl px-4 py-3 text-xs">
-        <div className="text-slate-400 font-medium mb-2">平均取引価格（万円）</div>
+        <div className="text-slate-400 font-medium mb-2">中古マンション中央値（万円）</div>
         <div className="flex items-center gap-1.5">
           {[
-            { color: "#0d9488", label: "~700" },
-            { color: "#16a34a", label: "~1000" },
-            { color: "#65a30d", label: "~1500" },
-            { color: "#ca8a04", label: "~2000" },
-            { color: "#d97706", label: "~3000" },
+            { color: "#0d9488", label: "~1000" },
+            { color: "#16a34a", label: "~1500" },
+            { color: "#65a30d", label: "~2000" },
+            { color: "#ca8a04", label: "~3000" },
+            { color: "#d97706", label: "~4000" },
             { color: "#ea580c", label: "~5000" },
             { color: "#dc2626", label: "5000+" },
           ].map((item) => (
