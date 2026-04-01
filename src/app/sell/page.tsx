@@ -7,6 +7,14 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "不動産を売りたい方 | 不動産相場ナビ",
   description: "売却をお考えの方へ。エリアの相場データを確認して、適正価格での売却を実現しましょう。無料査定も受付中。",
+  alternates: { canonical: "/sell" },
+  openGraph: {
+    title: "不動産を売りたい方 | 不動産相場ナビ",
+    description: "データに基づく適正価格で、損しない売却を。エリアの取引事例を無料で確認。",
+    url: "/sell",
+    images: [{ url: "/api/og-default", width: 1200, height: 630 }],
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 const steps = [

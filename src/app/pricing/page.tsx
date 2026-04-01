@@ -10,6 +10,14 @@ export const metadata: Metadata = {
   title: "料金プラン | 不動産相場ナビ",
   description:
     "不動産相場ナビの料金プラン。無料プランから法人向けプロプランまで、目的に合わせてお選びいただけます。",
+  alternates: { canonical: "/pricing" },
+  openGraph: {
+    title: "料金プラン | 不動産相場ナビ",
+    description: "無料で始められる不動産データプラットフォーム。スタンダード2,980円/月、プロ6,800円/月。年額20%OFF。",
+    url: "/pricing",
+    images: [{ url: "/api/og-default", width: 1200, height: 630 }],
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 const faqs = [
@@ -61,9 +69,52 @@ function renderCell(value: boolean | string) {
   return <span className="text-sm font-medium text-slate-700">{value}</span>;
 }
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Product",
+      name: "不動産相場ナビ スタンダードプラン",
+      description: "全国の詳細取引データ、過去20年分のデータ閲覧、CSVダウンロード、相場トレンド分析が利用可能。",
+      brand: { "@type": "Organization", name: "ネクソラ不動産" },
+      offers: [
+        {
+          "@type": "Offer",
+          price: "2980",
+          priceCurrency: "JPY",
+          priceValidUntil: "2027-12-31",
+          availability: "https://schema.org/InStock",
+          url: "https://market.next-aura.com/register?plan=standard",
+        },
+        {
+          "@type": "Offer",
+          price: "28600",
+          priceCurrency: "JPY",
+          priceValidUntil: "2027-12-31",
+          availability: "https://schema.org/InStock",
+          url: "https://market.next-aura.com/register?plan=standard&interval=yearly",
+          description: "年額プラン（20%OFF）",
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: { "@type": "Answer", text: faq.a },
+      })),
+    },
+  ],
+};
+
 export default function PricingPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
 
       {/* Hero */}

@@ -7,6 +7,14 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "不動産を買いたい方 | 不動産相場ナビ",
   description: "購入をお考えの方へ。希望エリアの相場を把握して、賢い物件選びを。エリア別の取引データで適正価格がわかります。",
+  alternates: { canonical: "/buy" },
+  openGraph: {
+    title: "不動産を買いたい方 | 不動産相場ナビ",
+    description: "希望エリアの実際の取引価格をチェック。データに基づいた判断で、納得の住まい探しを。",
+    url: "/buy",
+    images: [{ url: "/api/og-default", width: 1200, height: 630 }],
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 const tips = [

@@ -8,6 +8,14 @@ export const metadata: Metadata = {
   title: "お問い合わせ・無料査定相談 | 不動産相場ナビ",
   description:
     "不動産の売却・購入に関するご相談、無料査定のお申し込みはこちら。経験豊富なスタッフが丁寧に対応いたします。",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "お問い合わせ・無料査定相談 | 不動産相場ナビ",
+    description: "不動産の売却・購入に関するご相談、無料査定のお申し込みはこちら。",
+    url: "/contact",
+    images: [{ url: "/api/og-default", width: 1200, height: 630 }],
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function ContactPage() {
