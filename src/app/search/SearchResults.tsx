@@ -468,6 +468,42 @@ export default function SearchResults() {
         )}
       </div>
 
+      {/* レポート単品購入 CTA */}
+      {area && (
+        <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
+            <div className="flex-1">
+              <p className="text-xs text-amber-700 font-bold mb-1">単品レポート</p>
+              <h3 className="font-bold text-slate-800 text-lg">
+                {prefName}の詳細レポートを購入
+              </h3>
+              <p className="text-sm text-slate-600 mt-1">
+                過去5年分の取引データを種別別・年度別に分析。サブスク不要で1回 <strong>980円</strong>。
+              </p>
+            </div>
+            <button
+              onClick={async () => {
+                try {
+                  const res = await fetch("/api/report-checkout", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ area, areaName: prefName }),
+                  });
+                  const data = await res.json();
+                  if (data.url) {
+                    const top = window.top || window.self;
+                    top.location.href = data.url;
+                  }
+                } catch { /* ignore */ }
+              }}
+              className="shrink-0 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-6 rounded-xl transition shadow-sm whitespace-nowrap"
+            >
+              980円でレポート購入
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* SEO */}
       <div className="bg-slate-50 rounded-xl p-6 text-sm text-slate-600">
         <h3 className="font-bold mb-2">

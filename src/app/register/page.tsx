@@ -15,10 +15,11 @@ export const metadata: Metadata = {
 export default async function RegisterPage({
   searchParams,
 }: {
-  searchParams: Promise<{ plan?: string }>;
+  searchParams: Promise<{ plan?: string; interval?: string }>;
 }) {
   const params = await searchParams;
   const selectedPlanKey = params.plan || "";
+  const isYearly = params.interval === "yearly";
 
   const planMap: Record<string, (typeof plans)[number]> = {
     standard: plans[1],
@@ -59,11 +60,20 @@ export default async function RegisterPage({
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-bold text-slate-800">{selectedPlan.name}プラン</p>
-                        <p className="text-xs text-slate-500 mt-0.5">{selectedPlan.desc}</p>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          {selectedPlan.desc} — {isYearly ? "年額払い" : "月額払い"}
+                        </p>
                       </div>
                       <div className="text-right">
-                        <span className="text-2xl font-extrabold text-slate-800">{selectedPlan.price}</span>
-                        <span className="text-xs text-slate-500 ml-1">円/月</span>
+                        <span className="text-2xl font-extrabold text-slate-800">
+                          {isYearly ? selectedPlan.yearlyPrice : selectedPlan.price}
+                        </span>
+                        <span className="text-xs text-slate-500 ml-1">
+                          {isYearly ? "円/年" : "円/月"}
+                        </span>
+                        {isYearly && (
+                          <p className="text-[10px] text-emerald-600 font-medium mt-0.5">20%OFF</p>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -75,7 +85,7 @@ export default async function RegisterPage({
                     <span>最初の14日間は無料。いつでもキャンセル可能。</span>
                   </div>
 
-                  <CheckoutButton plan={selectedPlanKey} />
+                  <CheckoutButton plan={selectedPlanKey} interval={isYearly ? "yearly" : "monthly"} />
 
                   <p className="text-xs text-slate-400 text-center mt-4">
                     決済はStripeで安全に処理されます。カード情報は当サイトに保存されません。

@@ -1,26 +1,38 @@
 /** Stripe Price ID マッピング（一元管理） */
 export const STRIPE_PRICE_IDS: Record<string, string> = {
+  // 月額
   standard: "price_1TEY8xRoGbypKtRLTCar48k2",
   professional: "price_1TF4pnRoGbypKtRL5GKebMrj",
+  // 年額
+  "standard-yearly": "price_1THO5aRoGbypKtRL2n4GtHkU",
+  "professional-yearly": "price_1THO5aRoGbypKtRLA4eTzqyr",
 };
+
+export type BillingInterval = "monthly" | "yearly";
 
 export interface Plan {
   name: string;
   price: string;
+  yearlyPrice: string;
   unit: string;
+  yearlyUnit: string;
   desc: string;
   features: string[];
   limited: string[];
   cta: string;
   ctaLink: string;
   popular: boolean;
+  /** plan key（standard / professional） */
+  key: string;
 }
 
 export const plans: Plan[] = [
   {
     name: "フリー",
     price: "0",
+    yearlyPrice: "0",
     unit: "円/月",
+    yearlyUnit: "円/年",
     desc: "まずは相場をチェック",
     features: [
       "都道府県別の相場サマリー",
@@ -37,11 +49,14 @@ export const plans: Plan[] = [
     cta: "無料で始める",
     ctaLink: "/search",
     popular: false,
+    key: "free",
   },
   {
     name: "スタンダード",
     price: "2,980",
+    yearlyPrice: "28,600",
     unit: "円/月",
+    yearlyUnit: "円/年",
     desc: "不動産業者・投資家向け",
     features: [
       "全国の詳細取引データ",
@@ -56,11 +71,14 @@ export const plans: Plan[] = [
     cta: "14日間無料で試す",
     ctaLink: "/register?plan=standard",
     popular: true,
+    key: "standard",
   },
   {
     name: "プロフェッショナル",
     price: "6,800",
+    yearlyPrice: "65,280",
     unit: "円/月",
+    yearlyUnit: "円/年",
     desc: "法人・大量データ利用向け",
     features: [
       "スタンダードの全機能",
@@ -73,8 +91,16 @@ export const plans: Plan[] = [
     cta: "14日間無料で試す",
     ctaLink: "/register?plan=professional",
     popular: false,
+    key: "professional",
   },
 ];
+
+/** 年額の月あたり価格を計算 */
+export function yearlyMonthlyPrice(yearlyPrice: string): string {
+  const num = parseInt(yearlyPrice.replace(/,/g, ""), 10);
+  if (num === 0) return "0";
+  return Math.round(num / 12).toLocaleString();
+}
 
 // 機能比較テーブル用データ
 export const featureComparison = [

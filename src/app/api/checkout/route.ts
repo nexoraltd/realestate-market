@@ -11,9 +11,10 @@ export async function POST(req: NextRequest) {
       apiVersion: "2026-02-25.clover",
     });
 
-    const { plan, email } = await req.json();
+    const { plan, email, interval } = await req.json();
 
-    const priceId = STRIPE_PRICE_IDS[plan];
+    const priceKey = interval === "yearly" ? `${plan}-yearly` : plan;
+    const priceId = STRIPE_PRICE_IDS[priceKey];
     if (!priceId) {
       return NextResponse.json({ error: "無効なプランです" }, { status: 400 });
     }

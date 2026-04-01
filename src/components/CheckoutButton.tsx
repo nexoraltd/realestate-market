@@ -4,9 +4,10 @@ import { useState } from "react";
 
 interface CheckoutButtonProps {
   plan: string;
+  interval?: "monthly" | "yearly";
 }
 
-export default function CheckoutButton({ plan }: CheckoutButtonProps) {
+export default function CheckoutButton({ plan, interval = "monthly" }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
@@ -27,7 +28,7 @@ export default function CheckoutButton({ plan }: CheckoutButtonProps) {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, email }),
+        body: JSON.stringify({ plan, email, interval }),
       });
       const data = await res.json();
       if (data.url) {

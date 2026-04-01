@@ -353,16 +353,44 @@ export default function EstimatePage() {
                 </div>
               )}
 
-              {/* CTA */}
-              <div className="bg-gradient-to-br from-amber-900/30 to-orange-900/20 border border-amber-700/30 rounded-2xl p-6 text-center">
-                <h3 className="font-bold text-lg mb-2">より正確な査定・売却のご相談</h3>
-                <p className="text-slate-400 text-sm mb-4">AIデータをもとにした概算です。実際の売却価格は専門家への相談で確認できます。</p>
-                <a
-                  href="mailto:info@next-aura.com"
-                  className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg"
-                >
-                  無料査定相談（メール）
-                </a>
+              {/* CTA: 次のアクション */}
+              <div className="bg-gradient-to-br from-amber-900/30 to-orange-900/20 border border-amber-700/30 rounded-2xl p-6">
+                <div className="text-center mb-5">
+                  <h3 className="font-bold text-lg mb-1">次のステップ</h3>
+                  <p className="text-slate-400 text-sm">
+                    AI査定は過去データに基づく参考値です。実際の売却・購入判断は専門家にご相談ください。
+                  </p>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <a
+                    href="/contact"
+                    className="flex items-center gap-3 bg-amber-500 hover:bg-amber-400 text-slate-900 rounded-xl p-4 transition group"
+                  >
+                    <div className="w-10 h-10 bg-amber-600/30 rounded-lg flex items-center justify-center shrink-0">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm">無料で専門家に相談</p>
+                      <p className="text-[11px] opacity-80">売却・購入のプロがアドバイス</p>
+                    </div>
+                  </a>
+                  <a
+                    href="/search"
+                    className="flex items-center gap-3 bg-slate-700/60 hover:bg-slate-700 text-white border border-slate-600 rounded-xl p-4 transition group"
+                  >
+                    <div className="w-10 h-10 bg-slate-600/50 rounded-lg flex items-center justify-center shrink-0">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm">相場データを詳しく見る</p>
+                      <p className="text-[11px] text-slate-400">エリアの取引事例を確認</p>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
           )}
