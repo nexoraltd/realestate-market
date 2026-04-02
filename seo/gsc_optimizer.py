@@ -44,6 +44,11 @@ ALMOST_PAGE1_POS_MAX = 20
 
 SCOPES = ["https://www.googleapis.com/auth/webmasters.readonly"]
 
+# OAuth Desktop Flow 用の Client ID（Google Cloud Console で作成）
+# --setup で自動セットアップ時に使用
+OAUTH_TOKEN_PATH = SEO_DIR / "gsc-token.json"
+OAUTH_CLIENT_SECRETS_PATH = SEO_DIR / "client_secrets.json"
+
 # ---------------------------------------------------------------------------
 # Credentials
 # ---------------------------------------------------------------------------
@@ -58,38 +63,105 @@ def _get_credentials_path() -> Path:
 
 
 def _build_service():
-    """Build an authorized Search Console API service."""
-    creds_path = _get_credentials_path()
-    if not creds_path.exists():
-        print("=" * 60)
-        print("GSC credentials not found.")
-        print()
-        print("Setup instructions:")
-        print("  1. Go to https://console.cloud.google.com/")
-        print("  2. Create a project (or select existing)")
-        print("  3. Enable 'Google Search Console API'")
-        print("  4. Create a Service Account and download the JSON key")
-        print(f"  5. Save the key to: {creds_path}")
-        print("  6. In GSC, add the service account email as a user")
-        print(f"     (Property: {SITE_URL})")
-        print()
-        print("Or set GSC_CREDENTIALS_PATH environment variable.")
-        print("=" * 60)
-        sys.exit(1)
+    """Build an authorized Search Console API service.
 
+    Tries in order:
+    1. OAuth token (gsc-token.json) - created by --setup
+    2. Service account (gsc-credentials.json)
+    """
     try:
-        from google.oauth2 import service_account
         from googleapiclient.discovery import build
     except ImportError:
         print("Required packages not installed. Run:")
-        print("  pip install google-auth google-api-python-client")
+        print("  pip install google-auth google-api-python-client google-auth-oauthlib")
         sys.exit(1)
 
-    credentials = service_account.Credentials.from_service_account_file(
-        str(creds_path), scopes=SCOPES
+    # Method 1: OAuth token (from --setup)
+    if OAUTH_TOKEN_PATH.exists():
+        try:
+            from google.oauth2.credentials import Credentials
+            from google.auth.transport.requests import Request
+
+            creds = Credentials.from_authorized_user_file(str(OAUTH_TOKEN_PATH), SCOPES)
+            if creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+                # Save refreshed token
+                with open(OAUTH_TOKEN_PATH, "w") as f:
+                    f.write(creds.to_json())
+            service = build("searchconsole", "v1", credentials=creds)
+            print("Authenticated via OAuth token")
+            return service
+        except Exception as e:
+            print(f"OAuth token error: {e}. Trying service account...")
+
+    # Method 2: Service account
+    sa_path = _get_credentials_path()
+    if sa_path.exists():
+        try:
+            from google.oauth2 import service_account
+            credentials = service_account.Credentials.from_service_account_file(
+                str(sa_path), scopes=SCOPES
+            )
+            service = build("searchconsole", "v1", credentials=credentials)
+            print("Authenticated via service account")
+            return service
+        except Exception as e:
+            print(f"Service account error: {e}")
+
+    # Neither method available
+    print("=" * 60)
+    print("GSC credentials not found. Choose one of:")
+    print()
+    print("  Option A (recommended): OAuth Desktop Flow")
+    print("    python gsc_optimizer.py --setup")
+    print("    → ブラウザでGoogleログインするだけ")
+    print()
+    print("  Option B: Service Account")
+    print("    1. https://console.cloud.google.com/ でプロジェクト作成")
+    print("    2. Search Console API を有効化")
+    print("    3. Service Account を作成しJSONキーをダウンロード")
+    print(f"    4. {sa_path} に保存")
+    print(f"    5. GSCで Service Account メールを {SITE_URL} のユーザーに追加")
+    print("=" * 60)
+    sys.exit(1)
+
+
+def cmd_setup():
+    """OAuth Desktop Flow でブラウザ認証 → トークン保存"""
+    try:
+        from google_auth_oauthlib.flow import InstalledAppFlow
+    except ImportError:
+        print("Required package not installed. Run:")
+        print("  pip install google-auth-oauthlib")
+        sys.exit(1)
+
+    if not OAUTH_CLIENT_SECRETS_PATH.exists():
+        print("=" * 60)
+        print("OAuth セットアップ手順:")
+        print()
+        print("1. https://console.cloud.google.com/ にアクセス")
+        print("2. プロジェクトを作成（または既存を選択）")
+        print("3. 「APIとサービス」→「ライブラリ」→ 'Google Search Console API' を有効化")
+        print("4. 「APIとサービス」→「認証情報」→「認証情報を作成」→「OAuthクライアントID」")
+        print("5. アプリケーションの種類:「デスクトップアプリ」を選択")
+        print("6. JSONをダウンロード")
+        print(f"7. ダウンロードしたファイルを以下に保存:")
+        print(f"   {OAUTH_CLIENT_SECRETS_PATH}")
+        print()
+        print("保存後にもう一度 --setup を実行してください。")
+        print("=" * 60)
+        sys.exit(1)
+
+    flow = InstalledAppFlow.from_client_secrets_file(
+        str(OAUTH_CLIENT_SECRETS_PATH), SCOPES
     )
-    service = build("searchconsole", "v1", credentials=credentials)
-    return service
+    creds = flow.run_local_server(port=0)
+
+    with open(OAUTH_TOKEN_PATH, "w") as f:
+        f.write(creds.to_json())
+
+    print(f"✓ 認証成功！トークンを {OAUTH_TOKEN_PATH} に保存しました。")
+    print(f"  これで python gsc_optimizer.py で分析できます。")
 
 
 # ---------------------------------------------------------------------------
@@ -782,7 +854,17 @@ def main():
         action="store_true",
         help="Use cached GSC data instead of fetching fresh data",
     )
+    parser.add_argument(
+        "--setup",
+        action="store_true",
+        help="Run OAuth setup wizard (browser login)",
+    )
     args = parser.parse_args()
+
+    # Setup wizard
+    if args.setup:
+        cmd_setup()
+        return
 
     # Show latest report
     if args.report:
