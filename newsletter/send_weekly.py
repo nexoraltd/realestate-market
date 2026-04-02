@@ -310,7 +310,7 @@ def generate_report_html(area_data, year, quarter):
     <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:600px;margin:0 auto;background:#ffffff">
       <!-- Header -->
       <div style="background:linear-gradient(135deg,#0f172a,#1e3a5f);padding:28px 24px;text-align:center">
-        <h1 style="color:#f59e0b;font-size:20px;margin:0 0 4px">不動産相場ナビ 週刊レター</h1>
+        <h1 style="color:#f59e0b;font-size:20px;margin:0 0 4px">不動産相場ナビ — 数字は嘘をつかない</h1>
         <p style="color:#94a3b8;font-size:12px;margin:0">{today}配信 ｜ Vol.{week_num}</p>
       </div>
 

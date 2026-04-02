@@ -33,19 +33,17 @@ export default function Home() {
             <div className="lg:col-span-2 pt-4">
               <div className="animate-fade-in-up">
                 <div className="inline-flex items-center gap-2 bg-slate-500/10 border border-slate-500/20 rounded-full px-3 py-1 mb-6">
-                  <div className="w-1.5 h-1.5 rounded-full bg-slate-400" />
-                  <span className="text-slate-400 text-[10px] font-medium">公的データ活用</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                  <span className="text-slate-400 text-[10px] font-medium">数字は嘘をつかない</span>
                 </div>
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-5 leading-tight tracking-tight">
-                  マップで見る
+                  不動産の常識を
                   <br />
-                  <span className="gradient-text">不動産相場</span>
-                  <br />
-                  データベース
+                  <span className="gradient-text">データで覆す</span>
                 </h1>
                 <p className="text-slate-400 mb-8 leading-relaxed text-sm md:text-base">
-                  不動産取引データをマップで直感的に検索。
-                  買いたい方も売りたい方も、相場を知ることが第一歩です。
+                  500万件の実取引データが映す、不動産の真実。
+                  業界の「空気」ではなく「数字」で、正しい判断を。
                 </p>
               </div>
               <div className="animate-fade-in-up-delay-1">
@@ -161,9 +159,9 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-8">
             <p className="text-sm text-amber-600 font-bold mb-1">ネクソラ不動産</p>
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-800">売却・購入もプロにおまかせ</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-800">データに基づく、損しない不動産取引</h2>
             <p className="text-slate-500 text-sm mt-2 max-w-xl mx-auto">
-              相場データの確認から、実際の売却・購入まで一貫サポート。
+              営業トークではなく数字で判断。データが示す適正価格で、納得のいく取引を。
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-5">

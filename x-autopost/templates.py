@@ -1,21 +1,22 @@
 """
 不動産相場ナビ X自動投稿テンプレート
-投稿カテゴリ: morning（相場データ）/ noon（記事紹介）/ night（Tips・CTA）
+コンセプト: 数字は嘘をつかない。不動産の常識を、データで検証する。
+投稿カテゴリ: morning（データファクト）/ noon（記事紹介）/ night（Tips・CTA）/ premium（課金訴求）
 """
 
 MORNING_TEMPLATES = [
-    "東京23区のマンション平均価格は約6,800万円。\n\n区ごとの相場差は最大5倍以上。\nあなたのエリアの相場を無料でチェック👇\nhttps://market.next-aura.com/search",
-    "2026年の不動産市場、知っておくべき3つの数字：\n\n・マンション平均価格: 前年比+3.2%\n・金利: 変動0.3%台〜\n・取引件数: 回復傾向\n\n詳細データはこちら👇\nhttps://market.next-aura.com",
-    "大阪市のマンション坪単価ランキング：\n\n1位 北区（梅田）330〜450万円\n2位 中央区（心斎橋）300〜420万円\n3位 天王寺区 250〜350万円\n\n全エリアの相場を確認👇\nhttps://market.next-aura.com/search",
-    "「このマンション、適正価格？」\n\nAI査定なら数秒で推定価格がわかります。\n国交省の実取引データを元に算出。\n\n無料・登録不要👇\nhttps://market.next-aura.com/estimate",
-    "名古屋市のマンション相場：\n\n中区（栄）280〜400万円/坪\n東区（東桜）250〜350万円/坪\n千種区 200〜300万円/坪\n\nエリアの詳細データ👇\nhttps://market.next-aura.com/search",
-    "福岡市が今アツい理由：\n\n・マンション価格は東京の約1/2\n・天神ビッグバンで再開発加速\n・利回りは東京より1〜2%高い\n\n福岡の相場を確認👇\nhttps://market.next-aura.com/blog/fukuoka-mansion-souba",
-    "不動産の相場を調べる方法、いくつ知っていますか？\n\n1. 国交省データ（無料）\n2. レインズ（業者のみ）\n3. AI査定（無料）\n4. 公示地価\n5. 路線価\n\n最も手軽な方法👇\nhttps://market.next-aura.com/estimate",
-    "首都圏の中古マンション、エリア別の特徴：\n\n東京23区: 高値安定\n横浜市: 駅近人気\n埼玉県: コスパ◎\n千葉県: 新築供給多\n\n各エリアの相場を比較👇\nhttps://market.next-aura.com/search",
-    "マンション売却で損しないための3ステップ：\n\n① 相場を調べる（AI査定）\n② 複数社に査定依頼\n③ 高値で売れる時期を見極める\n\nまず相場チェック👇\nhttps://market.next-aura.com/estimate",
-    "住宅ローン、変動 vs 固定どっちがいい？\n\n・変動金利: 0.3%台〜（低いが上昇リスク）\n・固定金利: 1.5%台〜（安定だが割高）\n\n詳しい比較記事👇\nhttps://market.next-aura.com/blog/jutaku-loan-kinri-hikaku-2026",
-    "不動産取引データ500万件以上を無料で検索できるサービス、知ってますか？\n\n全47都道府県・20年分のデータを網羅。\n\n不動産相場ナビ👇\nhttps://market.next-aura.com",
-    "マンション購入の初期費用、実は物件価格の6〜10%かかります。\n\n3,000万円の物件なら180〜300万円。\n\n内訳と節約術はこちら👇\nhttps://market.next-aura.com/blog/mansion-kounyu-shoki-hiyo",
+    "【データで検証】東京23区のマンション、区ごとの価格差は最大5倍。\n\n「港区は高い」は常識。でも数字で見ると、同じ区内でも駅距離で2倍差がつく。\n\n常識より数字を見よう👇\nhttps://market.next-aura.com/search",
+    "【ファクトチェック】2026年の不動産市場：\n\n・マンション平均価格: 前年比+3.2%\n・変動金利: 0.3%台〜\n・取引件数: 回復傾向\n\n「バブル崩壊」論に数字は何を示しているか👇\nhttps://market.next-aura.com",
+    "【データが示す真実】「大阪は東京より安い」は本当か？\n\n梅田: 坪330〜450万\n心斎橋: 坪300〜420万\n天王寺: 坪250〜350万\n\n実は都心部の坪単価差は縮小傾向👇\nhttps://market.next-aura.com/search",
+    "「営業マンの査定額」vs「500万件のデータが示す価格」\n\nどちらを信じますか？\n\nAI査定は国交省の実取引データを統計処理。\n人間の主観が入らない。\n\n無料で試す👇\nhttps://market.next-aura.com/estimate",
+    "【通説を検証】「駅徒歩7分以内なら値崩れしない」\n\nデータで見ると：\n・徒歩5分以内: 築20年で-15%\n・徒歩10分超: 築20年で-40%\n\n通説はおおむね正しい。ただし例外あり👇\nhttps://market.next-aura.com/search",
+    "【数字で見る福岡】\n\n・マンション価格は東京の約1/2\n・天神ビッグバンで坪単価+20%\n・投資利回りは東京より1〜2%高い\n\n「地方はダメ」は本当か？データは別の答えを示す👇\nhttps://market.next-aura.com/blog/fukuoka-mansion-souba",
+    "不動産の「適正価格」を知る方法は5つある。\n\n1. 国交省データ（最も客観的）\n2. レインズ（業者のみ）\n3. AI査定（数秒で結果）\n4. 公示地価（年1回更新）\n5. 路線価（相続税基準）\n\n全部使えるサービス👇\nhttps://market.next-aura.com/estimate",
+    "【データ比較】首都圏マンション、エリア別の数学的特徴：\n\n東京23区: 標準偏差が大きい（格差大）\n横浜市: 駅距離との相関が最も強い\n埼玉: 価格/面積比が最も優秀\n\n数字で選ぶ👇\nhttps://market.next-aura.com/search",
+    "「今が売り時」と言う営業マン。\n\nデータは何と言っているか？\n\n① 過去の取引データで相場を確認\n② 価格推移トレンドを分析\n③ 数字に基づいて判断\n\n営業トークより信頼できるもの👇\nhttps://market.next-aura.com/estimate",
+    "【金利のファクト】変動 vs 固定\n\n変動0.3%台、固定1.5%台。\n3000万円借入で月額差は約15,000円。\n35年で約630万円の差。\n\nただし変動が0.5%上がるだけで差は半減する。\n\n数字でシミュレーション👇\nhttps://market.next-aura.com/tools/loan-simulator",
+    "「不動産は情報の非対称性が大きい」\n\nつまり、業者は知っていて買主は知らない。\n\n500万件の取引データを誰でも無料で見られるようにした。\n情報格差をゼロにする👇\nhttps://market.next-aura.com",
+    "【常識を疑え】「マンション購入の諸費用は物件価格の10%」\n\nデータで検証すると6〜8%が実態。\n10%は最大値を常識化した結果。\n\n正確な数字を知る👇\nhttps://market.next-aura.com/blog/mansion-kounyu-shoki-hiyo",
 ]
 
 NOON_TEMPLATES = [
@@ -34,18 +35,18 @@ NOON_TEMPLATES = [
 ]
 
 NIGHT_TEMPLATES = [
-    "不動産の売却・購入で最初にやるべきこと。\n\nそれは「相場を知ること」です。\n\n500万件以上の取引データを無料で検索👇\nhttps://market.next-aura.com",
-    "「相場を知らずに売ると損をする」\n\nこれは不動産業界の常識。\n知らないのは売主だけ、なんてことも。\n\nまずは無料でAI査定👇\nhttps://market.next-aura.com/estimate",
-    "不動産データの民主化。\n\n不動産相場ナビは、これまで業者しかアクセスできなかった取引データを、誰でも無料で検索できるようにしたサービスです。\n\nhttps://market.next-aura.com",
-    "マンションを売る前に、必ず近隣の取引事例を確認してください。\n\n同じマンション内でも、階数・向き・リフォーム状況で数百万円の差がつきます。\n\n取引事例を無料で検索👇\nhttps://market.next-aura.com/search",
-    "不動産投資で大事なのは「利回り」の計算。\n\n表面利回りと実質利回り、ちゃんと区別できていますか？\n\n詳しく解説👇\nhttps://market.next-aura.com/blog/fudousan-toshi-rimawari",
+    "不動産で最初にやるべきことは「数字を見ること」。\n\n営業マンの言葉でも、ネットの口コミでもなく、500万件の実取引データ。\n\n数字は嘘をつかない👇\nhttps://market.next-aura.com",
+    "「相場を知らずに売ると損をする」\n\nこれは唯一の不動産の真理。\n業者は知っていて、売主だけが知らない。\n\nデータで武装しよう👇\nhttps://market.next-aura.com/estimate",
+    "不動産データの民主化。\n\nこれまで業者しかアクセスできなかった取引データを、誰でも無料で見られるようにした。\n\n情報の非対称性をゼロにする👇\nhttps://market.next-aura.com",
+    "「この物件お得ですよ」\n\nその根拠は？感覚？経験？\n\n過去の取引データと比較すれば、数字が答えを出してくれる。\n\n同じマンション内でも階数・向きで数百万円の差👇\nhttps://market.next-aura.com/search",
+    "【数学的に考える不動産投資】\n\n表面利回り5%でも、実質は2-3%。\nその差の正体は管理費・修繕積立・空室・税金。\n\n計算できない投資はギャンブル👇\nhttps://market.next-aura.com/blog/fudousan-toshi-rimawari",
     "引っ越しの日取り、気にしますか？\n\n大安・一粒万倍日・天赦日をまとめて確認できるカレンダーを無料公開中👇\nhttps://market.next-aura.com/lp/moving-date",
-    "不動産のプロが使うデータを、あなたも使える時代。\n\n全47都道府県・20年分の取引データを無料で検索。\n\n不動産相場ナビ👇\nhttps://market.next-aura.com",
-    "週刊 不動産相場レポート、始めました。\n\nエリア別の相場動向・注目データを毎週無料でお届けします。\n\n登録はトップページから👇\nhttps://market.next-aura.com",
-    "「この物件、高くない？」\n\nそう思ったら、過去の取引事例と比較してみてください。\n\nデータが判断の根拠になります。\n\nhttps://market.next-aura.com/search",
-    "マンション購入の初期費用、物件価格の6〜10%かかるって知ってました？\n\n3,000万円なら180〜300万円。\n事前に知っておくことが大事。\n\nhttps://market.next-aura.com/blog/mansion-kounyu-shoki-hiyo",
-    "仲介手数料の上限は法律で決まっています。\n\n3,000万円の物件なら最大105.6万円。\n\n計算方法と値引き交渉のコツ👇\nhttps://market.next-aura.com/blog/fudousan-baibai-tesuryo",
-    "不動産相場ナビのデータは、国土交通省の「不動産情報ライブラリ」に基づいています。\n\n公的データだから信頼性が高い。\n\nhttps://market.next-aura.com",
+    "「不動産のプロ」が使うデータを、あなたも使える。\n\n違いは「データを見ているかどうか」だけ。\n\n全47都道府県・20年分👇\nhttps://market.next-aura.com",
+    "週刊データレポート配信中。\n\n不動産の「空気感」ではなく「数字」を毎週お届け。\n\n登録はトップページから👇\nhttps://market.next-aura.com",
+    "「高い気がする」は根拠にならない。\n\n500万件のデータと比較して初めて「高い」か「安い」かがわかる。\n\n感覚を数字に変えよう👇\nhttps://market.next-aura.com/search",
+    "仲介手数料の上限は法律で決まっている。\n\n3,000万円なら最大105.6万円。\nこれは交渉の余地がある。\n\n知っているかどうかで100万円変わる👇\nhttps://market.next-aura.com/blog/fudousan-baibai-tesuryo",
+    "住宅ローン、月々の返済額をシミュレーションしてみた？\n\n「なんとなく大丈夫」は数学的に危険。\n返済比率25%以上は黄信号。\n\n無料で計算👇\nhttps://market.next-aura.com/tools/loan-simulator",
+    "不動産相場ナビのデータソース = 国土交通省「不動産情報ライブラリ」。\n\n公的データ。恣意的な加工なし。\n数字そのものを見せる。\n\nhttps://market.next-aura.com",
 ]
 
 # ── 課金訴求テンプレート（朝・夜にランダムで混ぜる） ──
