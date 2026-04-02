@@ -186,44 +186,44 @@ export default async function BlogPostPage({ params }: Props) {
           {/* 関連記事 */}
           <RelatedPosts posts={relatedPosts} />
 
-          {/* 下部CTA: 不動産サービス */}
-          <div className="mt-16 rounded-xl border border-slate-700 bg-slate-800/50 p-8 text-center">
-            <p className="mb-2 text-lg font-bold text-amber-400">
-              不動産の売却・購入をお考えの方へ
+          {/* 下部CTA: AI査定 */}
+          <div className="mt-16 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-8 text-center">
+            <p className="mb-2 text-lg font-bold text-emerald-400">
+              お持ちの物件、今いくら？
             </p>
             <p className="mb-6 text-sm text-slate-400">
-              相場データに基づいた適正価格で、損しない不動産取引を実現します
-            </p>
-            <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <a
-                href="mailto:info@next-aura.com"
-                className="inline-block rounded-xl bg-amber-500 px-10 py-3 text-lg font-bold tracking-wide text-white transition hover:bg-amber-600"
-              >
-                無料で相談する
-              </a>
-              <Link
-                href="/"
-                className="inline-block rounded-xl border border-slate-600 px-10 py-3 text-lg font-bold tracking-wide text-slate-300 transition hover:border-amber-500 hover:text-amber-400"
-              >
-                相場を調べる
-              </Link>
-            </div>
-          </div>
-
-          {/* 引っ越し日カレンダーCTA */}
-          <div className="mt-8 rounded-xl border border-amber-500/30 bg-amber-500/10 p-8 text-center">
-            <p className="mb-2 text-lg font-bold text-amber-300">
-              引っ越しに良い日をチェック
-            </p>
-            <p className="mb-6 text-sm text-slate-400">
-              大安・一粒万倍日・天赦日など、引っ越しや契約に適した日をカレンダーで確認
+              AIが国交省データから推定価格を算出。無料・登録不要で今すぐ査定。
             </p>
             <Link
-              href="/lp/moving-date"
-              className="inline-block rounded-xl bg-amber-500 px-10 py-3 text-lg font-bold tracking-wide text-slate-900 transition hover:bg-amber-600"
+              href="/estimate"
+              className="inline-block rounded-xl bg-emerald-500 px-10 py-3 text-lg font-bold tracking-wide text-white transition hover:bg-emerald-600"
             >
-              カレンダーを見る
+              無料AI査定を試す
             </Link>
+          </div>
+
+          {/* 下部CTA: プロ向け有料プラン */}
+          <div className="mt-6 rounded-xl border border-slate-700 bg-slate-800/50 p-8 text-center">
+            <p className="mb-2 text-lg font-bold text-amber-400">
+              不動産のプロ向け — もっと詳しいデータが必要ですか？
+            </p>
+            <p className="mb-6 text-sm text-slate-400">
+              過去20年分の取引データ・CSV一括ダウンロード・トレンド分析。14日間無料トライアル。
+            </p>
+            <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <Link
+                href="/pricing"
+                className="inline-block rounded-xl bg-amber-500 px-10 py-3 text-lg font-bold tracking-wide text-white transition hover:bg-amber-600"
+              >
+                プランを見る
+              </Link>
+              <Link
+                href="/search"
+                className="inline-block rounded-xl border border-slate-600 px-10 py-3 text-lg font-bold tracking-wide text-slate-300 transition hover:border-amber-500 hover:text-amber-400"
+              >
+                まず無料で検索
+              </Link>
+            </div>
           </div>
         </article>
       </div>
