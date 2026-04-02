@@ -35,6 +35,9 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-sm mb-3 text-slate-300">お役立ちツール</h4>
             <ul className="space-y-2 text-sm text-slate-400">
+              <li><Link href="/estimate" className="hover:text-white transition">AI不動産査定</Link></li>
+              <li><Link href="/tools/loan-simulator" className="hover:text-white transition">住宅ローンシミュレーター</Link></li>
+              <li><Link href="/tools/property-tax" className="hover:text-white transition">固定資産税計算機</Link></li>
               <li><Link href="/lp/moving-date" className="hover:text-white transition">引っ越しに良い日カレンダー</Link></li>
               <li><Link href="/blog" className="hover:text-white transition">コラム・記事</Link></li>
             </ul>
