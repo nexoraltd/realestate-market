@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 type Step = "login" | "no_password" | "forgot" | "forgot_sent" | "not_found" | "found";
+
+const SESSION_KEY = "realestate_verified_email";
 
 interface SubInfo {
   active: boolean;
@@ -24,6 +26,29 @@ export default function AccountContent() {
   const [portalLoading, setPortalLoading] = useState(false);
   const [error, setError] = useState("");
   const [forgotEmail, setForgotEmail] = useState("");
+
+  // マウント時: localStorage に保存された verified email があれば /api/subscription で検証してスキップ
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const saved = localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY);
+    if (!saved) return;
+    try {
+      const { email: savedEmail } = JSON.parse(saved);
+      if (!savedEmail) return;
+      fetch(`/api/subscription?email=${encodeURIComponent(savedEmail)}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data && data.active) {
+            setEmail(savedEmail);
+            setSub(data);
+            setStep("found");
+          }
+        })
+        .catch(() => {});
+    } catch {
+      localStorage.removeItem(SESSION_KEY);
+    }
+  }, []);
 
   async function handleLogin() {
     if (!email || !password) return;
@@ -49,6 +74,16 @@ export default function AccountContent() {
       } else {
         setSub(data);
         setStep("found");
+        // dashboard と共通のセッションに保存
+        const planKey = data.basePlan === "professional" || data.plan === "professional"
+          ? "professional"
+          : "standard";
+        try {
+          localStorage.setItem(
+            SESSION_KEY,
+            JSON.stringify({ email, plan: planKey })
+          );
+        } catch {}
       }
     } catch {
       setError("通信エラーが発生しました。再度お試しください。");
@@ -104,6 +139,10 @@ export default function AccountContent() {
     setSub(null);
     setStep("login");
     setError("");
+    try {
+      localStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(SESSION_KEY);
+    } catch {}
   }
 
   const planLabel =

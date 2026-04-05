@@ -11,6 +11,32 @@ import ProFeaturesPanel from "@/components/ProFeaturesPanel";
 
 const SESSION_KEY = "realestate_verified_email";
 
+/** localStorage を優先的に読み、旧 sessionStorage からの移行も行う */
+function readSession(): string | null {
+  if (typeof window === "undefined") return null;
+  const ls = localStorage.getItem(SESSION_KEY);
+  if (ls) return ls;
+  // 旧 sessionStorage からマイグレーション
+  const ss = sessionStorage.getItem(SESSION_KEY);
+  if (ss) {
+    localStorage.setItem(SESSION_KEY, ss);
+    sessionStorage.removeItem(SESSION_KEY);
+    return ss;
+  }
+  return null;
+}
+
+function writeSession(value: string) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(SESSION_KEY, value);
+}
+
+function clearSession() {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(SESSION_KEY);
+}
+
 type AuthState = "idle" | "checking" | "active" | "inactive" | "no_password" | "error";
 
 const prefectures: Record<string, string> = {
@@ -80,19 +106,43 @@ export default function DashboardContent() {
   }, []);
 
   useEffect(() => {
-    const saved = sessionStorage.getItem(SESSION_KEY);
+    const saved = readSession();
     if (saved) {
       try {
         const { email, plan } = JSON.parse(saved);
+        // 楽観的に即座にUIを復元（体感速度優先）
         setVerifiedEmail(email);
         const key = plan === "professional" ? "professional" : "standard";
         setPlanKey(key);
         setPlanLabel(key === "professional" ? "プロフェッショナル" : "スタンダード");
         setAuthState("active");
         fetchCsvUsage(email);
+
+        // バックグラウンドでサブスク有効性を再検証。失効していたらログアウト
+        fetch(`/api/subscription?email=${encodeURIComponent(email)}`)
+          .then((r) => r.json())
+          .then((data) => {
+            if (!data.active) {
+              clearSession();
+              setVerifiedEmail(null);
+              setAuthState("idle");
+            } else {
+              const currentKey = data.basePlan === "professional" || data.plan === "professional"
+                ? "professional"
+                : "standard";
+              if (currentKey !== key) {
+                setPlanKey(currentKey);
+                setPlanLabel(currentKey === "professional" ? "プロフェッショナル" : "スタンダード");
+                writeSession(JSON.stringify({ email, plan: currentKey }));
+              }
+            }
+          })
+          .catch(() => {
+            // 通信エラー時はキャッシュのまま継続
+          });
         return;
       } catch {
-        sessionStorage.removeItem(SESSION_KEY);
+        clearSession();
       }
     }
 
@@ -113,7 +163,7 @@ export default function DashboardContent() {
                   const plan = subData.plan || data.plan || "standard";
                   const key = plan === "professional" ? "professional" : "standard";
                   const label = key === "professional" ? "プロフェッショナル" : "スタンダード";
-                  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email: data.email, plan: key }));
+                  writeSession(JSON.stringify({ email: data.email, plan: key }));
                   setVerifiedEmail(data.email);
                   setPlanKey(key);
                   setPlanLabel(label);
@@ -125,7 +175,7 @@ export default function DashboardContent() {
                   const plan = data.plan || "standard";
                   const key = plan === "professional" ? "professional" : "standard";
                   const label = key === "professional" ? "プロフェッショナル" : "スタンダード";
-                  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email: data.email, plan: key }));
+                  writeSession(JSON.stringify({ email: data.email, plan: key }));
                   setVerifiedEmail(data.email);
                   setPlanKey(key);
                   setPlanLabel(label);
@@ -169,7 +219,7 @@ export default function DashboardContent() {
       if (data.active) {
         const key = data.plan === "professional" ? "professional" : "standard";
         const label = key === "professional" ? "プロフェッショナル" : "スタンダード";
-        sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email: gateEmail, plan: key }));
+        writeSession(JSON.stringify({ email: gateEmail, plan: key }));
         setVerifiedEmail(gateEmail);
         setPlanKey(key);
         setPlanLabel(label);
@@ -184,7 +234,7 @@ export default function DashboardContent() {
   }
 
   function handleLogout() {
-    sessionStorage.removeItem(SESSION_KEY);
+    clearSession();
     setVerifiedEmail(null);
     setGateEmail("");
     setGatePassword("");
