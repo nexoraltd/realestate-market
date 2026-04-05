@@ -10,6 +10,7 @@ import HowItWorks from "@/components/HowItWorks";
 import MapSection from "@/components/MapSection";
 import DetailedDataPreview from "@/components/DetailedDataPreview";
 import NewsletterForm from "@/components/NewsletterForm";
+import LineAddFriend from "@/components/LineAddFriend";
 
 export default function Home() {
   return (
@@ -213,6 +214,69 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ⑦-B 有料版の必要性セクション（無料版の限界 → 有料版の価値提案） */}
+      <section className="py-16 bg-gradient-to-b from-slate-900 to-slate-950 text-white">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="text-center mb-10">
+            <p className="text-xs font-bold uppercase tracking-widest text-amber-400 mb-2">
+              ✦ なぜ有料版が必要か ✦
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-white">
+              本気で判断したいなら、<br className="sm:hidden" />無料版では足りない場面があります
+            </h2>
+            <p className="text-slate-400 text-sm mt-3 max-w-2xl mx-auto">
+              無料版でも相場の概算は掴めます。ただし「いくらで売るべきか」「今買うべきか」を数字で決断するには、もう一歩深いデータが必要です。
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-5">
+            <div className="rounded-2xl border border-slate-700 bg-slate-800/40 p-6">
+              <div className="text-2xl mb-3">📊</div>
+              <h3 className="font-bold text-white mb-2">無料版の限界 #1<br />データ閲覧件数</h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                無料版では上位5〜10件の概要のみ。類似物件を網羅的に比較できません。価格交渉の根拠に弱い。
+              </p>
+            </div>
+            <div className="rounded-2xl border border-slate-700 bg-slate-800/40 p-6">
+              <div className="text-2xl mb-3">📉</div>
+              <h3 className="font-bold text-white mb-2">無料版の限界 #2<br />時系列トレンド</h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                過去5年の価格推移・ピークアウト検知はスタンダード以上のみ。「今売るべきか」の判断ができません。
+              </p>
+            </div>
+            <div className="rounded-2xl border border-slate-700 bg-slate-800/40 p-6">
+              <div className="text-2xl mb-3">📁</div>
+              <h3 className="font-bold text-white mb-2">無料版の限界 #3<br />CSV一括出力</h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                不動産会社との交渉・融資相談で「データを手元で並べる」ことができず、再調査のたびに時間を浪費します。
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 rounded-2xl border border-amber-500/40 bg-gradient-to-br from-amber-500/10 to-slate-900 p-6 text-center">
+            <p className="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2">
+              14日間 無料トライアル
+            </p>
+            <h3 className="text-xl font-bold text-white mb-2">
+              スタンダード ¥2,980/月 で全部解決
+            </h3>
+            <p className="text-sm text-slate-300 mb-5">
+              500万件超の実取引データ・過去5年トレンド・CSV一括出力・無制限検索が使い放題。<br />
+              レポート¥980×3エリア = ¥2,940、プランなら全エリア見放題で同じ価格です。
+            </p>
+            <Link
+              href="/register?plan=standard&interval=monthly"
+              className="inline-block rounded-xl bg-amber-500 px-10 py-3 text-base font-bold tracking-wide text-white shadow-lg shadow-amber-500/20 transition hover:bg-amber-400"
+            >
+              スタンダードを14日間無料で試す
+            </Link>
+            <p className="mt-3 text-xs text-slate-500">
+              ※トライアル中の解約で一切課金されません
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ⑧ 料金プラン */}
       <PricingSection />
 
@@ -303,10 +367,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ⑩ メルマガ */}
+      {/* ⑩ メルマガ + LINE */}
       <section className="py-12 bg-[#0f172a]">
-        <div className="max-w-lg mx-auto px-4">
+        <div className="max-w-2xl mx-auto px-4 space-y-4">
           <NewsletterForm dark />
+          <LineAddFriend variant="banner" />
         </div>
       </section>
 

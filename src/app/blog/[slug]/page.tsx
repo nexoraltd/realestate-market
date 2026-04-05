@@ -10,6 +10,8 @@ import Breadcrumb from '../components/Breadcrumb'
 import RelatedPosts from '../components/RelatedPosts'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import NewsletterForm from '@/components/NewsletterForm'
+import LineAddFriend from '@/components/LineAddFriend'
 
 const BASE_URL = 'https://market.next-aura.com'
 
@@ -186,6 +188,12 @@ export default async function BlogPostPage({ params }: Props) {
           {/* 関連記事 */}
           <RelatedPosts posts={relatedPosts} />
 
+          {/* メルマガ + LINE登録CTA */}
+          <div className="mt-12 space-y-4">
+            <NewsletterForm dark />
+            <LineAddFriend variant="banner" />
+          </div>
+
           {/* 下部CTA: AI査定 */}
           <div className="mt-16 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-8 text-center">
             <p className="mb-2 text-lg font-bold text-emerald-400">
@@ -202,28 +210,35 @@ export default async function BlogPostPage({ params }: Props) {
             </Link>
           </div>
 
-          {/* 下部CTA: プロ向け有料プラン */}
-          <div className="mt-6 rounded-xl border border-slate-700 bg-slate-800/50 p-8 text-center">
-            <p className="mb-2 text-lg font-bold text-amber-400">
-              不動産のプロ向け — もっと詳しいデータが必要ですか？
+          {/* 下部CTA: 有料プラン（/register 直リンでワンステップ削減） */}
+          <div className="mt-6 rounded-xl border border-amber-500/40 bg-gradient-to-br from-amber-500/10 to-slate-800/50 p-8 text-center">
+            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-amber-400">
+              14日間 無料トライアル
             </p>
-            <p className="mb-6 text-sm text-slate-400">
-              過去20年分の取引データ・CSV一括ダウンロード・トレンド分析。14日間無料トライアル。
+            <p className="mb-2 text-xl font-bold text-white">
+              このデータにアクセスしたい方へ
+            </p>
+            <p className="mb-6 text-sm text-slate-300">
+              500万件超の実取引データ・CSV一括ダウンロード・価格トレンド分析が使い放題。<br className="hidden sm:inline" />
+              今なら14日間、クレカ登録のみで無料。途中解約OK。
             </p>
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <Link
-                href="/pricing"
-                className="inline-block rounded-xl bg-amber-500 px-10 py-3 text-lg font-bold tracking-wide text-white transition hover:bg-amber-600"
+                href="/register?plan=standard&interval=monthly"
+                className="inline-block rounded-xl bg-amber-500 px-10 py-3 text-lg font-bold tracking-wide text-white shadow-lg shadow-amber-500/20 transition hover:bg-amber-400"
               >
-                プランを見る
+                スタンダード（¥2,980/月）を無料で試す
               </Link>
               <Link
-                href="/search"
-                className="inline-block rounded-xl border border-slate-600 px-10 py-3 text-lg font-bold tracking-wide text-slate-300 transition hover:border-amber-500 hover:text-amber-400"
+                href="/pricing"
+                className="inline-block rounded-xl border border-slate-600 px-6 py-3 text-sm font-medium text-slate-300 transition hover:border-amber-500 hover:text-amber-400"
               >
-                まず無料で検索
+                プラン比較を見る
               </Link>
             </div>
+            <p className="mt-4 text-xs text-slate-500">
+              ※トライアル中に解約すれば一切課金されません
+            </p>
           </div>
         </article>
       </div>

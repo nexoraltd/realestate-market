@@ -3,8 +3,11 @@ import Stripe from "stripe";
 import {
   sendCheckoutCompleteEmail,
   sendCancellationEmail,
+  sendCancellationToCustomerEmail,
   sendPaymentFailedEmail,
+  sendPaymentFailedToCustomerEmail,
   sendSetPasswordEmail,
+  sendTrialEndingEmail,
 } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
@@ -68,6 +71,12 @@ export async function POST(req: NextRequest) {
       console.log(`[webhook] サブスクリプション解約: ${sub.id}`);
       try {
         await sendCancellationEmail(sub.id);
+        // 顧客にも解約完了メールを送信
+        const customerId = sub.customer as string;
+        const customer = await stripe.customers.retrieve(customerId);
+        if (!customer.deleted && customer.email) {
+          await sendCancellationToCustomerEmail(customer.email);
+        }
       } catch (e) {
         console.error("[webhook] 解約通知メール送信失敗:", e);
       }
@@ -78,8 +87,28 @@ export async function POST(req: NextRequest) {
       console.log(`[webhook] 支払い失敗: ${invoice.id}`);
       try {
         await sendPaymentFailedEmail(invoice.id);
+        // 顧客にも支払い失敗を通知
+        if (invoice.customer_email) {
+          await sendPaymentFailedToCustomerEmail(invoice.customer_email);
+        }
       } catch (e) {
         console.error("[webhook] 支払い失敗通知メール送信失敗:", e);
+      }
+      break;
+    }
+    case "customer.subscription.trial_will_end": {
+      const sub = event.data.object as Stripe.Subscription;
+      console.log(`[webhook] トライアル終了予告: ${sub.id}`);
+      try {
+        const customerId = sub.customer as string;
+        const customer = await stripe.customers.retrieve(customerId);
+        if (!customer.deleted && customer.email && sub.trial_end) {
+          const trialEndDate = new Date(sub.trial_end * 1000).toLocaleDateString("ja-JP");
+          const plan = sub.items.data[0]?.price?.lookup_key || "standard";
+          await sendTrialEndingEmail(customer.email, plan, trialEndDate);
+        }
+      } catch (e) {
+        console.error("[webhook] トライアル終了予告メール送信失敗:", e);
       }
       break;
     }

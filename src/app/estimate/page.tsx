@@ -366,24 +366,10 @@ export default function EstimatePage() {
                 <div className="text-center mb-5">
                   <h3 className="font-bold text-lg mb-1">次のステップ</h3>
                   <p className="text-slate-400 text-sm">
-                    AI査定は過去データに基づく参考値です。実際の売却・購入判断は専門家にご相談ください。
+                    AI査定は過去データに基づく参考値です。さらに詳しい分析で判断材料を増やしましょう。
                   </p>
                 </div>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  <a
-                    href="/contact"
-                    className="flex items-center gap-3 bg-amber-500 hover:bg-amber-400 text-slate-900 rounded-xl p-4 transition group"
-                  >
-                    <div className="w-10 h-10 bg-amber-600/30 rounded-lg flex items-center justify-center shrink-0">
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="font-bold text-sm">無料で専門家に相談</p>
-                      <p className="text-[11px] opacity-80">売却・購入のプロがアドバイス</p>
-                    </div>
-                  </a>
+                <div className="grid sm:grid-cols-3 gap-3">
                   <a
                     href="/search"
                     className="flex items-center gap-3 bg-slate-700/60 hover:bg-slate-700 text-white border border-slate-600 rounded-xl p-4 transition group"
@@ -394,8 +380,36 @@ export default function EstimatePage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-bold text-sm">相場データを詳しく見る</p>
+                      <p className="font-bold text-sm">相場データを見る</p>
                       <p className="text-[11px] text-slate-400">エリアの取引事例を確認</p>
+                    </div>
+                  </a>
+                  <a
+                    href="/pricing"
+                    className="flex items-center gap-3 bg-amber-500 hover:bg-amber-400 text-slate-900 rounded-xl p-4 transition group"
+                  >
+                    <div className="w-10 h-10 bg-amber-600/30 rounded-lg flex items-center justify-center shrink-0">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm">詳細データで分析</p>
+                      <p className="text-[11px] opacity-80">14日間無料トライアル</p>
+                    </div>
+                  </a>
+                  <a
+                    href="/contact"
+                    className="flex items-center gap-3 bg-slate-700/60 hover:bg-slate-700 text-white border border-slate-600 rounded-xl p-4 transition group"
+                  >
+                    <div className="w-10 h-10 bg-slate-600/50 rounded-lg flex items-center justify-center shrink-0">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm">専門家に相談</p>
+                      <p className="text-[11px] text-slate-400">プロが無料でアドバイス</p>
                     </div>
                   </a>
                 </div>

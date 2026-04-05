@@ -141,6 +141,109 @@ export async function sendPasswordResetEmail(customerEmail: string, token: strin
   });
 }
 
+/** トライアル期限リマインド → 顧客に通知 (Stripe trial_will_end イベントから呼ばれる) */
+export async function sendTrialEndingEmail(customerEmail: string, plan: string, trialEndDate: string) {
+  const planLabel = plan === "professional" ? "プロフェッショナル" : "スタンダード";
+
+  await getResend().emails.send({
+    from: FROM,
+    to: customerEmail,
+    subject: `【ネクソラ不動産】無料トライアルが${trialEndDate}に終了します`,
+    html: `
+      <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:24px">
+        <h2 style="color:#1e293b">無料トライアルまもなく終了</h2>
+        <p>${planLabel}プランの無料トライアルが <strong>${trialEndDate}</strong> に終了します。</p>
+        <p>トライアル終了後は自動的に有料プラン（${planLabel}）に移行します。</p>
+        <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:16px;margin:20px 0">
+          <p style="margin:0;font-size:14px"><strong>このまま継続いただくと：</strong></p>
+          <ul style="margin:8px 0 0;padding-left:20px;font-size:14px;color:#475569">
+            <li>500万件超の実取引データに無制限アクセス</li>
+            <li>CSVダウンロード・トレンド分析を継続利用</li>
+            <li>エリア比較で投資判断をサポート</li>
+          </ul>
+        </div>
+        <p>解約をご希望の場合は、トライアル終了前にアカウント管理ページから手続きできます。</p>
+        <div style="margin-top:20px">
+          <a href="https://market.next-aura.com/dashboard"
+             style="display:inline-block;background:#f59e0b;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;margin-right:8px">
+            ダッシュボードを確認
+          </a>
+          <a href="https://market.next-aura.com/account"
+             style="display:inline-block;background:#e2e8f0;color:#475569;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold">
+            アカウント管理
+          </a>
+        </div>
+        <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0" />
+        <p style="color:#94a3b8;font-size:12px">
+          ご不明な点がございましたら info@next-aura.com までお気軽にご連絡ください。
+        </p>
+      </div>
+    `,
+  });
+}
+
+/** 支払い失敗 → 顧客に通知 */
+export async function sendPaymentFailedToCustomerEmail(customerEmail: string) {
+  await getResend().emails.send({
+    from: FROM,
+    to: customerEmail,
+    subject: "【ネクソラ不動産】お支払いに問題が発生しました",
+    html: `
+      <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:24px">
+        <h2 style="color:#1e293b">お支払いの更新をお願いします</h2>
+        <p>サブスクリプションの更新にお支払いが確認できませんでした。</p>
+        <p>お支払い情報を更新いただくことで、引き続きサービスをご利用いただけます。</p>
+        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:16px;margin:20px 0">
+          <p style="margin:0;font-size:14px;color:#991b1b">
+            お支払いが確認できない場合、データアクセスが制限される可能性があります。
+          </p>
+        </div>
+        <a href="https://market.next-aura.com/account"
+           style="display:inline-block;background:#1e293b;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:8px">
+          お支払い情報を更新する
+        </a>
+        <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0" />
+        <p style="color:#94a3b8;font-size:12px">
+          ご不明な点がございましたら info@next-aura.com までお気軽にご連絡ください。
+        </p>
+      </div>
+    `,
+  });
+}
+
+/** 解約完了 → 顧客に通知 */
+export async function sendCancellationToCustomerEmail(customerEmail: string) {
+  await getResend().emails.send({
+    from: FROM,
+    to: customerEmail,
+    subject: "【ネクソラ不動産】解約手続きが完了しました",
+    html: `
+      <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:24px">
+        <h2 style="color:#1e293b">解約手続きが完了しました</h2>
+        <p>サブスクリプションの解約を承りました。ご利用いただきありがとうございました。</p>
+        <p>現在の請求期間の終了まではサービスをご利用いただけます。</p>
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px;margin:20px 0">
+          <p style="margin:0;font-size:14px"><strong>引き続き無料でご利用いただけるサービス：</strong></p>
+          <ul style="margin:8px 0 0;padding-left:20px;font-size:14px;color:#475569">
+            <li>AI不動産査定</li>
+            <li>基本的な相場検索</li>
+            <li>ブログ記事・週刊メルマガ</li>
+          </ul>
+        </div>
+        <p style="font-size:14px">再度ご利用をご検討の際は、いつでもプランにお申し込みいただけます。</p>
+        <a href="https://market.next-aura.com/pricing"
+           style="display:inline-block;background:#f59e0b;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:8px">
+          プランを確認する
+        </a>
+        <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0" />
+        <p style="color:#94a3b8;font-size:12px">
+          ご不明な点がございましたら info@next-aura.com までお気軽にご連絡ください。
+        </p>
+      </div>
+    `,
+  });
+}
+
 /** お問い合わせフォーム → 管理者に通知 + 顧客に自動返信 */
 export async function sendContactEmail(params: {
   name: string;

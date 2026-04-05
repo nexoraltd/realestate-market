@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "realestate-market",
+      "name": "realestate-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--port", "3003"],
-      "port": 3003
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000
     }
   ]
 }

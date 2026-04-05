@@ -175,6 +175,42 @@ export default function ReportDownloadPage() {
               </p>
             </div>
           )}
+
+          {/* アップセル: スタンダードプランへの誘導 */}
+          {status === "success" && (
+            <div className="mt-10 rounded-2xl border-2 border-amber-500/50 bg-gradient-to-br from-amber-500/15 via-slate-800/70 to-slate-900 p-8 shadow-xl">
+              <div className="text-center">
+                <p className="mb-2 text-xs font-bold uppercase tracking-wider text-amber-400">
+                  レポートをご購入いただきありがとうございます
+                </p>
+                <h3 className="mb-3 text-2xl font-bold text-white">
+                  他のエリアも見たい / 継続的に分析したい方へ
+                </h3>
+                <p className="mb-6 text-sm text-slate-300">
+                  スタンダードプラン（¥2,980/月）なら、<strong className="text-amber-300">全エリアのレポートが見放題</strong>。<br className="hidden sm:inline" />
+                  CSV一括ダウンロード・無制限検索・価格トレンド分析も使い放題です。<br className="hidden sm:inline" />
+                  今なら14日間無料トライアルで、途中解約すれば一切課金されません。
+                </p>
+                <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+                  <a
+                    href="/register?plan=standard&interval=monthly"
+                    className="inline-block rounded-xl bg-amber-500 px-10 py-3 text-base font-bold tracking-wide text-white shadow-lg shadow-amber-500/30 transition hover:bg-amber-400"
+                  >
+                    スタンダードを14日間無料で試す
+                  </a>
+                  <a
+                    href="/pricing"
+                    className="inline-block rounded-xl border border-slate-600 px-6 py-3 text-sm font-medium text-slate-300 transition hover:border-amber-500 hover:text-amber-400"
+                  >
+                    プラン比較を見る
+                  </a>
+                </div>
+                <p className="mt-4 text-xs text-slate-500">
+                  ¥980 × 3エリア = ¥2,940。スタンダードプランは月¥2,980で全エリア見放題なので、3エリア以上見るなら断然お得です。
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <Footer />

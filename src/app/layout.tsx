@@ -12,7 +12,15 @@ export const metadata: Metadata = {
     "500万件の実取引データで不動産の真実を可視化。業界の常識ではなく数字で判断する、新しい不動産情報サービス。全47都道府県・20年分のデータを無料で検索。",
   keywords: ['不動産相場', '不動産データ', '不動産取引価格', '地価', 'マンション相場', '不動産分析', 'データ分析', '不動産投資', '売却相場', '購入相場'],
   icons: {
-    icon: "/favicon.svg",
+    icon: [
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
   openGraph: {
     type: 'website',
@@ -44,6 +52,7 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true },
   },
+  manifest: "/site.webmanifest",
   alternates: {
     canonical: BASE_URL,
   },

@@ -1,0 +1,68 @@
+[2026-04-02 00:43:18] Slot=morning, idx=0, len=98
+[2026-04-02 00:43:18] FAIL (attempt 1): 402 Payment Required
+Your enrolled account [2039365503458627584] does not have any credits to fulfill this request.
+[2026-04-02 00:43:18] FAIL (attempt 2): 402 Payment Required
+Your enrolled account [2039365503458627584] does not have any credits to fulfill this request.
+[2026-04-02 07:45:23] Slot=morning, idx=1, len=114
+[2026-04-02 07:45:24] OK (attempt 1): id=2039474232498008095
+[2026-04-02 07:45:34] Slot=morning, idx=2, len=126
+[2026-04-02 07:45:34] Slot=night, idx=0, len=88
+[2026-04-02 07:45:34] OK (attempt 1): id=2039474277922316540
+[2026-04-02 07:45:34] OK (attempt 1): id=2039474277892890924
+[2026-04-02 07:45:34] OK (attempt 1): id=2039474277955797012
+[2026-04-02 08:00:01] Slot=morning, idx=3, len=102
+[2026-04-02 08:00:01] FAIL (attempt 1): HTTPSConnectionPool(host='api.twitter.com', port=443): Max retries exceeded with url: /2/tweets (Caused by NameResolutionError("HTTPSConnection(host='api.twitter.com', port=443): Failed to resolve 'api.twitter.com' ([Errno 11001] getaddrinfo failed)"))
+[2026-04-02 08:00:01] FAIL (attempt 2): HTTPSConnectionPool(host='api.twitter.com', port=443): Max retries exceeded with url: /2/tweets (Caused by NameResolutionError("HTTPSConnection(host='api.twitter.com', port=443): Failed to resolve 'api.twitter.com' ([Errno 11001] getaddrinfo failed)"))
+[2026-04-02 08:03:27] Slot=noon, idx=0, len=98
+13
+[2026-04-02 08:03:27] FAIL (attempt 1): 403 Forbidden
+You are not allowed to create a Tweet with duplicate content.
+[2026-04-02 08:03:27] OK (attempt 1): id=2039478790888534048
+[2026-04-02 08:03:28] FAIL (attempt 2): 403 Forbidden
+You are not allowed to create a Tweet with duplicate content.
+[2026-04-02 08:03:28] FAIL (attempt 2): 403 Forbidden
+You are not allowed to create a Tweet with duplicate content.
+[2026-04-02 12:30:00] Slot=noon, idx=1, len=98
+[2026-04-02 12:30:01] OK (attempt 1): id=2039545867573850187
+[2026-04-02 12:56:16] Slot=noon, idx=2, len=98
+13
+[2026-04-02 12:56:16] Slot=night, PREMIUM idx=0, len=118
+[2026-04-02 12:56:17] FAIL (attempt 1): 403 Forbidden
+You are not allowed to create a Tweet with duplicate content.
+[2026-04-02 12:56:17] OK (attempt 1): id=2039552478585442437
+[2026-04-02 12:56:17] OK (attempt 1): id=2039552478581281270
+[2026-04-02 12:56:17] FAIL (attempt 2): 403 Forbidden
+You are not allowed to create a Tweet with duplicate content.
+[2026-04-02 20:00:00] Slot=night, PREMIUM idx=0, len=118
+[2026-04-02 20:00:00] FAIL (attempt 1): 403 Forbidden
+You are not allowed to create a Tweet with duplicate content.
+[2026-04-02 20:00:01] FAIL (attempt 2): 403 Forbidden
+You are not allowed to create a Tweet with duplicate content.
+[2026-04-03 08:00:00] Slot=morning, idx=5, len=144
+[2026-04-03 08:00:01] OK (attempt 1): id=2039840291323335133
+[2026-04-03 12:30:00] Slot=noon, idx=2, len=98
+[2026-04-03 12:30:01] OK (attempt 1): id=2039908233746477166
+[2026-04-04 02:38:34] Slot=noon, idx=3, len=93
+1, len=112
+[2026-04-04 02:38:34] OK (attempt 1): id=2040121813196530114
+[2026-04-04 02:38:34] OK (attempt 1): id=2040121813209080192
+[2026-04-04 02:38:34] OK (attempt 1): id=2040121813259452546
+[2026-04-04 08:00:00] Slot=morning, idx=7, len=127
+[2026-04-04 08:00:00] OK (attempt 1): id=2040202699137007915
+[2026-04-04 12:30:00] Slot=noon, idx=3, len=93
+[2026-04-04 12:30:01] FAIL (attempt 1): 403 Forbidden
+You are not allowed to create a Tweet with duplicate content.
+[2026-04-04 12:30:01] FAIL (attempt 2): 403 Forbidden
+You are not allowed to create a Tweet with duplicate content.
+[2026-04-04 20:00:00] Slot=night, idx=1, len=101
+[2026-04-04 20:00:02] OK (attempt 1): id=2040383888447754332
+[2026-04-05 11:27:28] Slot=morning, idx=8, len=129
+[2026-04-05 11:27:30] OK (attempt 1): id=2040617311103754445
+[2026-04-05 12:29:54] Slot=noon, idx=4, len=91
+[2026-04-05 12:29:54] OK (attempt 1): id=2040633017753129003
+[2026-04-05 12:30:00] Slot=noon, idx=5, len=87
+[2026-04-05 12:30:01] OK (attempt 1): id=2040633043061514390
+[2026-04-05 19:59:53] Slot=night, idx=2, len=99
+[2026-04-05 19:59:53] OK (attempt 1): id=2040746252120596490
+[2026-04-05 20:00:00] Slot=night, PREMIUM idx=2, len=124
+[2026-04-05 20:00:01] OK (attempt 1): id=2040746281543643637
