@@ -37,10 +37,10 @@ export default function LineAddFriend({ variant = "banner" }: LineAddFriendProps
         </div>
         <div className="flex-1">
           <h3 className="font-bold text-sm text-slate-800 mb-1">
-            LINE で最新の相場情報を受け取る
+            LINE で友だち追加
           </h3>
           <p className="text-xs text-slate-500 mb-3">
-            週1回、エリア別の相場速報・注目データをLINEでお届け。無料・いつでもブロック可能。
+            相場情報・AI査定・お役立ちツールに簡単アクセス。無料・いつでもブロック可能。
           </p>
           <a
             href={lineUrl}

@@ -46,7 +46,7 @@ export default function NewsletterForm({ dark = false }: NewsletterFormProps) {
         </svg>
         <p className={`font-bold ${dark ? "text-white" : "text-slate-800"}`}>登録完了</p>
         <p className={`text-sm mt-1 ${dark ? "text-slate-400" : "text-slate-600"}`}>
-          確認メールをお送りしました。週刊レポートをお届けします。
+          確認メールをお送りしました。季刊レポートをお届けします。
         </p>
       </div>
     );
@@ -62,10 +62,10 @@ export default function NewsletterForm({ dark = false }: NewsletterFormProps) {
         </div>
         <div>
           <h3 className={`font-bold text-sm ${dark ? "text-white" : "text-slate-800"}`}>
-            週刊 不動産相場レポート
+            季刊 不動産相場レポート
           </h3>
           <p className={`text-xs mt-0.5 ${dark ? "text-slate-400" : "text-slate-500"}`}>
-            エリア別の相場動向・注目データを毎週無料でお届け
+            四半期ごとの最新相場データ・トレンド分析を無料でお届け
           </p>
         </div>
       </div>

@@ -36,9 +36,9 @@ SCRIPT_DIR = Path(__file__).parent
 SUBSCRIBERS_FILE = SCRIPT_DIR / "subscribers.json"
 LOG_FILE = SCRIPT_DIR / "send_weekly.log"
 
-RESEND_API_KEY = os.getenv("RESEND_API_KEY", "re_RjFayddS_PATYavSHzQgrUpVH3ZoSNsqD")
-REINFOLIB_API_KEY = os.getenv("REINFOLIB_API_KEY", "358076db69594cbbb9b279f88f23e41a")
-INTERNAL_API_SECRET = os.getenv("INTERNAL_API_SECRET", "c4d0067e90dbca89d5130d6d387a7f93ce955e1716875611837f47d403302860")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
+REINFOLIB_API_KEY = os.getenv("REINFOLIB_API_KEY", "")
+INTERNAL_API_SECRET = os.getenv("INTERNAL_API_SECRET", "")
 FROM_EMAIL = "ネクソラ不動産 <noreply@next-aura.com>"
 ADMIN_EMAIL = "admin@next-aura.com"
 SITE_URL = "https://market.next-aura.com"
