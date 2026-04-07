@@ -23,12 +23,7 @@ export default function Header() {
     >
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M3 12L12 3L21 12" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M5 10V20C5 20.5523 5.44772 21 6 21H18C18.5523 21 19 20.5523 19 20V10" stroke="white" strokeWidth="2" />
-            </svg>
-          </div>
+          <img src="/logo.jpg" alt="不動産相場ナビ" className="w-8 h-8 rounded-lg shadow-lg" />
           <div>
             <span className="text-white font-bold text-base tracking-tight">
               不動産相場ナビ
