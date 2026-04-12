@@ -55,7 +55,7 @@ export default function Header() {
           <Link href="/blog" className="text-slate-300 hover:text-white transition font-medium">
             コラム
           </Link>
-          <Link href="/pricing" className="text-slate-300 hover:text-white transition font-medium">
+          <Link href="/pricing" className="text-amber-400 hover:text-amber-300 transition font-bold">
             料金
           </Link>
           <Link href="/dashboard" className="text-slate-300 hover:text-white transition font-medium">
