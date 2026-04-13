@@ -295,8 +295,18 @@ export default function EstimatePage() {
 
           {/* Error */}
           {error && (
-            <div className="bg-red-900/30 border border-red-700/50 rounded-xl p-4 mb-8 text-red-300 text-sm">
+            <div className={`rounded-xl p-4 mb-8 text-sm ${error.includes("上限") || error.includes("アップグレード") ? "bg-amber-900/30 border border-amber-700/50 text-amber-300" : "bg-red-900/30 border border-red-700/50 text-red-300"}`}>
               {error}
+              {(error.includes("上限") || error.includes("アップグレード")) && (
+                <div className="mt-3">
+                  <a
+                    href="/register?plan=standard&interval=monthly"
+                    className="inline-block bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold text-xs px-5 py-2 rounded-lg transition"
+                  >
+                    14日間無料で試す →
+                  </a>
+                </div>
+              )}
             </div>
           )}
 
@@ -455,9 +465,15 @@ export default function EstimatePage() {
                       <div>
                         <ScoreBreakdown breakdown={result.assetScore.breakdown} />
                         {tier === "free" && (
-                          <p className="text-[10px] text-amber-500/70 mt-4 text-center">
-                            無料プラン: AI査定は月1回まで
-                          </p>
+                          <div className="mt-4 text-center bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
+                            <p className="text-xs text-amber-400 font-semibold mb-1">無料プラン: AI査定は月1回まで</p>
+                            <a
+                              href="/register?plan=standard&interval=monthly"
+                              className="inline-block text-xs bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-4 py-1.5 rounded-lg transition"
+                            >
+                              無制限プランへ（14日間無料）
+                            </a>
+                          </div>
                         )}
                       </div>
                     )}
@@ -493,7 +509,7 @@ export default function EstimatePage() {
                     </div>
                   </a>
                   <a
-                    href="/pricing"
+                    href="/register?plan=standard&interval=monthly"
                     className="flex items-center gap-3 bg-amber-500 hover:bg-amber-400 text-slate-900 rounded-xl p-4 transition group"
                   >
                     <div className="w-10 h-10 bg-amber-600/30 rounded-lg flex items-center justify-center shrink-0">
@@ -502,8 +518,8 @@ export default function EstimatePage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-bold text-sm">詳細データで分析</p>
-                      <p className="text-[11px] opacity-80">14日間無料トライアル</p>
+                      <p className="font-bold text-sm">毎月無制限で査定</p>
+                      <p className="text-[11px] opacity-80">¥2,980/月 · 14日間無料</p>
                     </div>
                   </a>
                   <a
