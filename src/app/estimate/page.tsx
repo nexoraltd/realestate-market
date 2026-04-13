@@ -1,14 +1,31 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ShareBar from "@/components/ShareBar";
+import AssetScoreGauge from "@/components/AssetScoreGauge";
+import ScoreBreakdown from "@/components/ScoreBreakdown";
+import TierGate from "@/components/TierGate";
+import FreeRegisterForm from "@/components/FreeRegisterForm";
+import { useTier } from "@/hooks/useTier";
 import { PREFECTURES } from "@/lib/prefectures";
+
+const FuturePriceChart = dynamic(() => import("@/components/FuturePriceChart"), {
+  ssr: false,
+  loading: () => <div className="h-80 bg-slate-800/50 rounded-2xl animate-pulse" />,
+});
 
 interface City {
   id: string;
   name: string;
+}
+
+interface ScoreFactor {
+  score: number;
+  label: string;
+  weight: number;
 }
 
 interface EstimateResult {
@@ -27,6 +44,16 @@ interface EstimateResult {
     stationMin: string | null;
     floorPlan: string | null;
   }[];
+  prediction: {
+    historicalTrend: { year: number; avgPricePerSqm: number; totalPrice: number }[];
+    annualGrowthRate: { pessimistic: number; standard: number; optimistic: number };
+    forecast: { year: number; pessimistic: number; standard: number; optimistic: number }[];
+  };
+  assetScore: {
+    total: number;
+    grade: string;
+    breakdown: Record<string, ScoreFactor>;
+  };
 }
 
 function fmtPrice(yen: number): string {
@@ -44,6 +71,7 @@ function fmtPricePerSqm(yen: number): string {
 }
 
 export default function EstimatePage() {
+  const { tier, email } = useTier();
   const [type, setType] = useState("mansion");
   const [prefCode, setPrefCode] = useState("");
   const [cityCode, setCityCode] = useState("");
@@ -86,11 +114,16 @@ export default function EstimatePage() {
           buildingAge: buildingAge ? parseInt(buildingAge, 10) : undefined,
           stationMin: stationMin ? parseInt(stationMin, 10) : -1,
           floorPlan: floorPlan || undefined,
+          email: email || undefined,
         }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.message || data.error || "エラーが発生しました");
+        if (res.status === 429) {
+          setError(data.message || "月間利用上限に達しました。スタンダードプランにアップグレードすると無制限でご利用いただけます。");
+        } else {
+          setError(data.message || data.error || "エラーが発生しました");
+        }
       } else {
         setResult(data);
       }
@@ -121,7 +154,7 @@ export default function EstimatePage() {
               あなたの物件、<span className="text-amber-400">今いくら？</span>
             </h1>
             <p className="text-slate-400 text-sm md:text-base max-w-xl mx-auto">
-              国土交通省の実取引データ（直近2年）をもとに、類似物件の成約価格から推定価格レンジを算出します。登録不要・完全無料。
+              国土交通省の実取引データ（直近5年）をもとに、推定価格・将来予測・資産性スコアをAIが算出。登録不要・完全無料。
             </p>
           </div>
 
@@ -313,11 +346,11 @@ export default function EstimatePage() {
 
                 <div className="flex items-center justify-between mt-4">
                   <p className="text-xs text-slate-500 leading-relaxed flex-1">
-                    ※ 国土交通省「不動産情報ライブラリ」の直近2年間の実取引データに基づく統計的推定です。
+                    ※ 国土交通省「不動産情報ライブラリ」の直近5年間の実取引データに基づく統計的推定です。
                   </p>
                   <ShareBar
                     path="/estimate"
-                    text={`AI不動産査定の結果: ${fmtPrice(result.estimate.mid)}（${PREFECTURES.find(p => p.code === prefCode)?.name || ""}）`}
+                    text={`AI不動産査定: 推定${fmtPrice(result.estimate.mid)}・資産性スコア${result.assetScore?.total ?? ""}点（${PREFECTURES.find(p => p.code === prefCode)?.name || ""}）不動産相場ナビで無料査定 #不動産査定 #不動産`}
                     dark
                   />
                 </div>
@@ -358,6 +391,81 @@ export default function EstimatePage() {
                       </tbody>
                     </table>
                   </div>
+                </div>
+              )}
+
+              {/* Future Price Prediction */}
+              {result.prediction && result.prediction.historicalTrend.length >= 2 && (
+                <>
+                  {tier === "guest" ? (
+                    <>
+                      {/* Guest: show 1yr only + registration CTA */}
+                      <FuturePriceChart
+                        historicalTrend={result.prediction.historicalTrend}
+                        forecast={result.prediction.forecast.slice(0, 1)}
+                        annualGrowthRate={result.prediction.annualGrowthRate}
+                        currentEstimate={result.estimate.mid}
+                      />
+                      <div className="bg-slate-800/50 border border-amber-500/20 rounded-2xl p-6">
+                        <div className="text-center mb-4">
+                          <p className="text-amber-400 text-sm font-bold mb-1">10年後までの予測を見るには</p>
+                          <p className="text-slate-400 text-xs">無料会員登録で10年後まで予測 + 資産性スコア内訳が見られます（月1回）</p>
+                        </div>
+                        <FreeRegisterForm />
+                      </div>
+                    </>
+                  ) : (
+                    /* Free & Paid: show full 10yr */
+                    <FuturePriceChart
+                      historicalTrend={result.prediction.historicalTrend}
+                      forecast={result.prediction.forecast}
+                      annualGrowthRate={result.prediction.annualGrowthRate}
+                      currentEstimate={result.estimate.mid}
+                    />
+                  )}
+                </>
+              )}
+
+              {/* Asset Score — tiered */}
+              {result.assetScore && (
+                <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 md:p-8">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2 h-6 rounded-full bg-gradient-to-b from-emerald-400 to-blue-500" />
+                    <h2 className="text-lg font-bold text-white">資産性スコア</h2>
+                    <span className="ml-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                      独自指標
+                    </span>
+                  </div>
+                  <p className="text-slate-500 text-xs mb-6">
+                    5つの因子から総合的に資産価値を評価。スコアが高いほど将来的な資産性が期待できます。
+                  </p>
+
+                  <div className="grid md:grid-cols-2 gap-8 items-start">
+                    {/* Gauge always visible */}
+                    <AssetScoreGauge
+                      total={result.assetScore.total}
+                      grade={result.assetScore.grade}
+                    />
+                    {/* Breakdown: gated for guest, full for free+ */}
+                    {tier === "guest" ? (
+                      <TierGate currentTier="guest" requiredTier="free" ctaText="無料登録でスコア内訳を見る">
+                        <ScoreBreakdown breakdown={result.assetScore.breakdown} />
+                      </TierGate>
+                    ) : (
+                      <div>
+                        <ScoreBreakdown breakdown={result.assetScore.breakdown} />
+                        {tier === "free" && (
+                          <p className="text-[10px] text-amber-500/70 mt-4 text-center">
+                            無料プラン: AI査定は月1回まで
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <p className="text-[10px] text-slate-600 mt-6 leading-relaxed">
+                    ※ 過去の取引データに基づく統計的評価であり、将来の資産価値を保証するものではありません。投資判断は自己責任でお願いします。
+                  </p>
                 </div>
               )}
 

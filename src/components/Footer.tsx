@@ -7,12 +7,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-7 h-7 rounded-md bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                  <path d="M3 12L12 3L21 12" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M5 10V20C5 20.5523 5.44772 21 6 21H18C18.5523 21 19 20.5523 19 20V10" stroke="white" strokeWidth="2" />
-                </svg>
-              </div>
+              <img src="/logo.jpg" alt="不動産相場ナビ" className="w-8 h-8 rounded-lg shadow-lg" />
               <span className="font-bold">不動産相場ナビ</span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">

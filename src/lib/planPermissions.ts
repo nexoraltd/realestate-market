@@ -31,8 +31,8 @@ const PERMISSIONS: Record<PlanKey, PlanPermissions> = {
     teamAccount: false,
     teamMaxMembers: 0,
     trendAccess: true,
-    trendYears: 20,
-    dataYears: 20,
+    trendYears: 2,
+    dataYears: 5,
   },
   professional: {
     csvMonthlyLimit: -1, // 無制限

@@ -60,9 +60,10 @@ export async function POST(req: NextRequest) {
     );
 
     if (!activeSub) {
+      // No active subscription — return as free member
       return NextResponse.json({
-        active: false,
-        plan: null,
+        active: true,
+        plan: "free",
         customer_id: customer.id,
         trial: false,
         current_period_end: null,

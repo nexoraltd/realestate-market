@@ -1,0 +1,78 @@
+{
+  "note": "X API Free TierではGET検索が403になるため、手動フォロー用ターゲットリスト",
+  "strategy": "以下カテゴリのインフルエンサーをフォローし、そのフォロワーに露出を増やす",
+  "target_categories": [
+    {
+      "category": "不動産投資インフルエンサー",
+      "keywords": ["不動産投資", "FIRE", "資産形成", "ワンルーム投資"],
+      "follow_their_followers": true,
+      "rationale": "不動産投資層は購買意欲が高く、相場データへの需要が大きい"
+    },
+    {
+      "category": "住宅購入系インフルエンサー",
+      "keywords": ["マイホーム", "注文住宅", "マンション購入", "住宅ローン"],
+      "follow_their_followers": true,
+      "rationale": "初めてのマイホーム購入者は不動産相場データを積極的に検索"
+    },
+    {
+      "category": "不動産会社・エージェント",
+      "keywords": ["不動産屋", "仲介", "宅建", "不動産営業"],
+      "follow_their_followers": false,
+      "rationale": "B2C層ではなくB2B。ただしそのフォロワーには不動産関心層が多い可能性"
+    },
+    {
+      "category": "ファイナンシャルプランナー",
+      "keywords": ["FP", "ファイナンシャルプランナー", "資産運用", "住宅ローン相談"],
+      "follow_their_followers": true,
+      "rationale": "資産運用層は相場情報による意思決定を重視"
+    },
+    {
+      "category": "家計管理・貯金系インフルエンサー",
+      "keywords": ["貯金", "家計管理", "家計簿", "貯蓄"],
+      "follow_their_followers": true,
+      "rationale": "マイホーム購入資金計画の段階で相場調査が必要"
+    },
+    {
+      "category": "不動産関連メディア・ブログ",
+      "keywords": ["不動産ニュース", "住宅情報", "相場分析", "不動産市場"],
+      "follow_their_followers": false,
+      "rationale": "メディアのフォロワーは既に情報収集中の層"
+    }
+  ],
+  "daily_follow_limit": 50,
+  "follow_back_check_days": 3,
+  "follow_back_rate_target": "15-25%",
+  "unfollow_non_followers_days": 14,
+  "manual_search_urls": [
+    "https://twitter.com/search?q=%E4%B8%8D%E5%8B%95%E7%94%A3%E6%8A%95%E8%B3%87&f=user",
+    "https://twitter.com/search?q=%E3%83%9E%E3%82%A4%E3%83%9B%E3%83%BC%E3%83%A0+%E8%B3%BC%E5%85%A5&f=user",
+    "https://twitter.com/search?q=%E4%BD%8F%E5%AE%85%E3%83%AD%E3%83%BC%E3%83%B3&f=user",
+    "https://twitter.com/search?q=FIRE+%E8%B3%87%E7%94%A3%E5%BD%A2%E6%88%90&f=user",
+    "https://twitter.com/search?q=%E4%B8%8D%E5%8B%95%E7%94%A3%E7%9B%B8%E5%A0%B4&f=user",
+    "https://twitter.com/search?q=%E9%81%8B%E7%94%A8%E4%B8%AD%E4%BD%8F%E5%AE%85&f=user"
+  ],
+  "engagement_strategy": {
+    "type": "営業コメント（提供価値型）",
+    "approach": "キーワード検索 → 関連ツイートに「相場データ活用法」を提案するリプライ",
+    "example_reply_templates": [
+      "その物件、本当にお得？国交省データと比較してみた方が安心ですよ👇",
+      "マイホーム購入の検討中ですか？ちなみに駅距離と価格の関係をデータで見ると...",
+      "不動産投資のエリア選定なら、過去20年分の相場トレンドを見てから決めた方が確実です👇"
+    ],
+    "daily_engagement_target": 10
+  },
+  "content_optimization": {
+    "hashtags_to_add": ["#不動産相場", "#マイホーム", "#不動産投資"],
+    "posting_times": ["8:13", "12:30", "19:45"],
+    "engagement_window": "投稿後2-4時間でリプライ営業"
+  },
+  "measurement_kpi": {
+    "primary": "月間フォロワー+100人",
+    "secondary": [
+      "フォローバック率 15-25%",
+      "ウェブサイトクリック数 月間+30",
+      "メルマガ登録 月間+15"
+    ],
+    "tracking_period": "2週間単位でPDCA回転"
+  }
+}

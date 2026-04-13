@@ -8,6 +8,7 @@ import PaywallOverlay from "@/components/PaywallOverlay";
 import ShareBar from "@/components/ShareBar";
 import { PREFECTURES } from "@/lib/prefectures";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import { useTier } from "@/hooks/useTier";
 
 interface Transaction {
   Type: string;
@@ -50,7 +51,12 @@ const QUARTER_LABELS: Record<string, string> = {
   "4": "第4四半期 (10-12月)",
 };
 
-const FREE_LIMIT = 5;
+const TIER_LIMITS: Record<string, number> = {
+  guest: 5,
+  free: 20,
+  standard: 9999,
+  professional: 9999,
+};
 
 const PRICE_RANGES = [
   { label: "全て", min: 0, max: Infinity },
@@ -71,6 +77,8 @@ const BUILDING_AGE_RANGES = [
 ];
 
 export default function SearchResults() {
+  const { tier } = useTier();
+  const FREE_LIMIT = TIER_LIMITS[tier] || 5;
   const params = useSearchParams();
   const area = params.get("area");
   const city = params.get("city");

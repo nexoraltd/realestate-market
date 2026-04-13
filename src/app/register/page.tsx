@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import LegalNotice from "@/components/LegalNotice";
+import FreeRegisterForm from "@/components/FreeRegisterForm";
 import { plans } from "@/lib/plans";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -38,7 +39,9 @@ export default async function RegisterPage({
             ご利用登録・お申し込み
           </h1>
           <p className="text-slate-400 text-base">
-            クレジットカードで即時開通。14日間は無料でお試しいただけます。
+            {selectedPlanKey === "free"
+              ? "メールアドレスの登録だけで、すぐにご利用いただけます。"
+              : "クレジットカードで即時開通。14日間は無料でお試しいただけます。"}
           </p>
         </div>
       </section>
@@ -46,7 +49,25 @@ export default async function RegisterPage({
       {/* Plan Selection / Checkout */}
       <section className="py-12 md:py-16 bg-slate-50">
         <div className="max-w-4xl mx-auto px-4">
-          {selectedPlan ? (
+          {selectedPlanKey === "free" ? (
+            <div className="max-w-md mx-auto">
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
+                <h2 className="text-xl font-bold text-slate-800 mb-2">無料会員登録</h2>
+                <p className="text-sm text-slate-500 mb-6">
+                  メールアドレスとパスワードを入力して登録してください。クレジットカードは不要です。
+                </p>
+                <div className="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-100">
+                  <p className="text-xs text-slate-500 mb-2 font-medium">無料プランに含まれる機能</p>
+                  <ul className="space-y-1.5 text-sm text-slate-700">
+                    <li className="flex items-center gap-2"><span className="text-emerald-500">&#10003;</span>AI査定 月1回（10年予測+スコア内訳付き）</li>
+                    <li className="flex items-center gap-2"><span className="text-emerald-500">&#10003;</span>相場検索 月3回</li>
+                    <li className="flex items-center gap-2"><span className="text-emerald-500">&#10003;</span>取引事例 5件まで表示</li>
+                  </ul>
+                </div>
+                <FreeRegisterForm dark={false} />
+              </div>
+            </div>
+          ) : selectedPlan ? (
             <div className="grid lg:grid-cols-5 gap-8">
               {/* Left: Checkout */}
               <div className="lg:col-span-3">

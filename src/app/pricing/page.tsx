@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "無料プランで何ができますか？",
-    a: "都道府県別の相場サマリー、直近1四半期のデータ閲覧、取引事例5件までの表示が可能です。まずは無料でお試しください。",
+    a: "AI査定（10年予測+資産性スコア5因子内訳）が月1回、相場検索が月3回ご利用いただけます。メールアドレスの登録だけで、クレジットカードは不要です。",
   },
   {
     q: "プランの変更はいつでもできますか？",
@@ -75,7 +75,7 @@ const jsonLd = {
     {
       "@type": "Product",
       name: "不動産相場ナビ スタンダードプラン",
-      description: "全国の詳細取引データ、過去20年分のデータ閲覧、CSVダウンロード、相場トレンド分析が利用可能。",
+      description: "AI査定無制限、将来価格予測10年後まで、資産性スコア5因子内訳、相場検索無制限（20件表示）、2年分トレンド分析、CSVダウンロード月100件が利用可能。",
       brand: { "@type": "Organization", name: "ネクソラ不動産" },
       offers: [
         {
@@ -227,7 +227,7 @@ export default function PricingPage() {
           <p className="text-slate-300 mb-8 leading-relaxed">
             スタンダードプランの全機能を14日間無料でお試しいただけます。
             <br className="hidden md:block" />
-            クレジットカード不要。いつでもキャンセル可能です。
+            トライアル中の解約で一切課金されません。いつでもキャンセル可能です。
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

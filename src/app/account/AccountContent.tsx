@@ -75,9 +75,12 @@ export default function AccountContent() {
         setSub(data);
         setStep("found");
         // dashboard と共通のセッションに保存
-        const planKey = data.basePlan === "professional" || data.plan === "professional"
-          ? "professional"
-          : "standard";
+        let planKey = "free";
+        if (data.basePlan === "professional" || data.plan === "professional") {
+          planKey = "professional";
+        } else if (data.basePlan === "standard" || data.plan?.startsWith("standard")) {
+          planKey = "standard";
+        }
         try {
           localStorage.setItem(
             SESSION_KEY,

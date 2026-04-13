@@ -51,9 +51,12 @@ export async function GET(req: NextRequest) {
     );
 
     if (!activeSub) {
+      // Customer exists but no subscription — free member
       return NextResponse.json({
-        active: false,
-        plan: null,
+        active: true,
+        plan: "free",
+        basePlan: "free",
+        interval: null,
         customer_id: customer.id,
         trial: false,
         current_period_end: null,

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getTransactions } from "@/lib/api";
 import { checkApiAuth } from "@/lib/apiAuth";
 import { STRIPE_PRICE_IDS } from "@/lib/plans";
+import { checkAndIncrementUsage } from "@/lib/usageLimit";
 import Stripe from "stripe";
 
 async function resolvePlan(email: string): Promise<string | null> {
@@ -50,6 +51,21 @@ export async function GET(request: NextRequest) {
       { error: "area or city is required" },
       { status: 400 }
     );
+  }
+
+  // Usage limit check for free members (monthly limit: 3 searches)
+  if (email) {
+    const { result: usage } = await checkAndIncrementUsage(email, "search", {
+      free: 3,    // free members: 3 searches/month
+      guest: 999, // guests: unlimited (gated by frontend)
+    });
+    if (!usage.allowed) {
+      return NextResponse.json({
+        error: "月間利用上限",
+        message: `無料プランの相場検索は月${usage.limit}回までです。スタンダードプランにアップグレードすると無制限でご利用いただけます。`,
+        usage,
+      }, { status: 429 });
+    }
   }
 
   // フリーユーザーは直近1四半期のみ許可

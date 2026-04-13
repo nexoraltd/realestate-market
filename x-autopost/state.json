@@ -1,6 +1,6 @@
 {
-  "morning_idx": 9,
-  "noon_idx": 6,
-  "night_idx": 4,
-  "premium_idx": 3
+  "morning_idx": 4,
+  "noon_idx": 1,
+  "night_idx": 0,
+  "premium_idx": 2
 }

@@ -74,30 +74,6 @@ export function PlanCTA({
   )
 }
 
-/* -- 姉妹サイト紹介: AI占い（風水・吉日） -- */
-export function SisterSiteCTA() {
-  return (
-    <div className="my-10 rounded-xl border border-purple-500/30 bg-gradient-to-br from-purple-900/30 to-slate-900/60 p-6">
-      <p className="mb-2 text-xs font-bold uppercase tracking-wider text-purple-300">
-        ✦ 姉妹サイト ✦
-      </p>
-      <p className="mb-2 text-lg font-bold text-white">
-        引っ越し日・方角・間取りは占いでも判断できます
-      </p>
-      <p className="mb-4 text-sm text-slate-300">
-        四柱推命×ホロスコープのAI占いで、あなたの運気に合った引っ越し日・方角・風水をチェック。会員登録不要・無料で使えます。
-      </p>
-      <a
-        href="https://ai-fortune-app-drab.vercel.app/lp/moving-date"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block rounded-xl border border-purple-400 bg-purple-500/20 px-6 py-2 text-sm font-bold text-purple-200 transition hover:bg-purple-500/30"
-      >
-        星詠みの館 — 吉日カレンダーを見る →
-      </a>
-    </div>
-  )
-}
 
 /* -- CTA: お問い合わせ誘導 -- */
 export function ConsultCTA({
@@ -138,7 +114,6 @@ export const mdxComponents = {
   MovingDateCTA,
   ConsultCTA,
   PlanCTA,
-  SisterSiteCTA,
   InfoBox,
   h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h2
