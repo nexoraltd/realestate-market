@@ -37,6 +37,9 @@ NOON_TEMPLATES = [
     "【新着記事】\n賃貸相場の調べ方｜家賃の適正価格を知る5つの方法\nhttps://market.next-aura.com/blog/chintai-souba-shiraberu\n\n#賃貸 #家賃 #不動産",
     "【新着記事】\n一戸建ての相場を調べる方法まとめ\nhttps://market.next-aura.com/blog/kodate-souba-shiraberu\n\n#一戸建て #不動産 #マイホーム",
     "【新着記事】\n不動産査定サイト比較2026｜無料で使えるおすすめ6選\nhttps://market.next-aura.com/blog/fudousan-satei-site-hikaku\n\n#不動産査定 #不動産 #無料査定",
+    "【新着記事】\n不動産投資初心者ガイド｜失敗しない物件選び・利回り計算・リスク管理\nhttps://market.next-aura.com/blog/fudousan-toshi-shoshinsha-guide\n\n#不動産投資 #初心者 #利回り #投資",
+    "【新着記事】\nマンション売却タイミングの見極め方2026｜相場・築年数・市況から判断する\nhttps://market.next-aura.com/blog/mansion-urikata-jiiki-hikaku\n\n#マンション売却 #売り時 #不動産相場",
+    "【新着記事】\n住宅ローン比較2026｜固定vs変動・おすすめ銀行・借り換えのポイント\nhttps://market.next-aura.com/blog/jutaku-loan-hikaku-2026\n\n#住宅ローン #固定金利 #変動金利 #マイホーム",
 ]
 
 NIGHT_TEMPLATES = [
