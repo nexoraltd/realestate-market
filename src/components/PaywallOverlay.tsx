@@ -23,14 +23,15 @@ export default function PaywallOverlay({
             </svg>
           </div>
           <p className="font-bold text-slate-800 mb-1">{feature}</p>
-          <p className="text-sm text-slate-500 mb-3">
+          <p className="text-sm text-slate-500 mb-1">
             スタンダードプラン以上でご利用いただけます
           </p>
+          <p className="text-xs text-slate-400 mb-3">¥2,980/月 · 14日間無料トライアル</p>
           <Link
-            href="/pricing"
+            href="/register?plan=standard&interval=monthly"
             className="inline-block bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold py-2 px-5 rounded-lg transition"
           >
-            プランを見る
+            無料で試す
           </Link>
         </div>
       </div>

@@ -250,8 +250,11 @@ export default function SearchResults() {
         </div>
         {isLimited && (
           <div className="hidden md:block bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-800">
-            無料プラン: {FREE_LIMIT}件まで表示中
-            <Link href="/pricing" className="ml-2 font-bold underline">
+            {tier === "guest" ? `ゲスト: ${FREE_LIMIT}件まで表示` : `無料プラン: ${FREE_LIMIT}件まで表示`}
+            <Link
+              href={tier === "guest" ? "/register?plan=free" : "/register?plan=standard&interval=monthly"}
+              className="ml-2 font-bold underline"
+            >
               全件表示 &rarr;
             </Link>
           </div>
@@ -470,20 +473,46 @@ export default function SearchResults() {
         <TransactionTable transactions={freeTransactions} />
 
         {/* Upsell */}
-        {isLimited && (
+        {isLimited && tier === "guest" && (
           <div className="mt-6 bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl p-6 text-white text-center">
-            <p className="font-bold text-lg mb-2">
+            <p className="font-bold text-lg mb-1">
+              残り {(filteredCount - FREE_LIMIT).toLocaleString()}件のデータがあります
+            </p>
+            <p className="text-slate-300 text-sm mb-5">
+              無料会員登録で <span className="text-amber-300 font-bold">20件まで</span> 即時解放。全件・分析は有料プランへ。
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/register?plan=free"
+                className="inline-block bg-amber-500 hover:bg-amber-400 text-white font-bold py-2.5 px-7 rounded-lg transition"
+              >
+                無料登録で20件見る（0円）
+              </Link>
+              <Link
+                href="/register?plan=standard&interval=monthly"
+                className="inline-block bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 px-7 rounded-lg border border-white/20 transition text-sm"
+              >
+                全件見る · ¥2,980/月〜
+              </Link>
+            </div>
+            <p className="text-slate-400 text-xs mt-3">14日間無料トライアルあり · いつでも解約可</p>
+          </div>
+        )}
+        {isLimited && tier === "free" && (
+          <div className="mt-6 bg-gradient-to-r from-blue-900 to-slate-800 rounded-xl p-6 text-white text-center">
+            <p className="font-bold text-lg mb-1">
               残り {(filteredCount - FREE_LIMIT).toLocaleString()}件のデータがあります
             </p>
             <p className="text-slate-300 text-sm mb-4">
-              スタンダードプランで全件表示・CSVダウンロード・トレンド分析が利用可能
+              スタンダードプランで<span className="text-amber-300 font-bold">全件表示</span>・CSVダウンロード・トレンド分析が利用可能
             </p>
             <Link
-              href="/pricing"
-              className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-8 rounded-lg transition"
+              href="/register?plan=standard&interval=monthly"
+              className="inline-block bg-amber-500 hover:bg-amber-400 text-white font-bold py-2.5 px-8 rounded-lg transition"
             >
-              プランを見る
+              14日間無料で全機能を試す
             </Link>
+            <p className="text-slate-400 text-xs mt-2">¥2,980/月 · 14日間無料 · いつでも解約可</p>
           </div>
         )}
       </div>
