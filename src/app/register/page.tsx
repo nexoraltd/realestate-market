@@ -59,10 +59,14 @@ export default async function RegisterPage({
                 <div className="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-100">
                   <p className="text-xs text-slate-500 mb-2 font-medium">無料プランに含まれる機能</p>
                   <ul className="space-y-1.5 text-sm text-slate-700">
-                    <li className="flex items-center gap-2"><span className="text-emerald-500">&#10003;</span>AI査定 月1回（10年予測+スコア内訳付き）</li>
-                    <li className="flex items-center gap-2"><span className="text-emerald-500">&#10003;</span>相場検索 月3回</li>
-                    <li className="flex items-center gap-2"><span className="text-emerald-500">&#10003;</span>取引事例 5件まで表示</li>
+                    <li className="flex items-center gap-2"><span className="text-emerald-500">&#10003;</span>AI査定 月1回（10年予測+資産性スコア内訳付き）</li>
+                    <li className="flex items-center gap-2"><span className="text-emerald-500">&#10003;</span>相場検索 月3回（20件まで表示）</li>
+                    <li className="flex items-center gap-2"><span className="text-emerald-500">&#10003;</span>メルマガ：不動産市況レポート（季刊）</li>
                   </ul>
+                  <div className="mt-3 pt-3 border-t border-slate-200">
+                    <p className="text-xs text-amber-700 font-medium">有料プランにいつでもアップグレード可</p>
+                    <p className="text-xs text-slate-500 mt-0.5">AI査定無制限・全件表示・CSV・14日間無料 → <Link href="/register?plan=standard&interval=monthly" className="underline text-amber-600">スタンダードプラン</Link></p>
+                  </div>
                 </div>
                 <FreeRegisterForm dark={false} />
               </div>
