@@ -60,51 +60,118 @@ export default async function BlogListPage({
           {posts.length === 0 ? (
             <p className="text-center text-slate-500">記事がありません。</p>
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2">
-              {posts.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="block rounded-xl border border-slate-700 bg-slate-800/50 p-6 transition-all hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/5"
-                >
-                  <div className="mb-3 flex items-center gap-2">
-                    <span className="rounded-full bg-amber-500/20 px-3 py-0.5 text-xs font-medium text-amber-400">
-                      {post.category}
-                    </span>
-                    <time className="text-xs text-slate-500">{post.date}</time>
-                  </div>
-                  <h2 className="mb-2 text-lg font-bold leading-snug text-slate-100">
-                    {post.title}
-                  </h2>
-                  <p className="text-sm text-slate-400 line-clamp-3">
-                    {post.description}
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {post.tags.slice(0, 4).map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded bg-slate-700/50 px-2 py-0.5 text-xs text-slate-500"
-                      >
-                        #{tag}
+            <div className="space-y-6">
+              <div className="grid gap-6 sm:grid-cols-2">
+                {posts.slice(0, 20).map((post) => (
+                  <Link
+                    key={post.slug}
+                    href={`/blog/${post.slug}`}
+                    className="block rounded-xl border border-slate-700 bg-slate-800/50 p-6 transition-all hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/5"
+                  >
+                    <div className="mb-3 flex items-center gap-2">
+                      <span className="rounded-full bg-amber-500/20 px-3 py-0.5 text-xs font-medium text-amber-400">
+                        {post.category}
                       </span>
-                    ))}
-                  </div>
-                </Link>
-              ))}
+                      <time className="text-xs text-slate-500">{post.date}</time>
+                    </div>
+                    <h2 className="mb-2 text-lg font-bold leading-snug text-slate-100">
+                      {post.title}
+                    </h2>
+                    <p className="text-sm text-slate-400 line-clamp-3">
+                      {post.description}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {post.tags.slice(0, 4).map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded bg-slate-700/50 px-2 py-0.5 text-xs text-slate-500"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {/* AI査定インライン広告 */}
+              {posts.length > 20 && (
+                <a
+                  href="/estimate"
+                  className="block rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-900/30 to-slate-800 p-6 text-center transition hover:border-amber-500/60"
+                >
+                  <p className="text-xs font-bold text-amber-400 mb-1">無料ツール</p>
+                  <p className="text-lg font-bold text-white mb-1">AI不動産査定 — 将来価格予測 + 資産性スコア</p>
+                  <p className="text-sm text-slate-400">住所を入れるだけ。登録不要・完全無料で物件の将来価値を確認 →</p>
+                </a>
+              )}
+
+              {posts.length > 20 && (
+                <div className="grid gap-6 sm:grid-cols-2">
+                  {posts.slice(20).map((post) => (
+                    <Link
+                      key={post.slug}
+                      href={`/blog/${post.slug}`}
+                      className="block rounded-xl border border-slate-700 bg-slate-800/50 p-6 transition-all hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/5"
+                    >
+                      <div className="mb-3 flex items-center gap-2">
+                        <span className="rounded-full bg-amber-500/20 px-3 py-0.5 text-xs font-medium text-amber-400">
+                          {post.category}
+                        </span>
+                        <time className="text-xs text-slate-500">{post.date}</time>
+                      </div>
+                      <h2 className="mb-2 text-lg font-bold leading-snug text-slate-100">
+                        {post.title}
+                      </h2>
+                      <p className="text-sm text-slate-400 line-clamp-3">
+                        {post.description}
+                      </p>
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {post.tags.slice(0, 4).map((tag) => (
+                          <span
+                            key={tag}
+                            className="rounded bg-slate-700/50 px-2 py-0.5 text-xs text-slate-500"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
           {/* 下部CTA */}
-          <div className="mt-16 text-center">
-            <p className="mb-4 text-slate-400">
-              不動産の売却・購入のご相談はお気軽に
+          <div className="mt-16 rounded-2xl border border-amber-500/20 bg-gradient-to-br from-slate-800 to-slate-900 p-8 text-center">
+            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-amber-400">無料で試す</p>
+            <h3 className="mb-3 text-2xl font-extrabold text-white">
+              物件の将来価値を<span className="text-amber-400">AI</span>で確認しよう
+            </h3>
+            <p className="mb-6 text-sm text-slate-400">
+              住所を入力するだけで、AI将来価格予測（3シナリオ）＋資産性スコア（0〜100点）を即時表示。登録不要・完全無料。
             </p>
-            <a
-              href="mailto:info@next-aura.com"
-              className="inline-block rounded-xl bg-amber-500 px-8 py-3 text-lg font-bold tracking-wide text-white shadow-lg transition hover:bg-amber-600 hover:shadow-xl"
-            >
-              無料で相談する
-            </a>
+            <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <a
+                href="/estimate"
+                className="inline-block rounded-xl bg-amber-500 px-8 py-3 text-base font-bold text-white shadow-lg transition hover:bg-amber-400"
+              >
+                無料AI査定を試す
+              </a>
+              <a
+                href="/search"
+                className="inline-block rounded-xl border border-slate-600 bg-slate-700/50 px-8 py-3 text-base font-bold text-slate-200 transition hover:border-amber-500/40 hover:text-white"
+              >
+                相場を検索する
+              </a>
+            </div>
+            <p className="mt-4 text-xs text-slate-500">
+              売却・購入のご相談は{' '}
+              <a href="mailto:info@next-aura.com" className="underline hover:text-slate-300">
+                info@next-aura.com
+              </a>
+            </p>
           </div>
         </div>
       </main>
