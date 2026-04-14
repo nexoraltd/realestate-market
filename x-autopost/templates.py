@@ -72,10 +72,10 @@ NIGHT_TEMPLATES = [
 
 # ── 課金訴求テンプレート（朝・夜にランダムで混ぜる） ──
 PREMIUM_TEMPLATES = [
-    "不動産仲介業者が使うデータ、個人でも手に入ります。\n\n✅ 過去20年分の取引データ\n✅ CSV一括ダウンロード\n✅ トレンド分析グラフ\n\n14日間無料トライアル👇\nhttps://market.next-aura.com/pricing\n\n#不動産投資 #不動産 #データ分析",
-    "マンション売却の査定前に。\n\nプロが使う「エリア別取引データ」で適正価格を把握。\n過去20年・全国のデータをCSVで取得可能。\n\n14日間無料で試す👇\nhttps://market.next-aura.com/pricing\n\n#マンション売却 #不動産査定 #不動産",
-    "不動産投資の物件分析に。\n\n・エリア別の平均利回りを算出\n・過去データからトレンドを分析\n・CSVでポートフォリオ管理\n\nスタンダードプラン 月額2,980円\n14日間無料👇\nhttps://market.next-aura.com/pricing\n\n#不動産投資 #利回り #ポートフォリオ",
+    "不動産仲介業者が使うデータ、個人でも手に入ります。\n\n✅ 過去20年分の取引データ\n✅ CSV一括ダウンロード\n✅ トレンド分析グラフ\n\n14日間無料で試す👇\nhttps://market.next-aura.com/register?plan=standard&interval=monthly\n\n#不動産投資 #不動産 #データ分析",
+    "マンション売却の査定前に。\n\nプロが使う「エリア別取引データ」で適正価格を把握。\n過去20年・全国のデータをCSVで取得可能。\n\n14日間無料・カード不要のお試し👇\nhttps://market.next-aura.com/register?plan=standard&interval=monthly\n\n#マンション売却 #不動産査定 #不動産",
+    "不動産投資の物件分析に。\n\n・エリア別の平均利回りを算出\n・過去データからトレンドを分析\n・CSVでポートフォリオ管理\n\nスタンダードプラン 月額2,980円\n最初の14日間は無料👇\nhttps://market.next-aura.com/register?plan=standard&interval=monthly\n\n#不動産投資 #利回り #ポートフォリオ",
     "不動産の相場レポート、1回980円で購入できます。\n\nサブスク不要。必要な時に必要なエリアだけ。\n国交省データに基づく信頼性の高いレポート。\n\nhttps://market.next-aura.com/search\n\n#不動産 #相場レポート #不動産投資",
-    "「データで判断する不動産投資」\n\n不動産相場ナビのプロプランなら：\n📊 カスタムレポート作成\n👥 チーム5名まで共有\n📈 20年分のトレンド分析\n\n詳細はこちら👇\nhttps://market.next-aura.com/pricing\n\n#不動産投資 #データ #不動産",
-    "不動産会社の営業トークに流されない方法。\n\nそれは「自分でデータを見ること」。\n\n不動産相場ナビなら全国の取引事例を検索可能。\n有料プランでCSV取得・詳細分析も。\n\nhttps://market.next-aura.com/pricing\n\n#不動産 #マンション #相場調査",
+    "「データで判断する不動産投資」\n\n不動産相場ナビのプロプランなら：\n📊 カスタムレポート作成\n👥 チーム5名まで共有\n📈 20年分のトレンド分析\n\n14日間無料でお試し👇\nhttps://market.next-aura.com/register?plan=professional&interval=monthly\n\n#不動産投資 #データ #不動産",
+    "不動産会社の営業トークに流されない方法。\n\nそれは「自分でデータを見ること」。\n\n不動産相場ナビなら全国の取引事例を検索可能。\n有料プランでCSV取得・詳細分析も。\n\n月2,980円〜・14日間無料👇\nhttps://market.next-aura.com/register?plan=standard&interval=monthly\n\n#不動産 #マンション #相場調査",
 ]
