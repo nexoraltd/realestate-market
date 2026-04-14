@@ -20,6 +20,8 @@ MORNING_TEMPLATES = [
     "【東京23区 価格マップ】坪単価の差は最大5倍。\n\n港区・千代田区: 坪600万超\n文京区・目黒区: 坪400〜500万\n足立区・江戸川区: 坪150〜200万\n\n同じ東京でも「区」で全然違う👇\nhttps://market.next-aura.com/blog/tokyo-23ku-souba-area\n\n#東京23区 #マンション #不動産相場",
     "【神奈川 相場解説】みなとみらい vs 武蔵小杉\n\nみなとみらい: 坪350〜500万（タワマン集積）\n武蔵小杉: 坪300〜450万（再開発エリア）\nたまプラーザ: 坪250〜350万（緑豊か・ファミリー人気）\n\n神奈川は「沿線」で選ぶ時代👇\nhttps://market.next-aura.com/blog/kanagawa-yokohama-mansion-souba\n\n#神奈川 #横浜 #マンション #不動産",
     "固定資産税、実は安くなる。\n\n住宅用地特例: 最大1/6に軽減\n新築住宅: 3年間1/2（マンションは5年）\nバリアフリー改修: 翌年度減額\n\n知らないと損する軽減措置👇\nhttps://market.next-aura.com/blog/kotei-shisan-zei-keigen\n\n#固定資産税 #節税 #マイホーム #不動産",
+    "住宅ローン控除、知らないと100万円損する。\n\n年末残高の0.7%が最大13年間控除。\n4500万円借入なら年間最大31.5万円。\n\n2024年改正で対象外になった住宅も要注意👇\nhttps://market.next-aura.com/blog/jutaku-loan-koujyo-kakuteishinkoku\n\n#住宅ローン控除 #節税 #マイホーム",
+    "不動産取得税、申請しないと損をする。\n\n新築住宅: 控除額1,200万円。\n中古住宅: 築年数ごとに異なる控除。\n土地: 軽減特例で最大半額に。\n\n知らないと払い損する税金👇\nhttps://market.next-aura.com/blog/fudousan-shutoku-zei-keigen\n\n#不動産取得税 #節税 #不動産購入",
 ]
 
 NOON_TEMPLATES = [
