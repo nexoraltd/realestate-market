@@ -53,6 +53,9 @@ NOON_TEMPLATES = [
     "【節税情報】\n住宅ローン控除（住宅ローン減税）2026年版｜計算方法・確定申告手順・2024年改正ポイントを解説\nhttps://market.next-aura.com/blog/jutaku-loan-koujyo-kakuteishinkoku\n\n#住宅ローン控除 #住宅ローン減税 #確定申告",
     "【費用節約】\n不動産取得税の軽減措置まとめ2026｜住宅・土地の特例計算と申請フロー\nhttps://market.next-aura.com/blog/fudousan-shutoku-zei-keigen\n\n#不動産取得税 #軽減措置 #マイホーム費用",
     "【資産形成】\nマンションの資産価値が下がらないエリアの条件とは？交通利便・学区・再開発で検証\nhttps://market.next-aura.com/blog/mansion-shisan-kachi-sagaru-joken\n\n#マンション #資産価値 #不動産投資",
+    "【売却ガイド】\n媒介契約の3種類を比較｜専任・専属専任・一般、あなたに合うのはどれ？\nhttps://market.next-aura.com/blog/fudousan-baikai-keiyaku-hikaku\n\n#媒介契約 #不動産売却 #専任媒介",
+    "【購入前に】\nマンション頭金はいくら必要？年収別シミュレーションと自己資金の考え方\nhttps://market.next-aura.com/blog/mansion-atama-kin-ikura\n\n#頭金 #住宅購入 #マンション",
+    "【内覧必読】\n中古マンション内覧チェックリスト30項目｜見落としやすいポイントを網羅\nhttps://market.next-aura.com/blog/chuko-mansion-nairan-checklist\n\n#中古マンション #内覧 #チェックリスト",
 ]
 
 NIGHT_TEMPLATES = [
