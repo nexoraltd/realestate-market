@@ -17,6 +17,9 @@ MORNING_TEMPLATES = [
     "【金利のファクト】変動 vs 固定\n\n変動0.3%台、固定1.5%台。\n3000万円借入で月額差は約15,000円。\n35年で約630万円の差。\n\nただし変動が0.5%上がるだけで差は半減する。\n\n数字でシミュレーション👇\nhttps://market.next-aura.com/tools/loan-simulator\n\n#住宅ローン #金利 #マイホーム",
     "「不動産は情報の非対称性が大きい」\n\nつまり、業者は知っていて買主は知らない。\n\n500万件の取引データを誰でも無料で見られるようにした。\n情報格差をゼロにする👇\nhttps://market.next-aura.com\n\n#不動産 #不動産相場 #情報格差",
     "【常識を疑え】「マンション購入の諸費用は物件価格の10%」\n\nデータで検証すると6〜8%が実態。\n10%は最大値を常識化した結果。\n\n正確な数字を知る👇\nhttps://market.next-aura.com/blog/mansion-kounyu-shoki-hiyo\n\n#マンション購入 #不動産 #諸費用",
+    "【東京23区 価格マップ】坪単価の差は最大5倍。\n\n港区・千代田区: 坪600万超\n文京区・目黒区: 坪400〜500万\n足立区・江戸川区: 坪150〜200万\n\n同じ東京でも「区」で全然違う👇\nhttps://market.next-aura.com/blog/tokyo-23ku-souba-area\n\n#東京23区 #マンション #不動産相場",
+    "【神奈川 相場解説】みなとみらい vs 武蔵小杉\n\nみなとみらい: 坪350〜500万（タワマン集積）\n武蔵小杉: 坪300〜450万（再開発エリア）\nたまプラーザ: 坪250〜350万（緑豊か・ファミリー人気）\n\n神奈川は「沿線」で選ぶ時代👇\nhttps://market.next-aura.com/blog/kanagawa-yokohama-mansion-souba\n\n#神奈川 #横浜 #マンション #不動産",
+    "固定資産税、実は安くなる。\n\n住宅用地特例: 最大1/6に軽減\n新築住宅: 3年間1/2（マンションは5年）\nバリアフリー改修: 翌年度減額\n\n知らないと損する軽減措置👇\nhttps://market.next-aura.com/blog/kotei-shisan-zei-keigen\n\n#固定資産税 #節税 #マイホーム #不動産",
 ]
 
 NOON_TEMPLATES = [
