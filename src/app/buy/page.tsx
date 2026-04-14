@@ -150,12 +150,20 @@ export default function BuyPage() {
             <br />
             ご希望の条件に合った物件をお探しします。
           </p>
-          <a
-            href="mailto:info@next-aura.com"
-            className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-10 rounded-xl text-lg transition shadow-lg"
-          >
-            info@next-aura.com にメール
-          </a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="/search"
+              className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-10 rounded-xl text-lg transition shadow-lg"
+            >
+              エリアの相場を調べる（無料）
+            </a>
+            <a
+              href="mailto:info@next-aura.com"
+              className="inline-block bg-white hover:bg-gray-50 text-[#1a365d] font-bold py-4 px-10 rounded-xl text-lg transition shadow border border-gray-200"
+            >
+              物件探しを相談する
+            </a>
+          </div>
         </div>
       </section>
 

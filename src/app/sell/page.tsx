@@ -132,12 +132,19 @@ export default function SellPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="mailto:info@next-aura.com"
+              href="/estimate"
               className="inline-block bg-[#ed8936] hover:bg-orange-500 text-white font-bold py-4 px-10 rounded-xl text-lg transition shadow-lg"
             >
-              info@next-aura.com にメール
+              AI査定で相場を確認する（無料）
+            </a>
+            <a
+              href="mailto:info@next-aura.com"
+              className="inline-block bg-white hover:bg-gray-50 text-[#1a365d] font-bold py-4 px-10 rounded-xl text-lg transition shadow border border-gray-200"
+            >
+              メールで相談する
             </a>
           </div>
+          <p className="text-sm text-gray-500 mt-4">まず相場を確認してからプロに相談するのがおすすめです</p>
         </div>
       </section>
 
