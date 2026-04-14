@@ -43,6 +43,11 @@ NOON_TEMPLATES = [
     "【新着記事】\n不動産投資初心者ガイド｜失敗しない物件選び・利回り計算・リスク管理\nhttps://market.next-aura.com/blog/fudousan-toshi-shoshinsha-guide\n\n#不動産投資 #初心者 #利回り #投資",
     "【新着記事】\nマンション売却タイミングの見極め方2026｜相場・築年数・市況から判断する\nhttps://market.next-aura.com/blog/mansion-urikata-jiiki-hikaku\n\n#マンション売却 #売り時 #不動産相場",
     "【新着記事】\n住宅ローン比較2026｜固定vs変動・おすすめ銀行・借り換えのポイント\nhttps://market.next-aura.com/blog/jutaku-loan-hikaku-2026\n\n#住宅ローン #固定金利 #変動金利 #マイホーム",
+    "【地域相場】\n東京23区 エリア別マンション相場まとめ｜港区・文京区・足立区の価格差を解説\nhttps://market.next-aura.com/blog/tokyo-23ku-souba-area\n\n#東京23区 #マンション #不動産相場",
+    "【地域相場】\n大阪マンション相場2026｜梅田・難波・天王寺・北摂エリアの最新価格動向\nhttps://market.next-aura.com/blog/osaka-mansion-souba-2026\n\n#大阪 #マンション #不動産相場",
+    "【地域相場】\n神奈川マンション相場2026｜横浜・川崎・みなとみらい・武蔵小杉の価格を徹底比較\nhttps://market.next-aura.com/blog/kanagawa-yokohama-mansion-souba\n\n#神奈川 #横浜 #マンション",
+    "【節税情報】\n固定資産税の軽減措置まとめ2026｜住宅用地特例・新築特例を正確に理解する\nhttps://market.next-aura.com/blog/kotei-shisan-zei-keigen\n\n#固定資産税 #節税 #マイホーム",
+    "【購入前に必読】\n不動産の共有名義にするべきか？メリット・デメリットとトラブル事例を解説\nhttps://market.next-aura.com/blog/fudousan-kyoyu-meigi-chui\n\n#共有名義 #不動産購入 #マイホーム",
 ]
 
 NIGHT_TEMPLATES = [
