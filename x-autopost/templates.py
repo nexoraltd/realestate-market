@@ -48,6 +48,9 @@ NOON_TEMPLATES = [
     "【地域相場】\n神奈川マンション相場2026｜横浜・川崎・みなとみらい・武蔵小杉の価格を徹底比較\nhttps://market.next-aura.com/blog/kanagawa-yokohama-mansion-souba\n\n#神奈川 #横浜 #マンション",
     "【節税情報】\n固定資産税の軽減措置まとめ2026｜住宅用地特例・新築特例を正確に理解する\nhttps://market.next-aura.com/blog/kotei-shisan-zei-keigen\n\n#固定資産税 #節税 #マイホーム",
     "【購入前に必読】\n不動産の共有名義にするべきか？メリット・デメリットとトラブル事例を解説\nhttps://market.next-aura.com/blog/fudousan-kyoyu-meigi-chui\n\n#共有名義 #不動産購入 #マイホーム",
+    "【節税情報】\n住宅ローン控除（住宅ローン減税）2026年版｜計算方法・確定申告手順・2024年改正ポイントを解説\nhttps://market.next-aura.com/blog/jutaku-loan-koujyo-kakuteishinkoku\n\n#住宅ローン控除 #住宅ローン減税 #確定申告",
+    "【費用節約】\n不動産取得税の軽減措置まとめ2026｜住宅・土地の特例計算と申請フロー\nhttps://market.next-aura.com/blog/fudousan-shutoku-zei-keigen\n\n#不動産取得税 #軽減措置 #マイホーム費用",
+    "【資産形成】\nマンションの資産価値が下がらないエリアの条件とは？交通利便・学区・再開発で検証\nhttps://market.next-aura.com/blog/mansion-shisan-kachi-sagaru-joken\n\n#マンション #資産価値 #不動産投資",
 ]
 
 NIGHT_TEMPLATES = [
