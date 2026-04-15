@@ -26,15 +26,15 @@ export default function PaywallOverlay({
           <ul className="text-left text-sm text-slate-600 mb-4 space-y-1.5 mx-auto inline-block">
             <li className="flex items-center gap-2">
               <span className="text-emerald-500 text-xs">&#10003;</span>
-              取引データ全件表示・CSV出力
+              AI査定 無制限 + 10年先の価格予測
             </li>
             <li className="flex items-center gap-2">
               <span className="text-emerald-500 text-xs">&#10003;</span>
-              AI査定 無制限（10年予測付き）
+              相場検索 無制限・取引事例20件表示
             </li>
             <li className="flex items-center gap-2">
               <span className="text-emerald-500 text-xs">&#10003;</span>
-              14日間無料 — カード登録後すぐ解約OK
+              CSV出力（月100件）+ トレンド分析
             </li>
           </ul>
           <Link
