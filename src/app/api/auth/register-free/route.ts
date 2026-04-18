@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import bcrypt from "bcryptjs";
-import { Resend } from "resend";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -43,9 +43,12 @@ export async function POST(req: NextRequest) {
           ...customer.metadata,
           password_hash: hash,
           plan: customer.metadata?.plan || "free",
+          registered_at: customer.metadata?.registered_at || new Date().toISOString(),
         },
       });
-      await sendWelcomeEmail(email);
+      await sendWelcomeEmail(email).catch((e) =>
+        console.error("[register-free] welcome email error:", e)
+      );
       return NextResponse.json({
         success: true,
         plan: "free",
@@ -60,10 +63,13 @@ export async function POST(req: NextRequest) {
       metadata: {
         password_hash: hash,
         plan: "free",
+        registered_at: new Date().toISOString(),
       },
     });
 
-    await sendWelcomeEmail(email);
+    await sendWelcomeEmail(email).catch((e) =>
+      console.error("[register-free] welcome email error:", e)
+    );
 
     return NextResponse.json({
       success: true,
@@ -79,31 +85,3 @@ export async function POST(req: NextRequest) {
   }
 }
 
-async function sendWelcomeEmail(email: string) {
-  try {
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
-      from: "不動産相場ナビ <noreply@next-aura.com>",
-      to: email,
-      subject: "無料会員登録が完了しました",
-      html: `
-        <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
-          <h2 style="color: #0f172a;">無料会員登録が完了しました</h2>
-          <p style="color: #475569;">不動産相場ナビにご登録いただきありがとうございます。</p>
-          <p style="color: #475569;">無料会員では以下の機能がご利用いただけます：</p>
-          <ul style="color: #475569;">
-            <li>AI査定 月1回（推定価格 + 10年後まで将来予測 + 資産性スコア5因子内訳）</li>
-            <li>相場検索 月3回</li>
-          </ul>
-          <a href="https://market.next-aura.com/estimate" style="display: inline-block; background: #f59e0b; color: #0f172a; font-weight: bold; padding: 12px 24px; border-radius: 8px; text-decoration: none; margin-top: 16px;">
-            AI査定を試す
-          </a>
-          <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
-          <p style="color: #94a3b8; font-size: 12px;">不動産相場ナビ｜ネクソラ不動産</p>
-        </div>
-      `,
-    });
-  } catch (err) {
-    console.error("[register-free] welcome email error:", err);
-  }
-}

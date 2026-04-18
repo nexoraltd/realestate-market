@@ -244,6 +244,215 @@ export async function sendCancellationToCustomerEmail(customerEmail: string) {
   });
 }
 
+const UNSUBSCRIBE_BASE = `${SITE_URL}/api/newsletter-unsubscribe`;
+
+function unsubscribeFooter(email: string) {
+  const url = `${UNSUBSCRIBE_BASE}?email=${encodeURIComponent(email)}`;
+  return `
+    <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0" />
+    <p style="color:#94a3b8;font-size:11px;text-align:center">
+      このメールの配信を停止するには
+      <a href="${url}" style="color:#94a3b8">こちら</a>
+      をクリックしてください。<br/>
+      ネクソラ不動産｜<a href="mailto:info@next-aura.com" style="color:#94a3b8">info@next-aura.com</a>
+    </p>
+  `;
+}
+
+/** 無料会員ウェルカムメール Day1 */
+export async function sendWelcomeEmail(customerEmail: string) {
+  await getResend().emails.send({
+    from: FROM,
+    to: customerEmail,
+    subject: "【ネクソラ不動産】無料会員登録が完了しました",
+    html: `
+      <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:24px">
+        <h2 style="color:#1e293b">無料会員登録が完了しました</h2>
+        <p style="color:#475569">不動産相場ナビにご登録いただきありがとうございます。</p>
+        <p style="color:#475569">無料会員では以下の機能がご利用いただけます：</p>
+        <ul style="color:#475569;line-height:1.8">
+          <li>AI査定 月1回（推定価格 + 10年後まで将来予測 + 資産性スコア5因子内訳）</li>
+          <li>相場検索 月3回</li>
+        </ul>
+        <a href="${SITE_URL}/estimate"
+           style="display:inline-block;background:#f59e0b;color:#0f172a;font-weight:bold;padding:12px 24px;border-radius:8px;text-decoration:none;margin-top:16px">
+          AI査定を試す
+        </a>
+        ${unsubscribeFooter(customerEmail)}
+      </div>
+    `,
+  });
+}
+
+/** ドリップDay3 — 相場検索の使い方・おすすめ検索エリア */
+export async function sendDripDay3Email(customerEmail: string) {
+  await getResend().emails.send({
+    from: FROM,
+    to: customerEmail,
+    subject: "【ネクソラ不動産】相場検索の使い方とおすすめエリア3選",
+    html: `
+      <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:24px">
+        <h2 style="color:#1e293b">相場検索を使いこなすヒント</h2>
+        <p style="color:#475569">ご登録から3日が経ちました。相場検索をもっと活用するための使い方をご紹介します。</p>
+
+        <div style="background:#fffbeb;border-left:4px solid #f59e0b;padding:16px;margin:20px 0;border-radius:0 8px 8px 0">
+          <p style="margin:0;font-weight:bold;color:#92400e">相場検索のポイント</p>
+          <ul style="margin:8px 0 0;padding-left:20px;font-size:14px;color:#475569;line-height:1.8">
+            <li>駅名・エリア名・市区町村名で検索できます</li>
+            <li>築年数・専有面積で絞り込むと精度が上がります</li>
+            <li>「㎡単価」で異なる広さの物件を公平に比較できます</li>
+          </ul>
+        </div>
+
+        <p style="font-weight:bold;color:#1e293b;margin-top:24px">注目エリア3選（2024年）</p>
+        <div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:12px">
+          <div style="background:#f8fafc;padding:12px 16px;border-bottom:1px solid #e2e8f0">
+            <strong style="color:#1e293b">1. 東京都・中野区</strong>
+          </div>
+          <p style="margin:0;padding:12px 16px;font-size:14px;color:#475569">再開発が進む中野駅周辺。価格上昇トレンドが続いており、利回りも安定しています。</p>
+        </div>
+        <div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:12px">
+          <div style="background:#f8fafc;padding:12px 16px;border-bottom:1px solid #e2e8f0">
+            <strong style="color:#1e293b">2. 神奈川県・川崎市</strong>
+          </div>
+          <p style="margin:0;padding:12px 16px;font-size:14px;color:#475569">都心アクセス良好で割安感が残る川崎区・幸区エリア。成約価格の上昇が顕著です。</p>
+        </div>
+        <div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:12px">
+          <div style="background:#f8fafc;padding:12px 16px;border-bottom:1px solid #e2e8f0">
+            <strong style="color:#1e293b">3. 大阪府・北区・福島区</strong>
+          </div>
+          <p style="margin:0;padding:12px 16px;font-size:14px;color:#475569">大阪万博の影響で注目度が高まるエリア。外国人投資家の流入も見られます。</p>
+        </div>
+
+        <a href="${SITE_URL}/dashboard"
+           style="display:inline-block;background:#f59e0b;color:#0f172a;font-weight:bold;padding:12px 24px;border-radius:8px;text-decoration:none;margin-top:8px">
+          相場を検索してみる
+        </a>
+        ${unsubscribeFooter(customerEmail)}
+      </div>
+    `,
+  });
+}
+
+/** ドリップDay5 — 無料プランの限界・有料CTA */
+export async function sendDripDay5Email(customerEmail: string) {
+  await getResend().emails.send({
+    from: FROM,
+    to: customerEmail,
+    subject: "【ネクソラ不動産】無料プランではここまで。あと一歩でプロが使うデータに",
+    html: `
+      <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:24px">
+        <h2 style="color:#1e293b">無料プランの限界を超えてみませんか？</h2>
+        <p style="color:#475569">相場検索を月3回以上ご利用になりたい方へ、有料プランの違いをご説明します。</p>
+
+        <div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin:20px 0">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center">
+            <div style="padding:12px;background:#f8fafc;font-size:12px;font-weight:bold;color:#94a3b8;border-bottom:1px solid #e2e8f0">機能</div>
+            <div style="padding:12px;background:#f8fafc;font-size:12px;font-weight:bold;color:#94a3b8;border-bottom:1px solid #e2e8f0;border-left:1px solid #e2e8f0">無料</div>
+            <div style="padding:12px;background:#fffbeb;font-size:12px;font-weight:bold;color:#92400e;border-bottom:1px solid #e2e8f0;border-left:1px solid #e2e8f0">有料</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center">
+            <div style="padding:10px 12px;font-size:13px;color:#475569;border-bottom:1px solid #f1f5f9">相場検索</div>
+            <div style="padding:10px 12px;font-size:13px;color:#475569;border-bottom:1px solid #f1f5f9;border-left:1px solid #e2e8f0">月3回</div>
+            <div style="padding:10px 12px;font-size:13px;font-weight:bold;color:#d97706;border-bottom:1px solid #f1f5f9;border-left:1px solid #e2e8f0">無制限</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center">
+            <div style="padding:10px 12px;font-size:13px;color:#475569;border-bottom:1px solid #f1f5f9">AI査定</div>
+            <div style="padding:10px 12px;font-size:13px;color:#475569;border-bottom:1px solid #f1f5f9;border-left:1px solid #e2e8f0">月1回</div>
+            <div style="padding:10px 12px;font-size:13px;font-weight:bold;color:#d97706;border-bottom:1px solid #f1f5f9;border-left:1px solid #e2e8f0">無制限</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center">
+            <div style="padding:10px 12px;font-size:13px;color:#475569;border-bottom:1px solid #f1f5f9">CSVダウンロード</div>
+            <div style="padding:10px 12px;font-size:13px;color:#cbd5e1;border-bottom:1px solid #f1f5f9;border-left:1px solid #e2e8f0">✕</div>
+            <div style="padding:10px 12px;font-size:13px;font-weight:bold;color:#d97706;border-bottom:1px solid #f1f5f9;border-left:1px solid #e2e8f0">✓</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center">
+            <div style="padding:10px 12px;font-size:13px;color:#475569">トレンド分析</div>
+            <div style="padding:10px 12px;font-size:13px;color:#cbd5e1;border-left:1px solid #e2e8f0">✕</div>
+            <div style="padding:10px 12px;font-size:13px;font-weight:bold;color:#d97706;border-left:1px solid #e2e8f0">✓</div>
+          </div>
+        </div>
+
+        <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:16px;margin:20px 0">
+          <p style="margin:0;font-size:14px;color:#92400e">
+            <strong>今なら14日間無料トライアル付き。</strong>
+            クレジットカード登録不要ではじめられます。
+          </p>
+        </div>
+
+        <a href="${SITE_URL}/pricing"
+           style="display:inline-block;background:#f59e0b;color:#0f172a;font-weight:bold;padding:14px 32px;border-radius:8px;text-decoration:none;margin-top:8px">
+          プランを見る
+        </a>
+        ${unsubscribeFooter(customerEmail)}
+      </div>
+    `,
+  });
+}
+
+/** ドリップDay7 — 14日無料トライアル最後のご案内 */
+export async function sendDripDay7Email(customerEmail: string) {
+  await getResend().emails.send({
+    from: FROM,
+    to: customerEmail,
+    subject: "【ネクソラ不動産】14日間無料トライアル開始の最後のご案内",
+    html: `
+      <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:24px">
+        <div style="background:#1e293b;border-radius:12px;padding:24px;text-align:center;margin-bottom:24px">
+          <p style="color:#fbbf24;font-size:13px;margin:0 0 8px;font-weight:bold;letter-spacing:0.05em">LIMITED OFFER</p>
+          <h2 style="color:#fff;margin:0 0 8px;font-size:22px">14日間 完全無料トライアル</h2>
+          <p style="color:#94a3b8;margin:0;font-size:14px">カード登録不要・いつでも解約OK</p>
+        </div>
+
+        <p style="color:#475569">無料会員にご登録いただいてから7日が経ちました。</p>
+        <p style="color:#475569">今週末も相場チェックにお役立てください。そして、より深く分析したい方には<strong>14日間の無料トライアル</strong>を強くおすすめします。</p>
+
+        <div style="margin:24px 0">
+          <p style="font-weight:bold;color:#1e293b;margin-bottom:12px">トライアルで体験できること</p>
+          <div style="display:flex;align-items:flex-start;margin-bottom:12px">
+            <span style="color:#f59e0b;font-size:18px;margin-right:12px;line-height:1.4">▶</span>
+            <div>
+              <p style="margin:0;font-weight:bold;color:#1e293b;font-size:14px">500万件超の実取引データ</p>
+              <p style="margin:4px 0 0;font-size:13px;color:#64748b">全国の実際の売買・賃貸データに無制限アクセス</p>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;margin-bottom:12px">
+            <span style="color:#f59e0b;font-size:18px;margin-right:12px;line-height:1.4">▶</span>
+            <div>
+              <p style="margin:0;font-weight:bold;color:#1e293b;font-size:14px">CSVダウンロード & トレンドグラフ</p>
+              <p style="margin:4px 0 0;font-size:13px;color:#64748b">Excelで加工したり、価格推移を可視化できます</p>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start">
+            <span style="color:#f59e0b;font-size:18px;margin-right:12px;line-height:1.4">▶</span>
+            <div>
+              <p style="margin:0;font-weight:bold;color:#1e293b;font-size:14px">AI査定 無制限</p>
+              <p style="margin:4px 0 0;font-size:13px;color:#64748b">複数物件をまとめて査定・比較できます</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px;margin:20px 0">
+          <p style="margin:0;font-size:14px;color:#166534">
+            トライアル期間中に気に入らなければ、<strong>費用は一切かかりません。</strong>
+            解約も1クリックで完了します。
+          </p>
+        </div>
+
+        <div style="text-align:center;margin-top:24px">
+          <a href="${SITE_URL}/pricing"
+             style="display:inline-block;background:#f59e0b;color:#0f172a;font-weight:bold;padding:16px 40px;border-radius:8px;text-decoration:none;font-size:16px">
+            14日間無料で始める →
+          </a>
+          <p style="color:#94a3b8;font-size:12px;margin-top:12px">クレジットカード登録不要</p>
+        </div>
+
+        ${unsubscribeFooter(customerEmail)}
+      </div>
+    `,
+  });
+}
+
 /** お問い合わせフォーム → 管理者に通知 + 顧客に自動返信 */
 export async function sendContactEmail(params: {
   name: string;

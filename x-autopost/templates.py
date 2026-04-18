@@ -56,6 +56,16 @@ NOON_TEMPLATES = [
     "【売却ガイド】\n媒介契約の3種類を比較｜専任・専属専任・一般、あなたに合うのはどれ？\nhttps://market.next-aura.com/blog/fudousan-baikai-keiyaku-hikaku\n\n#媒介契約 #不動産売却 #専任媒介",
     "【購入前に】\nマンション頭金はいくら必要？年収別シミュレーションと自己資金の考え方\nhttps://market.next-aura.com/blog/mansion-atama-kin-ikura\n\n#頭金 #住宅購入 #マンション",
     "【内覧必読】\n中古マンション内覧チェックリスト30項目｜見落としやすいポイントを網羅\nhttps://market.next-aura.com/blog/chuko-mansion-nairan-checklist\n\n#中古マンション #内覧 #チェックリスト",
+    "【地域相場】\n札幌マンション相場2026｜円山・大通・琴似・白石エリアの価格を徹底比較\nhttps://market.next-aura.com/blog/sapporo-mansion-souba\n\n#札幌 #マンション #不動産相場",
+    "【地域相場】\n仙台マンション相場2026｜青葉区・泉区・宮城野区の最新価格動向\nhttps://market.next-aura.com/blog/sendai-mansion-souba\n\n#仙台 #マンション #不動産相場",
+    "【地域相場】\n京都マンション相場2026｜烏丸・河原町・伏見・宇治エリアの価格分析\nhttps://market.next-aura.com/blog/kyoto-mansion-souba\n\n#京都 #マンション #不動産相場",
+    "【地域相場】\n神戸マンション相場2026｜三宮・元町・垂水・西区の最新相場\nhttps://market.next-aura.com/blog/kobe-mansion-souba\n\n#神戸 #マンション #不動産相場",
+    "【税金ガイド】\n不動産投資の税金完全ガイド2026｜確定申告・経費・減価償却を解説\nhttps://market.next-aura.com/blog/fudousan-toshi-tax\n\n#不動産投資 #税金 #確定申告 #減価償却",
+    "【投資ガイド】\nマンション投資で失敗しない方法｜利回り計算・物件選び・リスク管理\nhttps://market.next-aura.com/blog/mansion-toshi-investment\n\n#マンション投資 #不動産投資 #利回り",
+    "【比較ガイド】\n一戸建てvsマンション徹底比較2026｜資産価値・維持費・利便性で選ぶ\nhttps://market.next-aura.com/blog/kodate-vs-mansion\n\n#一戸建て #マンション #比較 #マイホーム",
+    "【費用ガイド】\n不動産の登記費用はいくら？計算方法と節約術【2026年版】\nhttps://market.next-aura.com/blog/fudousan-shinsatsu-tetsuzuki\n\n#登記費用 #登録免許税 #不動産購入 #諸費用",
+    "【資産価値】\nマンションリフォームで資産価値は上がる？費用対効果を徹底解説\nhttps://market.next-aura.com/blog/mansion-reform-kachi\n\n#リフォーム #マンション #資産価値 #売却",
+    "【地域相場】\n横浜・川崎のエリア別不動産相場2026｜みなとみらい・武蔵小杉・たまプラーザを比較\nhttps://market.next-aura.com/blog/yokohama-sobu-area\n\n#横浜 #川崎 #マンション #みなとみらい #武蔵小杉",
 ]
 
 NIGHT_TEMPLATES = [
