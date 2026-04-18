@@ -94,7 +94,7 @@ export default function NewsletterForm({ dark = false }: NewsletterFormProps) {
         <p className="text-red-400 text-xs mt-2">{errorMsg}</p>
       )}
       <p className={`text-[10px] mt-2 ${dark ? "text-slate-600" : "text-slate-400"}`}>
-        無料・いつでも解除可能。スパムは送りません。
+        無料・いつでも解除可能。
       </p>
     </div>
   );
