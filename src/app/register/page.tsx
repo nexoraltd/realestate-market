@@ -61,7 +61,6 @@ export default async function RegisterPage({
                   <ul className="space-y-1.5 text-sm text-slate-700">
                     <li className="flex items-center gap-2"><span className="text-emerald-500">&#10003;</span>AI査定 月1回（10年予測+資産性スコア内訳付き）</li>
                     <li className="flex items-center gap-2"><span className="text-emerald-500">&#10003;</span>相場検索 月3回（20件まで表示）</li>
-                    <li className="flex items-center gap-2"><span className="text-emerald-500">&#10003;</span>メルマガ：不動産市況レポート（季刊）</li>
                   </ul>
                   <div className="mt-3 pt-3 border-t border-slate-200">
                     <p className="text-xs text-amber-700 font-medium">有料プランにいつでもアップグレード可</p>

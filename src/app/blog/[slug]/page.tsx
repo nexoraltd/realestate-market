@@ -10,7 +10,6 @@ import Breadcrumb from '../components/Breadcrumb'
 import RelatedPosts from '../components/RelatedPosts'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import NewsletterForm from '@/components/NewsletterForm'
 import LineAddFriend from '@/components/LineAddFriend'
 
 const BASE_URL = 'https://market.next-aura.com'
@@ -188,9 +187,8 @@ export default async function BlogPostPage({ params }: Props) {
           {/* 関連記事 */}
           <RelatedPosts posts={relatedPosts} />
 
-          {/* メルマガ + LINE登録CTA */}
-          <div className="mt-12 space-y-4">
-            <NewsletterForm dark />
+          {/* LINE登録CTA */}
+          <div className="mt-12">
             <LineAddFriend variant="banner" />
           </div>
 

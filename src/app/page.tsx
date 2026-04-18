@@ -9,7 +9,6 @@ import PopularAreas from "@/components/PopularAreas";
 import HowItWorks from "@/components/HowItWorks";
 import MapSection from "@/components/MapSection";
 import FreeRegisterForm from "@/components/FreeRegisterForm";
-import NewsletterForm from "@/components/NewsletterForm";
 import LineAddFriend from "@/components/LineAddFriend";
 
 export default function Home() {
@@ -448,10 +447,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ⑩ メルマガ + LINE */}
+      {/* ⑩ LINE */}
       <section className="py-12 bg-[#0f172a]">
-        <div className="max-w-2xl mx-auto px-4 space-y-4">
-          <NewsletterForm dark />
+        <div className="max-w-2xl mx-auto px-4">
           <LineAddFriend variant="banner" />
         </div>
       </section>
