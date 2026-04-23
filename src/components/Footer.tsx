@@ -55,7 +55,7 @@ export default function Footer() {
         <div className="border-t border-slate-800 mt-8 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-500">
           <span>&copy; {new Date().getFullYear()} Nexora合同会社 All Rights Reserved.</span>
           <a href="https://house.blogmura.com/estate/ranking/in?p_cid=11213995" target="_blank" rel="noopener noreferrer">
-            <img src="https://b.blogmura.com/house/estate/88_31.gif" width="88" height="31" border={0} alt="にほんブログ村 住まいブログ 土地・不動産へ" />
+            <img src="https://b.blogmura.com/house/estate/88_31.gif" width="88" height="31" alt="にほんブログ村 住まいブログ 土地・不動産へ" />
           </a>
         </div>
       </div>
