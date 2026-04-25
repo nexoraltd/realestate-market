@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     description: '500万件の実取引データが映す不動産の真実。業界の空気ではなく数字で判断する、新しい不動産情報サービス。',
     images: [
       {
-        url: '/api/og-default',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: '不動産相場ナビ — データで不動産の常識を覆す',
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: '不動産相場ナビ | データで不動産の常識を覆す',
     description: '500万件の実取引データが映す不動産の真実。業界の空気ではなく数字で判断。',
-    images: ['/api/og-default'],
+    images: ['/og-image.png'],
   },
   verification: {
     google: 'hOV40fQ8hsaEnL0TM0GPzUW-HR9QwhUCBRVgS4P9O_w',
