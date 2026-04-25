@@ -3,7 +3,7 @@ import { ImageResponse } from 'next/og'
 export const runtime = 'edge'
 
 export async function GET() {
-  return new ImageResponse(
+  const response = new ImageResponse(
     (
       <div
         style={{
@@ -148,4 +148,6 @@ export async function GET() {
       height: 500,
     }
   )
+  response.headers.set('Access-Control-Allow-Origin', '*')
+  return response
 }
