@@ -232,15 +232,15 @@ export default function Home() {
           {/* CTA */}
           <div className="text-center">
             <Link
-              href="/estimate"
+              href="/register?plan=free"
               className="inline-flex items-center gap-3 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-4 px-10 rounded-xl text-lg transition shadow-lg hover:shadow-amber-500/25 animate-pulse-glow"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-              無料でAI査定する — 将来予測 + スコア付き
+              無料登録して将来予測・スコアを解放する
             </Link>
-            <p className="text-slate-500 text-xs mt-3">登録不要・完全無料 / 中古マンション・一戸建て・土地対応</p>
+            <p className="text-slate-500 text-xs mt-3">メールアドレスのみ・30秒で完了 / クレジットカード不要</p>
           </div>
         </div>
       </section>
@@ -357,86 +357,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ⑦ スタンダード訴求 — CSV・トレンドが転換ポイント */}
-      <section className="py-16 bg-slate-50 border-y border-slate-100">
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="text-center mb-10">
-            <p className="text-sm text-amber-600 font-bold mb-1 tracking-wider">スタンダードプラン 月額2,980円</p>
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-800">無料では得られない、3つのデータ優位</h2>
-            <p className="text-slate-500 text-sm mt-2">大手ポータルにはない機能。データを武器にする人のためのプラン。</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6 mb-10">
-            {/* CSV */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-md transition">
-              <div className="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-4">
-                <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <h3 className="font-bold text-slate-800 text-base mb-2">CSVダウンロード <span className="text-emerald-600">月100件</span></h3>
-              <p className="text-sm text-slate-500 leading-relaxed">実取引データをExcelで加工・分析。投資判断・売却戦略に使えるローデータをそのまま取得。</p>
-              <div className="mt-4 bg-slate-50 rounded-xl px-4 py-3 text-xs text-slate-500 border border-slate-100">
-                <span className="font-medium text-slate-700">取得できるデータ例</span><br />
-                成約価格・面積・築年・最寄駅・取引時期
-              </div>
-            </div>
-            {/* トレンド */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-md transition">
-              <div className="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-4">
-                <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-                </svg>
-              </div>
-              <h3 className="font-bold text-slate-800 text-base mb-2">2年分トレンド分析</h3>
-              <p className="text-sm text-slate-500 leading-relaxed">エリアの価格推移を2年分グラフで確認。「上がってるのか下がってるのか」を数字で判断。</p>
-              <div className="mt-4 flex items-end gap-1 h-10">
-                {[40, 45, 42, 50, 55, 53, 60, 65, 63, 70, 75, 72].map((h, i) => (
-                  <div key={i} className="flex-1 rounded-t-sm bg-blue-400/60" style={{ height: `${h}%` }} />
-                ))}
-              </div>
-              <p className="text-[10px] text-slate-400 mt-1 text-right">直近2年の価格推移イメージ</p>
-            </div>
-            {/* 無制限検索 */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-md transition">
-              <div className="w-11 h-11 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center mb-4">
-                <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <h3 className="font-bold text-slate-800 text-base mb-2">相場検索・AI査定 <span className="text-amber-600">無制限</span></h3>
-              <p className="text-sm text-slate-500 leading-relaxed">無料は月3回まで。スタンダードなら何度でも。複数エリア・物件タイプを比較しながら検討できる。</p>
-              <div className="mt-4 grid grid-cols-2 gap-2 text-center">
-                <div className="bg-slate-50 rounded-lg py-2 border border-slate-100">
-                  <p className="text-[10px] text-slate-400">無料</p>
-                  <p className="text-sm font-bold text-slate-500">月3回</p>
-                </div>
-                <div className="bg-amber-50 rounded-lg py-2 border border-amber-100">
-                  <p className="text-[10px] text-amber-500">スタンダード</p>
-                  <p className="text-sm font-bold text-amber-600">無制限</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="text-center">
-            <Link
-              href="/register?plan=standard"
-              className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 px-8 rounded-xl text-sm transition"
-            >
-              14日間無料で試す — 月額2,980円
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-            <p className="text-xs text-slate-400 mt-2">クレジットカード必須 / 14日間は無料 / いつでも解約可</p>
-          </div>
-        </div>
-      </section>
-
-      {/* ⑧ 料金プラン */}
-      <PricingSection />
-
-      {/* ⑧.5 単発レポート — サブスク不要 */}
-      <section className="py-14 bg-white border-y border-slate-100">
+      {/* ⑧ 単発レポート — サブスク不要 */}
+      <section className="py-14 bg-white">
         <div className="max-w-4xl mx-auto px-4">
           <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-8 md:p-10 flex flex-col md:flex-row gap-8 items-center">
             <div className="flex-1">
@@ -501,7 +423,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ⑨ お役立ちコンテンツ（カレンダー＋コラム統合） */}
+      {/* ⑨ 料金プラン */}
+      <PricingSection />
+
+      {/* ⑩ お役立ちコンテンツ（カレンダー＋コラム統合） */}
       <section className="py-16 bg-[#0f172a]">
         <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-10">
@@ -646,7 +571,7 @@ export default function Home() {
               「今いくらか」だけでなく「将来どうなるか」まで、データに基づいた判断材料を提供します。無料会員登録で月1回ご利用いただけます。
             </p>
             <p>
-              スタンダードプラン（月額2,980円）ではAI査定・相場検索が無制限に。プロフェッショナルプラン（月額6,800円）では20年分のトレンド分析、CSV無制限ダウンロード、チームアカウントなど法人向け機能をご用意しています。
+              スタンダードプラン（月額2,980円）ではAI査定・相場検索が無制限に。プロフェッショナルプラン（月額6,800円）では20年分のトレンド分析、CSV無制限ダウンロード、チームアカウント（5名）など法人向け機能をご用意しています。月額契約なしで試したい方には、1エリア980円の単発レポートもご利用いただけます。
             </p>
           </div>
         </div>
