@@ -453,9 +453,9 @@ export default function Home() {
               </p>
               <ul className="space-y-2 mb-6">
                 {[
-                  "過去5年分の実取引データ（種別別・年度別）",
-                  "AI推定価格レンジ（p25/p50/p75）",
-                  "将来価格予測・資産性スコア",
+                  "過去5年間の実取引データ（種別別・年度別集計）",
+                  "エリア別価格推移グラフ",
+                  "種別ごとの相場レンジ（中古マンション・戸建て・土地）",
                   "月額契約なし・1回限りの支払い",
                 ].map((f) => (
                   <li key={f} className="flex items-center gap-2 text-sm text-slate-600">
