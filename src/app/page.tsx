@@ -357,8 +357,149 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ⑦ スタンダード訴求 — CSV・トレンドが転換ポイント */}
+      <section className="py-16 bg-slate-50 border-y border-slate-100">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="text-center mb-10">
+            <p className="text-sm text-amber-600 font-bold mb-1 tracking-wider">スタンダードプラン 月額2,980円</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-800">無料では得られない、3つのデータ優位</h2>
+            <p className="text-slate-500 text-sm mt-2">大手ポータルにはない機能。データを武器にする人のためのプラン。</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6 mb-10">
+            {/* CSV */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-md transition">
+              <div className="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-4">
+                <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-slate-800 text-base mb-2">CSVダウンロード <span className="text-emerald-600">月100件</span></h3>
+              <p className="text-sm text-slate-500 leading-relaxed">実取引データをExcelで加工・分析。投資判断・売却戦略に使えるローデータをそのまま取得。</p>
+              <div className="mt-4 bg-slate-50 rounded-xl px-4 py-3 text-xs text-slate-500 border border-slate-100">
+                <span className="font-medium text-slate-700">取得できるデータ例</span><br />
+                成約価格・面積・築年・最寄駅・取引時期
+              </div>
+            </div>
+            {/* トレンド */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-md transition">
+              <div className="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-4">
+                <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-slate-800 text-base mb-2">2年分トレンド分析</h3>
+              <p className="text-sm text-slate-500 leading-relaxed">エリアの価格推移を2年分グラフで確認。「上がってるのか下がってるのか」を数字で判断。</p>
+              <div className="mt-4 flex items-end gap-1 h-10">
+                {[40, 45, 42, 50, 55, 53, 60, 65, 63, 70, 75, 72].map((h, i) => (
+                  <div key={i} className="flex-1 rounded-t-sm bg-blue-400/60" style={{ height: `${h}%` }} />
+                ))}
+              </div>
+              <p className="text-[10px] text-slate-400 mt-1 text-right">直近2年の価格推移イメージ</p>
+            </div>
+            {/* 無制限検索 */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-md transition">
+              <div className="w-11 h-11 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center mb-4">
+                <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-slate-800 text-base mb-2">相場検索・AI査定 <span className="text-amber-600">無制限</span></h3>
+              <p className="text-sm text-slate-500 leading-relaxed">無料は月3回まで。スタンダードなら何度でも。複数エリア・物件タイプを比較しながら検討できる。</p>
+              <div className="mt-4 grid grid-cols-2 gap-2 text-center">
+                <div className="bg-slate-50 rounded-lg py-2 border border-slate-100">
+                  <p className="text-[10px] text-slate-400">無料</p>
+                  <p className="text-sm font-bold text-slate-500">月3回</p>
+                </div>
+                <div className="bg-amber-50 rounded-lg py-2 border border-amber-100">
+                  <p className="text-[10px] text-amber-500">スタンダード</p>
+                  <p className="text-sm font-bold text-amber-600">無制限</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="text-center">
+            <Link
+              href="/register?plan=standard"
+              className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 px-8 rounded-xl text-sm transition"
+            >
+              14日間無料で試す — 月額2,980円
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+            <p className="text-xs text-slate-400 mt-2">クレジットカード必須 / 14日間は無料 / いつでも解約可</p>
+          </div>
+        </div>
+      </section>
+
       {/* ⑧ 料金プラン */}
       <PricingSection />
+
+      {/* ⑧.5 単発レポート — サブスク不要 */}
+      <section className="py-14 bg-white border-y border-slate-100">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-8 md:p-10 flex flex-col md:flex-row gap-8 items-center">
+            <div className="flex-1">
+              <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-full px-3 py-1 mb-4">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                <span className="text-amber-700 text-xs font-bold">サブスク不要・買い切り</span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 mb-3">
+                気になるエリアだけ、<br />
+                <span className="text-amber-500">980円</span>で単発レポート
+              </h2>
+              <p className="text-slate-500 text-sm leading-relaxed mb-5">
+                月額契約なし。調べたいエリアを1つ選んで、過去5年分の取引データを種別・年度別で即取得。
+              </p>
+              <ul className="space-y-2 mb-6">
+                {[
+                  "過去5年分の実取引データ（種別別・年度別）",
+                  "AI推定価格レンジ（p25/p50/p75）",
+                  "将来価格予測・資産性スコア",
+                  "月額契約なし・1回限りの支払い",
+                ].map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-sm text-slate-600">
+                    <svg className="w-4 h-4 text-amber-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/search"
+                className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-3 px-6 rounded-xl text-sm transition"
+              >
+                エリアを選んで購入する
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+            <div className="w-full md:w-56 shrink-0">
+              <div className="rounded-2xl border-2 border-amber-400 bg-white p-6 text-center shadow-lg">
+                <p className="text-xs text-slate-500 mb-1">1エリア・単発</p>
+                <div className="text-5xl font-extrabold text-amber-500 mb-1">¥980</div>
+                <p className="text-xs text-slate-400 mb-5">税込 / サブスクなし</p>
+                <div className="space-y-1.5 text-left mb-5">
+                  {["月額契約なし", "即時アクセス", "エリア自由に選択"].map((t) => (
+                    <p key={t} className="text-xs text-slate-500 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+                      {t}
+                    </p>
+                  ))}
+                </div>
+                <Link
+                  href="/search"
+                  className="block bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-2.5 px-4 rounded-xl text-sm transition w-full text-center"
+                >
+                  エリアを選ぶ →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ⑨ お役立ちコンテンツ（カレンダー＋コラム統合） */}
       <section className="py-16 bg-[#0f172a]">
