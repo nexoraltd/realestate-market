@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTier } from "@/hooks/useTier";
 
 export default function PaywallOverlay({
   feature,
@@ -9,6 +10,16 @@ export default function PaywallOverlay({
   feature: string;
   children: React.ReactNode;
 }) {
+  const { tier, loading } = useTier();
+
+  if (loading) {
+    return <div className="animate-pulse bg-slate-100 rounded-xl h-24" />;
+  }
+
+  if (tier === "standard" || tier === "professional") {
+    return <>{children}</>;
+  }
+
   return (
     <div className="relative">
       <div className="filter blur-sm pointer-events-none select-none w-full overflow-hidden">

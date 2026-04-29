@@ -228,6 +228,12 @@ export default function SearchResults() {
   const filteredCount = filtered.length;
   const isLimited = filteredCount > FREE_LIMIT;
 
+  const prices = filtered.map((t) => Number(t.TradePrice)).filter((n) => n > 0);
+  const avgPriceMan = prices.length > 0 ? Math.round(prices.reduce((a, b) => a + b, 0) / prices.length / 10000) : null;
+  const sortedPrices = [...prices].sort((a, b) => a - b);
+  const medianPriceMan = sortedPrices.length > 0 ? Math.round(sortedPrices[Math.floor(sortedPrices.length / 2)] / 10000) : null;
+  const maxPriceMan = prices.length > 0 ? Math.round(Math.max(...prices) / 10000) : null;
+
   return (
     <div className="space-y-6">
       {/* Title */}
@@ -406,19 +412,19 @@ export default function SearchResults() {
         <PaywallOverlay feature="平均価格">
           <div className="bg-white rounded-xl shadow-sm p-5 border border-slate-100">
             <div className="text-xs text-slate-500 mb-1">平均取引価格</div>
-            <div className="text-2xl font-extrabold text-slate-800">****<span className="text-sm font-normal text-slate-500 ml-1">万円</span></div>
+            <div className="text-2xl font-extrabold text-slate-800">{avgPriceMan?.toLocaleString() ?? "----"}<span className="text-sm font-normal text-slate-500 ml-1">万円</span></div>
           </div>
         </PaywallOverlay>
         <PaywallOverlay feature="中央値">
           <div className="bg-white rounded-xl shadow-sm p-5 border border-slate-100">
             <div className="text-xs text-slate-500 mb-1">中央値</div>
-            <div className="text-2xl font-extrabold text-slate-800">****<span className="text-sm font-normal text-slate-500 ml-1">万円</span></div>
+            <div className="text-2xl font-extrabold text-slate-800">{medianPriceMan?.toLocaleString() ?? "----"}<span className="text-sm font-normal text-slate-500 ml-1">万円</span></div>
           </div>
         </PaywallOverlay>
         <PaywallOverlay feature="最高価格">
           <div className="bg-white rounded-xl shadow-sm p-5 border border-slate-100">
             <div className="text-xs text-slate-500 mb-1">最高価格</div>
-            <div className="text-2xl font-extrabold text-slate-800">****<span className="text-sm font-normal text-slate-500 ml-1">万円</span></div>
+            <div className="text-2xl font-extrabold text-slate-800">{maxPriceMan?.toLocaleString() ?? "----"}<span className="text-sm font-normal text-slate-500 ml-1">万円</span></div>
           </div>
         </PaywallOverlay>
       </div>
