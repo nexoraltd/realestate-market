@@ -30,7 +30,7 @@ const MAX_PAGES = {
   "28": 40,  // Hyogo
   "40": 40,  // Fukuoka
 };
-const DEFAULT_MAX_PAGES = 30;
+const DEFAULT_MAX_PAGES = 200;
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
