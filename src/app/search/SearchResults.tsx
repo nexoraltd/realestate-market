@@ -476,7 +476,7 @@ export default function SearchResults() {
             </span>
           )}
         </div>
-        <TransactionTable transactions={freeTransactions} />
+        <TransactionTable transactions={freeTransactions} showAll={tier === "standard" || tier === "professional"} />
 
         {/* Upsell */}
         {isLimited && tier === "guest" && (

@@ -30,8 +30,10 @@ function formatYen(val: string): string {
 
 export default function TransactionTable({
   transactions,
+  showAll = false,
 }: {
   transactions: Transaction[];
+  showAll?: boolean;
 }) {
   const [typeFilter, setTypeFilter] = useState("all");
   const [page, setPage] = useState(0);
@@ -102,7 +104,7 @@ export default function TransactionTable({
               </tr>
             ) : (
               pageData.map((t, i) => {
-                const isMasked = i >= 2; // 3件目以降はマスク
+                const isMasked = !showAll && i >= 2;
                 return (
                 <tr
                   key={i}
