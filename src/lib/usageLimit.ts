@@ -1,8 +1,14 @@
 import Stripe from "stripe";
 
-const stripe = new Stripe((process.env.STRIPE_SECRET_KEY || "").trim(), {
-  apiVersion: "2026-02-25.clover",
-});
+let _stripe: Stripe | null = null;
+function getStripe(): Stripe {
+  if (!_stripe) {
+    _stripe = new Stripe((process.env.STRIPE_SECRET_KEY || "").trim(), {
+      apiVersion: "2026-02-25.clover",
+    });
+  }
+  return _stripe;
+}
 
 /** Monthly usage key format: estimate_2026-04 or search_2026-04 */
 function usageKey(feature: string): string {
@@ -37,7 +43,7 @@ export async function checkAndIncrementUsage(
   }
 
   // Look up customer
-  const customers = await stripe.customers.list({ email, limit: 1 });
+  const customers = await getStripe().customers.list({ email, limit: 1 });
   if (customers.data.length === 0) {
     return {
       result: { allowed: true, used: 0, limit: limits.guest, remaining: limits.guest },
@@ -48,7 +54,7 @@ export async function checkAndIncrementUsage(
   const customer = customers.data[0];
 
   // Check for active subscription → paid users have no limits
-  const subscriptions = await stripe.subscriptions.list({
+  const subscriptions = await getStripe().subscriptions.list({
     customer: customer.id,
     status: "all",
     limit: 5,
@@ -77,7 +83,7 @@ export async function checkAndIncrementUsage(
   }
 
   // Increment usage
-  await stripe.customers.update(customer.id, {
+  await getStripe().customers.update(customer.id, {
     metadata: {
       ...customer.metadata,
       [key]: String(used + 1),

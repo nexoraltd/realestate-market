@@ -44,7 +44,7 @@ function parseAge(buildingYear: string): number {
   return year > 0 ? currentYear - year : 0;
 }
 
-function parseStationMin(s: string): number {
+function parseStationMin(s: string | undefined): number {
   if (!s) return 999;
   const n = parseInt(s, 10);
   return isNaN(n) ? 999 : n;

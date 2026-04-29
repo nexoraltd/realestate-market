@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { setSession, clearSession } from "./sessionStorage";
 
 export type Tier = "guest" | "free" | "standard" | "professional";
+export { setSession, clearSession };
 
 interface TierState {
   tier: Tier;
@@ -68,10 +70,3 @@ export function useTier(): TierState {
   return state;
 }
 
-export function setSession(email: string, plan: string) {
-  localStorage.setItem(SESSION_KEY, JSON.stringify({ email, plan }));
-}
-
-export function clearSession() {
-  localStorage.removeItem(SESSION_KEY);
-}

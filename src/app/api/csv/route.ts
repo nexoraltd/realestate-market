@@ -17,7 +17,7 @@ function toCSV(rows: Transaction[]): string {
     "間取り", "土地の形状", "容積率", "建蔽率",
   ];
 
-  const escape = (v: string) => `"${(v || "").replace(/"/g, '""')}"`;
+  const escape = (v: string | undefined) => `"${(v || "").replace(/"/g, '""')}"`;
 
   const dataRows = rows.map((r) =>
     [

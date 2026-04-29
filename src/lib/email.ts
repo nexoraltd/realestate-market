@@ -259,6 +259,39 @@ function unsubscribeFooter(email: string) {
   `;
 }
 
+/** マジックリンク認証メール */
+export async function sendMagicLinkEmail(customerEmail: string, token: string) {
+  const url = `${SITE_URL}/account/magic-link?email=${encodeURIComponent(customerEmail)}&token=${token}`;
+
+  await getResend().emails.send({
+    from: FROM,
+    to: customerEmail,
+    subject: "【ネクソラ不動産】ログインリンク",
+    html: `
+      <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:24px">
+        <h2 style="color:#1e293b">ログインリンク</h2>
+        <p style="color:#475569">以下のボタンをクリックしてログインしてください。</p>
+        <p style="margin:24px 0">
+          <a href="${url}"
+             style="display:inline-block;background:#f59e0b;color:#0f172a;font-weight:bold;padding:14px 28px;border-radius:8px;text-decoration:none">
+            ログインする
+          </a>
+        </p>
+        <p style="color:#94a3b8;font-size:13px">このリンクは15分間有効です。</p>
+        <p style="color:#94a3b8;font-size:13px">
+          リンクが機能しない場合は以下のURLをブラウザに貼り付けてください：<br/>
+          <span style="word-break:break-all">${url}</span>
+        </p>
+        <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0" />
+        <p style="color:#94a3b8;font-size:12px">
+          このメールに心当たりがない場合は無視してください。
+          ご不明な点は <a href="mailto:info@next-aura.com" style="color:#f59e0b">info@next-aura.com</a> までお問い合わせください。
+        </p>
+      </div>
+    `,
+  });
+}
+
 /** 無料会員ウェルカムメール Day1 */
 export async function sendWelcomeEmail(customerEmail: string) {
   await getResend().emails.send({
