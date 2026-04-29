@@ -10,7 +10,6 @@ import TrendChart from "@/components/TrendChart";
 import ShareBar from "@/components/ShareBar";
 import { PREFECTURES } from "@/lib/prefectures";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
-import { useTier } from "@/hooks/useTier";
 
 interface Transaction {
   Type: string;
@@ -53,12 +52,6 @@ const QUARTER_LABELS: Record<string, string> = {
   "4": "第4四半期 (10-12月)",
 };
 
-const TIER_LIMITS: Record<string, number> = {
-  guest: 5,
-  free: 20,
-  standard: 9999,
-  professional: 9999,
-};
 
 const PRICE_RANGES = [
   { label: "全て", min: 0, max: Infinity },
@@ -79,8 +72,6 @@ const BUILDING_AGE_RANGES = [
 ];
 
 export default function SearchResults() {
-  const { tier } = useTier();
-  const FREE_LIMIT = TIER_LIMITS[tier] || 5;
   const params = useSearchParams();
   const area = params.get("area");
   const city = params.get("city");
@@ -225,10 +216,8 @@ export default function SearchResults() {
     );
   }
 
-  const freeTransactions = filtered.slice(0, FREE_LIMIT);
   const totalCount = transactions.length;
   const filteredCount = filtered.length;
-  const isLimited = filteredCount > FREE_LIMIT;
 
   const prices = filtered.map((t) => Number(t.TradePrice)).filter((n) => n > 0);
   const avgPriceMan = prices.length > 0 ? Math.round(prices.reduce((a, b) => a + b, 0) / prices.length / 10000) : null;
@@ -256,17 +245,6 @@ export default function SearchResults() {
             )}
           </p>
         </div>
-        {isLimited && (
-          <div className="hidden md:block bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-800">
-            {tier === "guest" ? `ゲスト: ${FREE_LIMIT}件まで表示` : `無料プラン: ${FREE_LIMIT}件まで表示`}
-            <Link
-              href={tier === "guest" ? "/register?plan=free" : "/register?plan=standard&interval=monthly"}
-              className="ml-2 font-bold underline"
-            >
-              全件表示 &rarr;
-            </Link>
-          </div>
-        )}
       </div>
 
       {/* Filters */}
@@ -466,63 +444,17 @@ export default function SearchResults() {
         </div>
       </PaywallOverlay>
 
-      {/* Table - Limited */}
+      {/* Table */}
       <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-bold text-lg text-slate-800">
             取引事例一覧
           </h3>
-          {isLimited && (
-            <span className="text-xs text-slate-400">
-              {FREE_LIMIT}件 / {filteredCount.toLocaleString()}件 を表示中
-            </span>
-          )}
+          <span className="text-xs text-slate-400">
+            {filteredCount.toLocaleString()}件
+          </span>
         </div>
-        <TransactionTable transactions={freeTransactions} showAll={tier === "standard" || tier === "professional"} />
-
-        {/* Upsell */}
-        {isLimited && tier === "guest" && (
-          <div className="mt-6 bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl p-6 text-white text-center">
-            <p className="font-bold text-lg mb-1">
-              残り {(filteredCount - FREE_LIMIT).toLocaleString()}件のデータがあります
-            </p>
-            <p className="text-slate-300 text-sm mb-5">
-              無料会員登録で <span className="text-amber-300 font-bold">20件まで</span> 即時解放。全件・分析は有料プランへ。
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link
-                href="/register?plan=free"
-                className="inline-block bg-amber-500 hover:bg-amber-400 text-white font-bold py-2.5 px-7 rounded-lg transition"
-              >
-                無料登録で20件見る（0円）
-              </Link>
-              <Link
-                href="/register?plan=standard&interval=monthly"
-                className="inline-block bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 px-7 rounded-lg border border-white/20 transition text-sm"
-              >
-                全件見る · ¥2,980/月〜
-              </Link>
-            </div>
-            <p className="text-slate-400 text-xs mt-3">14日間無料トライアルあり · いつでも解約可</p>
-          </div>
-        )}
-        {isLimited && tier === "free" && (
-          <div className="mt-6 bg-gradient-to-r from-blue-900 to-slate-800 rounded-xl p-6 text-white text-center">
-            <p className="font-bold text-lg mb-1">
-              残り {(filteredCount - FREE_LIMIT).toLocaleString()}件のデータがあります
-            </p>
-            <p className="text-slate-300 text-sm mb-4">
-              スタンダードプランで<span className="text-amber-300 font-bold">全件表示</span>・CSVダウンロード・トレンド分析が利用可能
-            </p>
-            <Link
-              href="/register?plan=standard&interval=monthly"
-              className="inline-block bg-amber-500 hover:bg-amber-400 text-white font-bold py-2.5 px-8 rounded-lg transition"
-            >
-              14日間無料で全機能を試す
-            </Link>
-            <p className="text-slate-400 text-xs mt-2">¥2,980/月 · 14日間無料 · いつでも解約可</p>
-          </div>
-        )}
+        <TransactionTable transactions={filtered} showAll={true} />
       </div>
 
       {/* レポート単品購入 CTA */}
