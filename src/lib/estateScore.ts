@@ -7,6 +7,20 @@ import { getTransactions } from './api';
 
 const SQM_PER_TSUBO = 3.30579;
 
+const ERA_BASE: Record<string, number> = { 令和: 2018, 平成: 1988, 昭和: 1925, 大正: 1911 };
+
+function parseJapaneseYear(s: string | undefined): number | undefined {
+  if (!s) return undefined;
+  for (const [era, base] of Object.entries(ERA_BASE)) {
+    const m = s.match(new RegExp(`${era}(\\d+)年`));
+    if (m) {
+      const y = base + Number(m[1]);
+      return y > 1900 && y <= new Date().getFullYear() ? y : undefined;
+    }
+  }
+  return undefined;
+}
+
 // ─── Area map ───────────────────────────────────────────────────────────────
 
 interface AreaCode {
@@ -86,6 +100,9 @@ export interface TsuboPriceResult {
   tsuboPriceYen: number;
   tsuboPriceMan: number;
   sampleCount: number;
+  avgStationDistanceMin?: number;
+  avgBuildingAgeYears?: number;
+  avgFloorAreaRatio?: number;
 }
 
 export async function getTsuboPrice(area: string): Promise<TsuboPriceResult> {
@@ -98,12 +115,30 @@ export async function getTsuboPrice(area: string): Promise<TsuboPriceResult> {
   }
   const avgPerSqm = prices.reduce((a, b) => a + b, 0) / prices.length;
   const tsuboPriceYen = avgPerSqm * SQM_PER_TSUBO;
+
+  const stationMins = txs.map((t) => Number(t.TimeToNearestStation)).filter((n) => Number.isFinite(n) && n > 0);
+  const avgStationDistanceMin = stationMins.length > 0
+    ? Math.round(stationMins.reduce((a, b) => a + b, 0) / stationMins.length) : undefined;
+
+  const currentYear = new Date().getFullYear();
+  const ages = txs.map((t) => parseJapaneseYear(t.BuildingYear)).filter((y): y is number => y !== undefined)
+    .map((y) => currentYear - y).filter((age) => age >= 0 && age <= 120);
+  const avgBuildingAgeYears = ages.length > 0
+    ? Math.round(ages.reduce((a, b) => a + b, 0) / ages.length) : undefined;
+
+  const ratios = txs.map((t) => Number(t.FloorAreaRatio)).filter((n) => Number.isFinite(n) && n > 0);
+  const avgFloorAreaRatio = ratios.length > 0
+    ? Math.round(ratios.reduce((a, b) => a + b, 0) / ratios.length) : undefined;
+
   return {
     area,
     areaName: resolved.name,
     tsuboPriceYen,
     tsuboPriceMan: Math.round(tsuboPriceYen / 10000),
     sampleCount: prices.length,
+    avgStationDistanceMin,
+    avgBuildingAgeYears,
+    avgFloorAreaRatio,
   };
 }
 
@@ -145,6 +180,7 @@ export interface ScoringInputs {
   propertyTsuboMan?: number;
   stationDistanceMin?: number;
   lineCount?: number;
+  buildingAgeYears?: number;
   redevelopmentFlag?: boolean;
   populationTrend?: 'up' | 'flat' | 'down';
 }
@@ -180,31 +216,38 @@ function scoreConvenience(distanceMin: number, lineCount: number) {
   return { score, note: `徒歩${distanceMin}分 / ${lineCount}路線` };
 }
 
-function scoreFuture(redevelopmentFlag: boolean, populationTrend: 'up' | 'flat' | 'down') {
+function scoreFuture(redevelopmentFlag: boolean, populationTrend: 'up' | 'flat' | 'down', buildingAgeYears?: number) {
   let score = 50;
   if (redevelopmentFlag) score += 25;
   if (populationTrend === 'up') score += 15;
   else if (populationTrend === 'down') score -= 15;
+  if (buildingAgeYears !== undefined) {
+    if (buildingAgeYears <= 5) score += 15;
+    else if (buildingAgeYears <= 10) score += 5;
+    else if (buildingAgeYears <= 20) score += 0;
+    else if (buildingAgeYears <= 30) score -= 5;
+    else if (buildingAgeYears <= 40) score -= 10;
+    else score -= 15;
+  }
   score = Math.max(0, Math.min(100, score));
   const notes: string[] = [];
   if (redevelopmentFlag) notes.push('再開発エリア');
+  if (buildingAgeYears !== undefined) notes.push(`築${buildingAgeYears}年`);
   notes.push(`人口${populationTrend === 'up' ? '増加' : populationTrend === 'down' ? '減少' : '横ばい'}`);
   return { score, note: notes.join(' / ') };
 }
 
 export async function computeEstateScore(area: string, inputs: ScoringInputs = {}): Promise<ScoreResult & { areaData: TsuboPriceResult }> {
   const areaData = await getTsuboPrice(area);
-  const {
-    propertyTsuboMan,
-    stationDistanceMin = 10,
-    lineCount = 1,
-    redevelopmentFlag = false,
-    populationTrend = 'flat',
-  } = inputs;
+  const { propertyTsuboMan, lineCount = 1, populationTrend = 'flat' } = inputs;
+
+  const stationDistanceMin = inputs.stationDistanceMin ?? areaData.avgStationDistanceMin ?? 10;
+  const buildingAgeYears = inputs.buildingAgeYears ?? areaData.avgBuildingAgeYears;
+  const redevelopmentFlag = inputs.redevelopmentFlag ?? (areaData.avgFloorAreaRatio !== undefined ? areaData.avgFloorAreaRatio >= 300 : false);
 
   const price = scorePrice(propertyTsuboMan, areaData.tsuboPriceMan);
   const conv = scoreConvenience(stationDistanceMin, lineCount);
-  const fut = scoreFuture(redevelopmentFlag, populationTrend);
+  const fut = scoreFuture(redevelopmentFlag, populationTrend, buildingAgeYears);
 
   const overall = Math.round(price.score * WEIGHTS.price + conv.score * WEIGHTS.convenience + fut.score * WEIGHTS.future);
 

@@ -56,9 +56,8 @@ export interface Transaction {
   Remarks: string;
   PriceCategory: string;
   DistrictCode: string;
-  // Station data
-  NearestStation: string;
-  TimeToNearestStation: string;
+  NearestStation?: string;
+  TimeToNearestStation?: string;
 }
 
 export async function getCities(prefCode: string): Promise<City[]> {
