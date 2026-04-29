@@ -114,11 +114,9 @@ export default function SearchResults() {
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
 
-    // Trend data (multi-period)
-    const targetArea = city || area;
-    if (targetArea) {
-      const trendParam = city ? `city=${city}` : `area=${area}`;
-      fetchWithAuth(`/api/trend?${trendParam}`)
+    // Trend data (multi-period) — trend API requires area (prefecture code)
+    if (area) {
+      fetchWithAuth(`/api/trend?area=${area}`)
         .then((r) => r.ok ? r.json() : [])
         .then((data) => setTrendData(Array.isArray(data) ? data : []))
         .catch(() => setTrendData([]));

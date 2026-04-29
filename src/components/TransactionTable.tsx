@@ -83,7 +83,7 @@ export default function TransactionTable({
         <table className="w-full text-sm">
           <thead className="bg-gray-50">
             <tr>
-              {["種別", "所在地", "取引価格", "面積", "間取り", "築年", "最寄駅", "徒歩", "用途地域", "時期"].map(
+              {["種別", "所在地", "取引価格", "面積", "間取り", "築年", "用途地域", "時期"].map(
                 (h) => (
                   <th
                     key={h}
@@ -98,7 +98,7 @@ export default function TransactionTable({
           <tbody>
             {pageData.length === 0 ? (
               <tr>
-                <td colSpan={10} className="px-3 py-8 text-center text-gray-400">
+                <td colSpan={8} className="px-3 py-8 text-center text-gray-400">
                   データがありません
                 </td>
               </tr>
@@ -128,12 +128,6 @@ export default function TransactionTable({
                   </td>
                   <td className="px-3 py-2 whitespace-nowrap">{t.FloorPlan || "-"}</td>
                   <td className={`px-3 py-2 whitespace-nowrap ${isMasked ? "blur-[3px] select-none" : ""}`}>{t.BuildingYear || "-"}</td>
-                  <td className={`px-3 py-2 whitespace-nowrap text-xs ${isMasked ? "blur-[3px] select-none" : ""}`}>
-                    {t.NearestStation || "-"}
-                  </td>
-                  <td className={`px-3 py-2 whitespace-nowrap text-xs ${isMasked ? "blur-[3px] select-none" : ""}`}>
-                    {t.TimeToNearestStation ? `${t.TimeToNearestStation}分` : "-"}
-                  </td>
                   <td className={`px-3 py-2 whitespace-nowrap text-xs ${isMasked ? "blur-[3px] select-none" : ""}`}>
                     {t.CityPlanning || "-"}
                   </td>

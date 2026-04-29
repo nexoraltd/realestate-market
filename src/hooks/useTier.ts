@@ -22,49 +22,55 @@ function parseTier(plan: string | null): Tier {
   return "guest";
 }
 
-export function useTier(): TierState {
-  const [state, setState] = useState<TierState>({
-    tier: "guest",
-    loading: true,
-    email: null,
-  });
+// Module-level cache so multiple PaywallOverlay instances share one fetch
+let _fetchPromise: Promise<TierState> | null = null;
+let _cachedResult: TierState | null = null;
 
-  useEffect(() => {
+function fetchTierOnce(): Promise<TierState> {
+  if (_cachedResult) return Promise.resolve(_cachedResult);
+  if (_fetchPromise) return _fetchPromise;
+
+  _fetchPromise = (async (): Promise<TierState> => {
     const stored = localStorage.getItem(SESSION_KEY);
-    if (!stored) {
-      setState({ tier: "guest", loading: false, email: null });
-      return;
-    }
+    if (!stored) return { tier: "guest", loading: false, email: null };
 
     let parsed: { email?: string; plan?: string };
-    try {
-      parsed = JSON.parse(stored);
-    } catch {
-      setState({ tier: "guest", loading: false, email: null });
-      return;
+    try { parsed = JSON.parse(stored); } catch {
+      return { tier: "guest", loading: false, email: null };
     }
 
     const userEmail = parsed.email || null;
-    if (!userEmail) {
-      setState({ tier: "guest", loading: false, email: null });
-      return;
+    if (!userEmail) return { tier: "guest", loading: false, email: null };
+
+    try {
+      const r = await fetch(`/api/subscription?email=${encodeURIComponent(userEmail)}`);
+      const data = await r.json();
+      const verifiedPlan = data.basePlan || data.plan || (data.active ? "free" : null);
+      const tier = parseTier(verifiedPlan);
+      localStorage.setItem(SESSION_KEY, JSON.stringify({ email: userEmail, plan: verifiedPlan }));
+      _cachedResult = { tier, loading: false, email: userEmail };
+    } catch {
+      _cachedResult = { tier: parseTier(parsed.plan || null), loading: false, email: userEmail };
     }
+    return _cachedResult!;
+  })();
 
-    // Use cached plan for immediate display, then verify
-    const cachedTier = parseTier(parsed.plan || null);
-    setState({ tier: cachedTier, loading: true, email: userEmail });
+  return _fetchPromise;
+}
 
-    fetch(`/api/subscription?email=${encodeURIComponent(userEmail)}`)
-      .then((r) => r.json())
-      .then((data) => {
-        const verifiedPlan = data.basePlan || data.plan || (data.active ? "free" : null);
-        const tier = parseTier(verifiedPlan);
-        localStorage.setItem(SESSION_KEY, JSON.stringify({ email: userEmail, plan: verifiedPlan }));
-        setState({ tier, loading: false, email: userEmail });
-      })
-      .catch(() => {
-        setState({ tier: cachedTier, loading: false, email: userEmail });
-      });
+export function useTier(): TierState {
+  const stored = typeof window !== "undefined" ? localStorage.getItem(SESSION_KEY) : null;
+  const cached = stored ? (() => { try { return JSON.parse(stored); } catch { return null; } })() : null;
+  const cachedTier = parseTier(cached?.plan || null);
+
+  const [state, setState] = useState<TierState>({
+    tier: cachedTier,
+    loading: true,
+    email: cached?.email || null,
+  });
+
+  useEffect(() => {
+    fetchTierOnce().then(setState);
   }, []);
 
   return state;
