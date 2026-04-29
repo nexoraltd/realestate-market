@@ -5,6 +5,8 @@ import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import TransactionTable from "@/components/TransactionTable";
 import PaywallOverlay from "@/components/PaywallOverlay";
+import PriceByTypeChart from "@/components/PriceByTypeChart";
+import TrendChart from "@/components/TrendChart";
 import ShareBar from "@/components/ShareBar";
 import { PREFECTURES } from "@/lib/prefectures";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
@@ -435,7 +437,7 @@ export default function SearchResults() {
           <h3 className="font-bold text-lg mb-4 text-slate-800">
             種別ごとの平均取引価格
           </h3>
-          <div className="w-full h-80 bg-slate-100 rounded-lg" />
+          <PriceByTypeChart transactions={filtered} />
         </div>
       </PaywallOverlay>
 
@@ -445,7 +447,7 @@ export default function SearchResults() {
           <h3 className="font-bold text-lg mb-4 text-slate-800">
             価格推移トレンド
           </h3>
-          <div className="w-full h-72 bg-slate-100 rounded-lg" />
+          <TrendChart transactions={filtered} />
         </div>
       </PaywallOverlay>
 
