@@ -96,6 +96,13 @@ export async function GET(request: NextRequest) {
       area: area || undefined,
       city: city || undefined,
     });
+    if (transactions.length > 0) {
+      console.log("[transactions] sample keys:", Object.keys(transactions[0]));
+      console.log("[transactions] sample station fields:", {
+        NearestStation: transactions[0].NearestStation,
+        TimeToNearestStation: transactions[0].TimeToNearestStation,
+      });
+    }
     return NextResponse.json(transactions);
   } catch {
     return NextResponse.json(

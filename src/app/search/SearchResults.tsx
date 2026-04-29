@@ -81,6 +81,7 @@ export default function SearchResults() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [trendData, setTrendData] = useState<{ TradePrice: string; Type: string; Period: string }[]>([]);
 
   // Filters
   const [typeFilter, setTypeFilter] = useState("all");
@@ -112,6 +113,16 @@ export default function SearchResults() {
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
+
+    // Trend data (multi-period)
+    const targetArea = city || area;
+    if (targetArea) {
+      const trendParam = city ? `city=${city}` : `area=${area}`;
+      fetchWithAuth(`/api/trend?${trendParam}`)
+        .then((r) => r.ok ? r.json() : [])
+        .then((data) => setTrendData(Array.isArray(data) ? data : []))
+        .catch(() => setTrendData([]));
+    }
   }, [area, city, year, quarter]);
 
   // Derived filter options
@@ -425,7 +436,7 @@ export default function SearchResults() {
           <h3 className="font-bold text-lg mb-4 text-slate-800">
             価格推移トレンド
           </h3>
-          <TrendChart transactions={filtered} />
+          <TrendChart transactions={trendData} />
         </div>
       </PaywallOverlay>
 
