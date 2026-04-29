@@ -1,9 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getTransactions } from "@/lib/api";
+import { getTransactions, Transaction } from "@/lib/api";
 import { checkApiAuth } from "@/lib/apiAuth";
 import { STRIPE_PRICE_IDS } from "@/lib/plans";
 import { checkAndIncrementUsage } from "@/lib/usageLimit";
+import { supabaseAdmin } from "@/lib/supabase";
 import Stripe from "stripe";
+
+async function enrichWithStations(transactions: Transaction[]): Promise<Transaction[]> {
+  if (transactions.length === 0) return transactions;
+
+  const codes = [...new Set(transactions.map((t) => t.MunicipalityCode).filter(Boolean))];
+  const { data } = await supabaseAdmin
+    .from("station_lookup")
+    .select("municipality_code, district_name, nearest_station, time_to_station")
+    .in("municipality_code", codes);
+
+  if (!data || data.length === 0) return transactions;
+
+  const stationMap = new Map<string, { nearest_station: string; time_to_station: number | null }>();
+  for (const s of data) {
+    stationMap.set(`${s.municipality_code}|${s.district_name}`, s);
+  }
+
+  return transactions.map((t) => {
+    const s = stationMap.get(`${t.MunicipalityCode}|${t.DistrictName}`);
+    if (!s) return t;
+    return {
+      ...t,
+      NearestStation: s.nearest_station,
+      TimeToNearestStation: s.time_to_station != null ? String(s.time_to_station) : undefined,
+    };
+  });
+}
 
 async function resolvePlan(email: string): Promise<string | null> {
   const stripeKey = (process.env.STRIPE_SECRET_KEY || "").trim();
@@ -90,12 +118,13 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const transactions = await getTransactions({
+    const raw = await getTransactions({
       year,
       quarter,
       area: area || undefined,
       city: city || undefined,
     });
+    const transactions = await enrichWithStations(raw);
     return NextResponse.json(transactions);
   } catch {
     return NextResponse.json(
