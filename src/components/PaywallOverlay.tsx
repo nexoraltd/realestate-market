@@ -12,12 +12,12 @@ export default function PaywallOverlay({
 }) {
   const { tier, loading } = useTier();
 
-  if (loading) {
-    return <div className="animate-pulse bg-slate-100 rounded-xl h-24" />;
-  }
-
   if (tier === "standard" || tier === "professional") {
     return <>{children}</>;
+  }
+
+  if (loading) {
+    return <div className="animate-pulse bg-slate-100 rounded-xl h-24" />;
   }
 
   return (
