@@ -5,40 +5,58 @@ import Footer from "@/components/Footer";
 import SearchForm from "@/components/SearchForm";
 import LegalNotice from "@/components/LegalNotice";
 import ReportCheckoutButton from "@/components/ReportCheckoutButton";
+import SearchPageCta from "@/components/SearchPageCta";
 import SearchResults from "./SearchResults";
+import { PREFECTURES } from "@/lib/prefectures";
 
 interface SearchPageProps {
-  searchParams: Promise<{ prefecture?: string; city?: string; type?: string }>
+  searchParams: Promise<{ area?: string; city?: string; type?: string }>
+}
+
+async function resolveCityName(prefCode: string, cityCode: string): Promise<string> {
+  try {
+    const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://market.next-aura.com'
+    const res = await fetch(`${base}/api/cities?area=${prefCode}`, { next: { revalidate: 86400 } })
+    if (!res.ok) return cityCode
+    const cities: { id: string; name: string }[] = await res.json()
+    return cities.find((c) => c.id === cityCode)?.name ?? cityCode
+  } catch {
+    return cityCode
+  }
 }
 
 async function getAreaLabel(searchParams: SearchPageProps['searchParams']) {
   const params = await searchParams
-  const { prefecture, city } = params
-  return city ? `${prefecture ?? ''}${city}` : prefecture ?? ''
+  const { area, city } = params
+  const prefName = PREFECTURES.find((p) => p.code === area)?.name ?? area ?? ''
+  if (!city) return prefName
+  const cityName = await resolveCityName(area ?? '', city)
+  return `${prefName} ${cityName}`
 }
 
 export async function generateMetadata({ searchParams }: SearchPageProps): Promise<Metadata> {
+  const areaLabel = await getAreaLabel(searchParams)
   const params = await searchParams
-  const { prefecture, city } = params
+  const { area } = params
 
-  const areaLabel = city ? `${prefecture}${city}` : prefecture ?? 'エリア'
-  const title = `${areaLabel}の不動産相場 | 不動産相場ナビ`
-  const description = `${areaLabel}の不動産取引価格・相場情報。マンション・一戸建て・土地の売買実績データを無料で検索。`
+  const label = areaLabel || 'エリア'
+  const title = `${label}の不動産相場 | 不動産相場ナビ`
+  const description = `${label}の不動産取引価格・相場情報。マンション・一戸建て・土地の売買実績データを無料で検索。`
 
   return {
     title,
     description,
     openGraph: {
-      title: `📍 ${areaLabel}の不動産相場 | 不動産相場ナビ`,
+      title: `📍 ${label}の不動産相場 | 不動産相場ナビ`,
       description,
     },
     twitter: {
       card: 'summary',
-      title: `📍 ${areaLabel}の不動産相場 | 不動産相場ナビ`,
+      title: `📍 ${label}の不動産相場 | 不動産相場ナビ`,
       description,
     },
     alternates: {
-      canonical: `https://market.next-aura.com/search${prefecture ? `?prefecture=${encodeURIComponent(prefecture)}` : ''}`,
+      canonical: `https://market.next-aura.com/search${area ? `?area=${encodeURIComponent(area)}` : ''}`,
     },
   }
 }
@@ -46,7 +64,7 @@ export async function generateMetadata({ searchParams }: SearchPageProps): Promi
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const areaLabel = await getAreaLabel(searchParams)
   const params = await searchParams
-  const areaParam = params.city || params.prefecture || ''
+  const areaParam = params.city || params.area || ''
 
   return (
     <>
@@ -92,49 +110,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         </section>
       )}
 
-      {/* CTA: 有料プラン + AI査定 */}
-      <section className="bg-gradient-to-b from-[#fdf2e9] to-white py-12">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* 有料プラン（直リンに変更） */}
-            <div className="bg-white rounded-2xl border-2 border-amber-400 p-6 text-center shadow-lg">
-              <div className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full mb-4">
-                14日間無料トライアル
-              </div>
-              <h2 className="text-lg font-bold text-[#1a365d] mb-2">
-                もっと詳しいデータで分析
-              </h2>
-              <p className="text-gray-600 text-sm mb-4">
-                CSV一括ダウンロード・価格トレンド・無制限検索で、データに基づく意思決定を。
-              </p>
-              <a
-                href="/register?plan=standard&interval=monthly"
-                className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg w-full"
-              >
-                スタンダード（¥2,980/月）を無料で試す
-              </a>
-            </div>
-            {/* AI査定 */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center shadow">
-              <div className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full mb-4">
-                無料・登録不要
-              </div>
-              <h2 className="text-lg font-bold text-[#1a365d] mb-2">
-                AIで物件価格を査定
-              </h2>
-              <p className="text-gray-600 text-sm mb-4">
-                エリア・面積・築年数を入力するだけ。国交省データから推定価格をAIが即算出。
-              </p>
-              <a
-                href="/estimate"
-                className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg w-full"
-              >
-                無料AI査定を試す
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* CTA: 有料プラン + AI査定（有料ユーザーには非表示） */}
+      <SearchPageCta />
 
       <LegalNotice />
       <Footer />

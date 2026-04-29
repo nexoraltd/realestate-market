@@ -120,6 +120,11 @@ export default function SearchForm({ compact = false }: { compact?: boolean }) {
               </option>
             ))}
           </select>
+          {Number(year) >= currentYear && (
+            <p className="mt-1 text-xs text-amber-600">
+              ⚠️ {year}年のデータはまだ収録されていない可能性があります
+            </p>
+          )}
         </div>
 
         <div>

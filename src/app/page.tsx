@@ -577,6 +577,25 @@ export default function Home() {
         </div>
       </section>
 
+      {/* データ有効期限の明記 */}
+      <section className="bg-amber-50 border-t border-amber-200 py-6">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="flex items-start gap-3 text-sm text-amber-900">
+            <span className="text-lg leading-none mt-0.5">⚠️</span>
+            <div>
+              <p className="font-bold mb-1">データの収録範囲について</p>
+              <p>
+                本サービスで提供しているデータは、国土交通省「不動産情報ライブラリ」の
+                <strong>2025年第4四半期（2025年10〜12月）まで</strong>の実取引データに基づいています。
+                <strong>2026年のデータは現在収録されていません。</strong>
+                国交省のデータ公開は実取引から約2四半期遅れるため、最新四半期が反映されるまでタイムラグが生じます。
+                購入・売却の判断には必ず最新情報を専門家にご確認ください。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <LegalNotice />
       <Footer />
     </>
