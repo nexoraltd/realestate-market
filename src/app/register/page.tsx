@@ -41,7 +41,7 @@ export default async function RegisterPage({
           <p className="text-slate-400 text-base">
             {selectedPlanKey === "free"
               ? "メールアドレスの登録だけで、すぐにご利用いただけます。"
-              : "クレジットカードで即時開通。14日間は無料でお試しいただけます。"}
+              : "ご登録後は14日間無料でお使いいただけます。"}
           </p>
         </div>
       </section>
