@@ -13,11 +13,13 @@ import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { useTier } from "@/hooks/useTier";
 
 const GUEST_SEARCH_KEY = "realestate_guest_searches";
+const FREE_SEARCH_KEY = "realestate_free_searches";
 const GUEST_SEARCH_LIMIT = 3;
+const FREE_SEARCH_LIMIT = 3;
 
-function getGuestSearchCount(): number {
+function getMonthlyCount(key: string): number {
   if (typeof window === "undefined") return 0;
-  const stored = localStorage.getItem(GUEST_SEARCH_KEY);
+  const stored = localStorage.getItem(key);
   if (!stored) return 0;
   try {
     const { count, month } = JSON.parse(stored);
@@ -28,12 +30,17 @@ function getGuestSearchCount(): number {
   }
 }
 
-function incrementGuestSearchCount(): number {
+function incrementMonthlyCount(key: string): number {
   const currentMonth = new Date().toISOString().slice(0, 7);
-  const count = getGuestSearchCount() + 1;
-  localStorage.setItem(GUEST_SEARCH_KEY, JSON.stringify({ count, month: currentMonth }));
+  const count = getMonthlyCount(key) + 1;
+  localStorage.setItem(key, JSON.stringify({ count, month: currentMonth }));
   return count;
 }
+
+const getGuestSearchCount = () => getMonthlyCount(GUEST_SEARCH_KEY);
+const incrementGuestSearchCount = () => incrementMonthlyCount(GUEST_SEARCH_KEY);
+const getFreeSearchCount = () => getMonthlyCount(FREE_SEARCH_KEY);
+const incrementFreeSearchCount = () => incrementMonthlyCount(FREE_SEARCH_KEY);
 
 interface Transaction {
   Type: string;
@@ -104,6 +111,7 @@ export default function SearchResults() {
 
   const { tier } = useTier();
   const [showGuestGate, setShowGuestGate] = useState(false);
+  const [showFreeGate, setShowFreeGate] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -129,6 +137,15 @@ export default function SearchResults() {
         return;
       }
       incrementGuestSearchCount();
+    }
+
+    if (tier === "free") {
+      const count = getFreeSearchCount();
+      if (count >= FREE_SEARCH_LIMIT) {
+        setShowFreeGate(true);
+        return;
+      }
+      incrementFreeSearchCount();
     }
 
     setLoading(true);
@@ -239,6 +256,39 @@ export default function SearchResults() {
             className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition text-sm"
           >
             スタンダードプランへ（無制限）
+          </Link>
+        </div>
+        <p className="text-xs text-slate-400 mt-6">※ 翌月になると自動でリセットされます</p>
+      </div>
+    );
+  }
+
+  if (showFreeGate) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
+        <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-6">
+          <svg className="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h2 className="text-2xl font-extrabold text-slate-800 mb-2">
+          今月の検索回数（{FREE_SEARCH_LIMIT}回）を使い切りました
+        </h2>
+        <p className="text-slate-500 mb-8 max-w-md">
+          スタンダードプラン以上にアップグレードすると毎月20回、プロフェッショナルプランなら無制限でご利用いただけます。
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Link
+            href="/pricing"
+            className="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-xl transition text-sm"
+          >
+            プランを比較する
+          </Link>
+          <Link
+            href="/register?plan=standard&interval=monthly"
+            className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition text-sm"
+          >
+            スタンダードにアップグレード
           </Link>
         </div>
         <p className="text-xs text-slate-400 mt-6">※ 翌月になると自動でリセットされます</p>
