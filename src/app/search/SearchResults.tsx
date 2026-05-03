@@ -109,7 +109,7 @@ export default function SearchResults() {
   const year = params.get("year");
   const quarter = params.get("quarter");
 
-  const { tier } = useTier();
+  const { tier, loading: tierLoading } = useTier();
   const [showGuestGate, setShowGuestGate] = useState(false);
   const [showFreeGate, setShowFreeGate] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -129,6 +129,7 @@ export default function SearchResults() {
 
   useEffect(() => {
     if (!area || !year || !quarter) return;
+    if (tierLoading) return;
 
     if (tier === "guest") {
       const count = getGuestSearchCount();
@@ -173,7 +174,7 @@ export default function SearchResults() {
         .then((data) => setTrendData(Array.isArray(data) ? data : []))
         .catch(() => setTrendData([]));
     }
-  }, [area, city, year, quarter]);
+  }, [area, city, year, quarter, tier, tierLoading]);
 
   // Derived filter options
   const types = useMemo(
