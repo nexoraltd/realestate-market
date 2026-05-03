@@ -27,6 +27,15 @@ let _fetchPromise: Promise<TierState> | null = null;
 let _cachedResult: TierState | null = null;
 
 function fetchTierOnce(): Promise<TierState> {
+  // Invalidate cache if the stored email changed (e.g., user logged in after being a guest)
+  if (_cachedResult) {
+    const stored = localStorage.getItem(SESSION_KEY);
+    const currentEmail = stored ? (() => { try { return JSON.parse(stored).email || null; } catch { return null; } })() : null;
+    if (_cachedResult.email !== currentEmail) {
+      _cachedResult = null;
+      _fetchPromise = null;
+    }
+  }
   if (_cachedResult) return Promise.resolve(_cachedResult);
   if (_fetchPromise) return _fetchPromise;
 

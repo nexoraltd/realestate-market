@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
 import TransactionTable from "@/components/TransactionTable";
 import PaywallOverlay from "@/components/PaywallOverlay";
@@ -110,6 +110,7 @@ export default function SearchResults() {
   const quarter = params.get("quarter");
 
   const { tier, loading: tierLoading } = useTier();
+  const fetchedParamsRef = useRef<string | null>(null);
   const [showGuestGate, setShowGuestGate] = useState(false);
   const [showFreeGate, setShowFreeGate] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -131,24 +132,30 @@ export default function SearchResults() {
     if (!area || !year || !quarter) return;
     if (tierLoading) return;
 
-    if (tier === "guest") {
-      const count = getGuestSearchCount();
-      if (count >= GUEST_SEARCH_LIMIT) {
-        setShowGuestGate(true);
-        return;
+    const paramsKey = `${area}|${city}|${year}|${quarter}`;
+    const alreadyFetched = fetchedParamsRef.current === paramsKey;
+
+    if (!alreadyFetched) {
+      if (tier === "guest") {
+        const count = getGuestSearchCount();
+        if (count >= GUEST_SEARCH_LIMIT) {
+          setShowGuestGate(true);
+          return;
+        }
+        incrementGuestSearchCount();
       }
-      incrementGuestSearchCount();
+
+      if (tier === "free") {
+        const count = getFreeSearchCount();
+        if (count >= FREE_SEARCH_LIMIT) {
+          setShowFreeGate(true);
+          return;
+        }
+        incrementFreeSearchCount();
+      }
     }
 
-    if (tier === "free") {
-      const count = getFreeSearchCount();
-      if (count >= FREE_SEARCH_LIMIT) {
-        setShowFreeGate(true);
-        return;
-      }
-      incrementFreeSearchCount();
-    }
-
+    fetchedParamsRef.current = paramsKey;
     setLoading(true);
     setError("");
 
