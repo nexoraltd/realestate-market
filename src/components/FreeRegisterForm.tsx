@@ -153,7 +153,7 @@ export default function FreeRegisterForm({ onSuccess, dark = true }: Props) {
 
         <p className={`text-center text-[11px] ${dark ? "text-slate-500" : "text-slate-500"}`}>
           既にアカウントをお持ちの方は
-          <Link href="/account" className="text-amber-500 hover:text-amber-400 ml-1">
+          <Link href="/login" className="text-amber-500 hover:text-amber-400 ml-1">
             ログイン
           </Link>
         </p>
