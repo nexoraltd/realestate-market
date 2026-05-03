@@ -5,10 +5,10 @@
  * professional: プロフェッショナル（6,800円/月）
  */
 
-export type PlanKey = "standard" | "professional";
+export type PlanKey = "free" | "standard" | "professional";
 
 export interface PlanPermissions {
-  /** CSVダウンロード月間上限（-1 = 無制限） */
+  /** CSVダウンロード月間上限（-1 = 無制限、0 = 不可） */
   csvMonthlyLimit: number;
   /** カスタムレポートの利用可否 */
   customReport: boolean;
@@ -25,6 +25,15 @@ export interface PlanPermissions {
 }
 
 const PERMISSIONS: Record<PlanKey, PlanPermissions> = {
+  free: {
+    csvMonthlyLimit: 0,
+    customReport: false,
+    teamAccount: false,
+    teamMaxMembers: 0,
+    trendAccess: false,
+    trendYears: 0,
+    dataYears: 1,
+  },
   standard: {
     csvMonthlyLimit: 100,
     customReport: false,
@@ -52,7 +61,8 @@ const PERMISSIONS: Record<PlanKey, PlanPermissions> = {
  */
 export function getPermissions(plan: string | null | undefined): PlanPermissions {
   if (plan?.startsWith("professional")) return PERMISSIONS.professional;
-  return PERMISSIONS.standard;
+  if (plan?.startsWith("standard")) return PERMISSIONS.standard;
+  return PERMISSIONS.free;
 }
 
 /**
@@ -60,7 +70,8 @@ export function getPermissions(plan: string | null | undefined): PlanPermissions
  */
 export function basePlanKey(plan: string | null | undefined): PlanKey {
   if (plan?.startsWith("professional")) return "professional";
-  return "standard";
+  if (plan?.startsWith("standard")) return "standard";
+  return "free";
 }
 
 /**

@@ -62,7 +62,7 @@ export default function DashboardContent() {
   const [authState, setAuthState] = useState<AuthState>("idle");
   const [verifiedEmail, setVerifiedEmail] = useState<string | null>(null);
   const [planLabel, setPlanLabel] = useState<string>("");
-  const [planKey, setPlanKey] = useState<PlanKey>("standard");
+  const [planKey, setPlanKey] = useState<PlanKey>("free");
 
   // CSV tab state (must be before any conditional return to respect Rules of Hooks)
   const [csvArea, setCsvArea] = useState("");
@@ -110,9 +110,9 @@ export default function DashboardContent() {
         const { email, plan } = JSON.parse(saved);
         // 楽観的に即座にUIを復元（体感速度優先）
         setVerifiedEmail(email);
-        const key = plan === "professional" ? "professional" : "standard";
+        const key: PlanKey = plan === "professional" ? "professional" : plan === "standard" ? "standard" : "free";
         setPlanKey(key);
-        setPlanLabel(key === "professional" ? "プロフェッショナル" : "スタンダード");
+        setPlanLabel(key === "professional" ? "プロフェッショナル" : key === "standard" ? "スタンダード" : "無料");
         setAuthState("active");
         fetchCsvUsage(email);
 
@@ -125,12 +125,14 @@ export default function DashboardContent() {
               setVerifiedEmail(null);
               setAuthState("idle");
             } else {
-              const currentKey = data.basePlan === "professional" || data.plan === "professional"
+              const currentKey: PlanKey = (data.basePlan === "professional" || data.plan === "professional")
                 ? "professional"
-                : "standard";
+                : (data.basePlan === "standard" || data.plan === "standard")
+                ? "standard"
+                : "free";
               if (currentKey !== key) {
                 setPlanKey(currentKey);
-                setPlanLabel(currentKey === "professional" ? "プロフェッショナル" : "スタンダード");
+                setPlanLabel(currentKey === "professional" ? "プロフェッショナル" : currentKey === "standard" ? "スタンダード" : "無料");
                 writeSession(JSON.stringify({ email, plan: currentKey }));
               }
             }
@@ -158,9 +160,9 @@ export default function DashboardContent() {
               .then((r) => r.json())
               .then((subData) => {
                 if (subData.active) {
-                  const plan = subData.plan || data.plan || "standard";
-                  const key = plan === "professional" ? "professional" : "standard";
-                  const label = key === "professional" ? "プロフェッショナル" : "スタンダード";
+                  const resolvedPlan = subData.plan || data.plan || "free";
+                  const key: PlanKey = resolvedPlan === "professional" ? "professional" : resolvedPlan === "standard" ? "standard" : "free";
+                  const label = key === "professional" ? "プロフェッショナル" : key === "standard" ? "スタンダード" : "無料";
                   writeSession(JSON.stringify({ email: data.email, plan: key }));
                   setVerifiedEmail(data.email);
                   setPlanKey(key);
@@ -170,9 +172,9 @@ export default function DashboardContent() {
                 } else {
                   // Stripeで決済完了直後はまだサブスクリプションが反映されていない場合がある
                   // その場合はセッション情報だけで認証する
-                  const plan = data.plan || "standard";
-                  const key = plan === "professional" ? "professional" : "standard";
-                  const label = key === "professional" ? "プロフェッショナル" : "スタンダード";
+                  const resolvedPlan = data.plan || "free";
+                  const key: PlanKey = resolvedPlan === "professional" ? "professional" : resolvedPlan === "standard" ? "standard" : "free";
+                  const label = key === "professional" ? "プロフェッショナル" : key === "standard" ? "スタンダード" : "無料";
                   writeSession(JSON.stringify({ email: data.email, plan: key }));
                   setVerifiedEmail(data.email);
                   setPlanKey(key);
@@ -215,7 +217,7 @@ export default function DashboardContent() {
     setVerifiedEmail(null);
     setGateEmail("");
     setAuthState("idle");
-    setPlanKey("standard");
+    setPlanKey("free");
   }
 
   // Show gate if not verified
@@ -604,6 +606,18 @@ export default function DashboardContent() {
 
           {/* CSVダウンロード */}
           {activeTab === "csv" && (
+            planKey === "free" ? (
+              <div className="text-center py-12">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-amber-100 flex items-center justify-center">
+                  <svg className="w-7 h-7 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-slate-800 mb-2">スタンダードプラン以上で利用できます</h3>
+                <p className="text-sm text-slate-500 mb-6">CSVダウンロードはスタンダードプラン（月2,980円）からご利用いただけます。月100件まで（プロフェッショナルは無制限）。</p>
+                <Link href="/pricing" className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3 rounded-xl transition text-sm">プランをアップグレード →</Link>
+              </div>
+            ) : (
             <div>
               <div className="flex items-center justify-between mb-2">
                 <h2 className="text-xl font-bold text-slate-800">CSVダウンロード</h2>
@@ -707,10 +721,23 @@ export default function DashboardContent() {
                 選択した都道府県・年度の全4四半期データをまとめてダウンロードします。Excelで開く際は文字コードUTF-8（BOM付き）を選択してください。
               </div>
             </div>
+            )
           )}
 
           {/* トレンド分析 */}
           {activeTab === "trend" && (
+            planKey === "free" ? (
+              <div className="text-center py-12">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-amber-100 flex items-center justify-center">
+                  <svg className="w-7 h-7 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-slate-800 mb-2">スタンダードプラン以上で利用できます</h3>
+                <p className="text-sm text-slate-500 mb-6">トレンド分析はスタンダードプラン（月2,980円）からご利用いただけます。2年分のデータ（プロフェッショナルは20年分）を可視化できます。</p>
+                <Link href="/pricing" className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3 rounded-xl transition text-sm">プランをアップグレード →</Link>
+              </div>
+            ) : (
             <div>
               <h2 className="text-xl font-bold text-slate-800 mb-2">トレンド分析</h2>
               <p className="text-sm text-slate-500 mb-6">
@@ -785,10 +812,23 @@ export default function DashboardContent() {
                 </div>
               )}
             </div>
+            )
           )}
 
           {/* エリア比較レポート */}
           {activeTab === "compare" && (
+            planKey === "free" ? (
+              <div className="text-center py-12">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-amber-100 flex items-center justify-center">
+                  <svg className="w-7 h-7 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-slate-800 mb-2">スタンダードプラン以上で利用できます</h3>
+                <p className="text-sm text-slate-500 mb-6">エリア比較レポートはスタンダードプラン（月2,980円）からご利用いただけます。複数エリアの相場を一覧で比較できます。</p>
+                <Link href="/pricing" className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3 rounded-xl transition text-sm">プランをアップグレード →</Link>
+              </div>
+            ) : (
             <div>
               <h2 className="text-xl font-bold text-slate-800 mb-2">エリア比較レポート</h2>
               <p className="text-sm text-slate-500 mb-6">
@@ -936,6 +976,7 @@ export default function DashboardContent() {
                 </div>
               )}
             </div>
+            )
           )}
 
           {/* プロ限定機能 */}
