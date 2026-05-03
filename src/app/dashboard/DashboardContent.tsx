@@ -37,7 +37,7 @@ function clearSession() {
   sessionStorage.removeItem(SESSION_KEY);
 }
 
-type AuthState = "idle" | "checking" | "active" | "inactive" | "no_password" | "error";
+type AuthState = "idle" | "checking" | "active" | "inactive" | "sent" | "error";
 
 const prefectures: Record<string, string> = {
   "01": "北海道", "02": "青森県", "03": "岩手県", "04": "宮城県", "05": "秋田県",
@@ -59,8 +59,6 @@ export default function DashboardContent() {
 
   // Subscription gate state
   const [gateEmail, setGateEmail] = useState("");
-  const [gatePassword, setGatePassword] = useState("");
-  const [showGatePassword, setShowGatePassword] = useState(false);
   const [authState, setAuthState] = useState<AuthState>("idle");
   const [verifiedEmail, setVerifiedEmail] = useState<string | null>(null);
   const [planLabel, setPlanLabel] = useState<string>("");
@@ -193,41 +191,20 @@ export default function DashboardContent() {
     }
   }, [fetchCsvUsage]);
 
-  async function handleGateCheck() {
-    if (!gateEmail || !gatePassword) return;
+  async function handleGateMagicLink() {
+    if (!gateEmail) return;
     setAuthState("checking");
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("/api/auth/magic-link", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: gateEmail, password: gatePassword }),
+        body: JSON.stringify({ email: gateEmail }),
       });
-      const data = await res.json();
-
-      if (res.status === 403 && data.error === "no_password") {
-        setAuthState("no_password");
-        return;
-      }
-      if (res.status === 401) {
-        setAuthState("error");
-        return;
-      }
       if (!res.ok) {
         setAuthState("error");
         return;
       }
-      if (data.active) {
-        const key = data.plan === "professional" ? "professional" : "standard";
-        const label = key === "professional" ? "プロフェッショナル" : "スタンダード";
-        writeSession(JSON.stringify({ email: gateEmail, plan: key }));
-        setVerifiedEmail(gateEmail);
-        setPlanKey(key);
-        setPlanLabel(label);
-        setAuthState("active");
-        fetchCsvUsage(gateEmail);
-      } else {
-        setAuthState("inactive");
-      }
+      setAuthState("sent");
     } catch {
       setAuthState("error");
     }
@@ -237,7 +214,6 @@ export default function DashboardContent() {
     clearSession();
     setVerifiedEmail(null);
     setGateEmail("");
-    setGatePassword("");
     setAuthState("idle");
     setPlanKey("standard");
   }
@@ -312,72 +288,40 @@ export default function DashboardContent() {
               <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
                 <p className="text-xs font-semibold text-slate-500 text-center mb-4">すでに会員の方はこちら</p>
 
-                <div className="mb-3">
-                  <input
-                    type="email"
-                    value={gateEmail}
-                    onChange={(e) => setGateEmail(e.target.value)}
-                    placeholder="メールアドレス"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
-                  />
-                </div>
+                {authState === "sent" ? (
+                  <div className="text-center py-2">
+                    <p className="text-sm font-bold text-emerald-600 mb-1">メールを送信しました</p>
+                    <p className="text-xs text-slate-500">{gateEmail} のメールボックスをご確認ください。</p>
+                    <button onClick={() => setAuthState("idle")} className="mt-3 text-xs text-slate-400 hover:text-slate-600">← 戻る</button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="mb-3">
+                      <input
+                        type="email"
+                        value={gateEmail}
+                        onChange={(e) => setGateEmail(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && handleGateMagicLink()}
+                        placeholder="メールアドレス"
+                        className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
+                      />
+                    </div>
 
-                <div className="mb-4">
-                  <div className="relative">
-                    <input
-                      type={showGatePassword ? "text" : "password"}
-                      value={gatePassword}
-                      onChange={(e) => setGatePassword(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && handleGateCheck()}
-                      placeholder="パスワード"
-                      className="w-full border border-slate-200 rounded-xl px-4 py-3 pr-12 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
-                    />
+                    {authState === "error" && (
+                      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm mb-3">
+                        送信に失敗しました。再度お試しください。
+                      </div>
+                    )}
+
                     <button
-                      type="button"
-                      onClick={() => setShowGatePassword(!showGatePassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                      onClick={handleGateMagicLink}
+                      disabled={!gateEmail || authState === "checking"}
+                      className="w-full bg-slate-800 hover:bg-slate-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold py-3 rounded-xl transition"
                     >
-                      {showGatePassword ? (
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                        </svg>
-                      ) : (
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                      )}
+                      {authState === "checking" ? "送信中..." : "ログインリンクを送る"}
                     </button>
-                  </div>
-                </div>
-
-                {authState === "error" && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm mb-3">
-                    メールアドレスまたはパスワードが正しくありません
-                  </div>
+                  </>
                 )}
-                {authState === "no_password" && (
-                  <div className="bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-xl text-sm mb-3">
-                    パスワードが未設定です。登録時のメールをご確認ください。
-                    <Link href="/login" className="block mt-1 text-amber-600 hover:text-amber-700 font-medium underline">
-                      パスワード設定・再送はこちら →
-                    </Link>
-                  </div>
-                )}
-
-                <button
-                  onClick={handleGateCheck}
-                  disabled={!gateEmail || !gatePassword || authState === "checking"}
-                  className="w-full bg-slate-800 hover:bg-slate-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold py-3 rounded-xl transition"
-                >
-                  {authState === "checking" ? "確認中..." : "ログインして入る"}
-                </button>
-
-                <div className="mt-3 text-center">
-                  <Link href="/login" className="text-xs text-amber-600 hover:text-amber-700 font-medium">
-                    パスワードを忘れた方はこちら →
-                  </Link>
-                </div>
               </div>
             </div>
           )}
