@@ -46,12 +46,7 @@ export default function Header() {
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
             AI査定
           </Link>
-          <Link href="/sell" className="text-slate-300 hover:text-white transition font-medium">
-            売りたい方
-          </Link>
-          <Link href="/buy" className="text-slate-300 hover:text-white transition font-medium">
-            買いたい方
-          </Link>
+
           <Link href="/blog" className="text-slate-300 hover:text-white transition font-medium">
             コラム
           </Link>
@@ -92,8 +87,7 @@ export default function Header() {
             { href: "/", label: "トップ" },
             { href: "/search", label: "相場検索" },
             { href: "/estimate", label: "AI査定" },
-            { href: "/sell", label: "売りたい方" },
-            { href: "/buy", label: "買いたい方" },
+
             { href: "/blog", label: "コラム" },
             { href: "/pricing", label: "料金" },
             { href: "/dashboard", label: "マイページ" },
