@@ -57,10 +57,10 @@ export default function Header() {
             マイページ
           </Link>
           <Link
-            href="/estimate"
+            href="/register"
             className="bg-amber-500 hover:bg-amber-400 px-5 py-2 rounded-lg font-bold transition text-sm text-slate-900 shadow-md"
           >
-            無料AI査定
+            無料登録
           </Link>
         </nav>
 
