@@ -75,10 +75,7 @@ export default function Home() {
       {/* ② 信頼バッジ */}
       <TrustBadges />
 
-      {/* ③ 使い方の説明 — まずサービスを理解してもらう */}
-      <HowItWorks />
-
-      {/* ④ キラーコンテンツ訴求 — 将来予測 + 資産性スコア */}
+      {/* ③ キラーコンテンツ訴求 — 将来予測 + 資産性スコア */}
       <section className="py-20 bg-gradient-to-b from-[#0f172a] via-[#0f1f3a] to-[#0f172a]">
         <div className="max-w-6xl mx-auto px-4">
           {/* Section header */}
@@ -245,7 +242,56 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ⑤ 無料ツール — 住宅ローン・固定資産税 */}
+      {/* ④ 人気エリア — データの説得力 */}
+      <PopularAreas />
+
+      {/* ⑤ 無料会員登録CTA */}
+      <section className="py-16 bg-gradient-to-b from-[#0f172a] to-[#1e293b]">
+        <div className="max-w-3xl mx-auto px-4">
+          <div className="rounded-3xl border border-amber-500/20 bg-gradient-to-br from-slate-800/80 to-slate-900/80 p-8 md:p-12">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-full px-4 py-1.5 mb-4">
+                <span className="text-amber-400 text-xs font-bold">無料 / 30秒で完了</span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3">
+                無料登録で、もっと見える。
+              </h2>
+              <p className="text-slate-400 text-sm max-w-lg mx-auto leading-relaxed">
+                メールアドレスの登録だけで、将来価格予測が10年後まで解放。<br className="hidden md:block" />
+                資産性スコアの5因子内訳も全て見られます。
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <div className="space-y-3">
+                {[
+                  { icon: "📈", text: "将来価格予測 10年後まで（月1回）" },
+                  { icon: "📊", text: "資産性スコア 5因子の内訳表示" },
+                  { icon: "🔍", text: "相場検索 月3回" },
+                  { icon: "📋", text: "参考成約事例 5件まで" },
+                ].map((item) => (
+                  <div key={item.text} className="flex items-center gap-3">
+                    <span className="text-lg">{item.icon}</span>
+                    <span className="text-sm text-slate-300">{item.text}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="bg-slate-900/60 border border-slate-700/50 rounded-2xl p-6">
+                <p className="text-xs text-slate-500 mb-4 font-medium text-center">無料会員登録</p>
+                <FreeRegisterForm />
+                <p className="text-center text-[10px] text-slate-600 mt-2">
+                  クレジットカード不要 / いつでも退会可能
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ⑥ 使い方の説明 */}
+      <HowItWorks />
+
+      {/* ⑦ 無料ツール — 住宅ローン・固定資産税 */}
       <section className="py-14 bg-white border-y border-slate-100">
         <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-8">
@@ -307,52 +353,6 @@ export default function Home() {
                 </svg>
               </span>
             </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ⑥ 人気エリア — データの説得力 */}
-      <PopularAreas />
-
-      {/* ⑥ 無料会員登録CTA */}
-      <section className="py-16 bg-gradient-to-b from-[#0f172a] to-[#1e293b]">
-        <div className="max-w-3xl mx-auto px-4">
-          <div className="rounded-3xl border border-amber-500/20 bg-gradient-to-br from-slate-800/80 to-slate-900/80 p-8 md:p-12">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-full px-4 py-1.5 mb-4">
-                <span className="text-amber-400 text-xs font-bold">無料 / 30秒で完了</span>
-              </div>
-              <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3">
-                無料登録で、もっと見える。
-              </h2>
-              <p className="text-slate-400 text-sm max-w-lg mx-auto leading-relaxed">
-                メールアドレスの登録だけで、将来価格予測が10年後まで解放。<br className="hidden md:block" />
-                資産性スコアの5因子内訳も全て見られます。
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <div className="space-y-3">
-                {[
-                  { icon: "📈", text: "将来価格予測 10年後まで（月1回）" },
-                  { icon: "📊", text: "資産性スコア 5因子の内訳表示" },
-                  { icon: "🔍", text: "相場検索 月3回" },
-                  { icon: "📋", text: "参考成約事例 5件まで" },
-                ].map((item) => (
-                  <div key={item.text} className="flex items-center gap-3">
-                    <span className="text-lg">{item.icon}</span>
-                    <span className="text-sm text-slate-300">{item.text}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="bg-slate-900/60 border border-slate-700/50 rounded-2xl p-6">
-                <p className="text-xs text-slate-500 mb-4 font-medium text-center">無料会員登録</p>
-                <FreeRegisterForm />
-                <p className="text-center text-[10px] text-slate-600 mt-2">
-                  クレジットカード不要 / いつでも退会可能
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
