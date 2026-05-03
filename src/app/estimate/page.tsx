@@ -154,7 +154,7 @@ export default function EstimatePage() {
               あなたの物件、<span className="text-amber-400">今いくら？</span>
             </h1>
             <p className="text-slate-400 text-sm md:text-base max-w-xl mx-auto">
-              国土交通省の実取引データ（直近5年）をもとに、推定価格・将来予測・資産性スコアをAIが算出。登録不要・完全無料。
+              国土交通省の実取引データ（直近5年）をもとに推定価格を即表示。無料登録（30秒）で10年後の将来予測・資産性スコアも解放。
             </p>
           </div>
 
