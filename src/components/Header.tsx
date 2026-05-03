@@ -57,7 +57,7 @@ export default function Header() {
             マイページ
           </Link>
           <Link
-            href="/register"
+            href="/register?plan=free"
             className="bg-amber-500 hover:bg-amber-400 px-5 py-2 rounded-lg font-bold transition text-sm text-slate-900 shadow-md"
           >
             無料登録
