@@ -531,7 +531,14 @@ export default function SearchResults() {
             {filteredCount.toLocaleString()}件
           </span>
         </div>
-        <TransactionTable transactions={filtered} showAll={true} />
+        <TransactionTable
+          transactions={
+            tier === "professional" ? filtered :
+            tier === "standard" ? filtered.slice(0, 20) :
+            filtered.slice(0, 5)
+          }
+          showAll={tier !== "guest"}
+        />
       </div>
 
       {/* レポート単品購入 CTA */}
