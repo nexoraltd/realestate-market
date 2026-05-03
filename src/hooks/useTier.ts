@@ -68,14 +68,10 @@ function fetchTierOnce(): Promise<TierState> {
 }
 
 export function useTier(): TierState {
-  const stored = typeof window !== "undefined" ? localStorage.getItem(SESSION_KEY) : null;
-  const cached = stored ? (() => { try { return JSON.parse(stored); } catch { return null; } })() : null;
-  const cachedTier = parseTier(cached?.plan || null);
-
   const [state, setState] = useState<TierState>({
-    tier: cachedTier,
+    tier: "guest",
     loading: true,
-    email: cached?.email || null,
+    email: null,
   });
 
   useEffect(() => {
