@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { supabaseAdmin } from "@/lib/supabase";
 import {
   sendCheckoutCompleteEmail,
   sendCancellationEmail,
@@ -11,6 +12,12 @@ import {
 } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
+
+function planFromSub(sub: Stripe.Subscription): string {
+  const meta = sub.metadata?.plan;
+  if (meta) return meta;
+  return "standard";
+}
 
 export async function POST(req: NextRequest) {
   const key = (process.env.STRIPE_SECRET_KEY || "").trim();
@@ -40,17 +47,39 @@ export async function POST(req: NextRequest) {
       const email = session.customer_email;
       const customerId = session.customer as string | null;
       const plan = session.metadata?.plan || "standard";
-      console.log(
-        `[webhook] チェックアウト完了: ${session.id} customer=${email} plan=${plan}`
-      );
+      console.log(`[webhook] チェックアウト完了: ${session.id} customer=${email} plan=${plan}`);
+
+      // Sync plan to Supabase
       if (email) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const sub = session.subscription ? await stripe.subscriptions.retrieve(session.subscription as string) : null;
+        const periodEnd = sub
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ? new Date(((sub as any).current_period_end as number) * 1000).toISOString()
+          : null;
+
+        try {
+          await supabaseAdmin
+            .from("realestate_users")
+            .upsert(
+              {
+                email,
+                plan,
+                ...(customerId ? { stripe_customer_id: customerId } : {}),
+                ...(periodEnd ? { current_period_end: periodEnd } : {}),
+              },
+              { onConflict: "email" }
+            );
+        } catch (e) {
+          console.error("[webhook] Supabase upsert error:", e);
+        }
+
         try {
           await sendCheckoutCompleteEmail(email, plan);
         } catch (e) {
           console.error("[webhook] メール送信失敗:", e);
         }
 
-        // パスワード設定リンクを生成・送信
         if (customerId) {
           try {
             const token = crypto.randomUUID();
@@ -66,13 +95,48 @@ export async function POST(req: NextRequest) {
       }
       break;
     }
+
+    case "customer.subscription.updated": {
+      const sub = event.data.object as Stripe.Subscription;
+      const customerId = sub.customer as string;
+      const plan = planFromSub(sub);
+      const isActive = sub.status === "active" || sub.status === "trialing";
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const periodEnd = (sub as any).current_period_end as number | null;
+
+      try {
+        await supabaseAdmin
+          .from("realestate_users")
+          .update({
+            plan: isActive ? plan : "free",
+            current_period_end: periodEnd
+              ? new Date(periodEnd * 1000).toISOString()
+              : null,
+          })
+          .eq("stripe_customer_id", customerId);
+      } catch (e) {
+        console.error("[webhook] Supabase update error:", e);
+      }
+      break;
+    }
+
     case "customer.subscription.deleted": {
       const sub = event.data.object as Stripe.Subscription;
+      const customerId = sub.customer as string;
       console.log(`[webhook] サブスクリプション解約: ${sub.id}`);
+
+      // Reset plan to free in Supabase
+      try {
+        await supabaseAdmin
+          .from("realestate_users")
+          .update({ plan: "free", current_period_end: null })
+          .eq("stripe_customer_id", customerId);
+      } catch (e) {
+        console.error("[webhook] Supabase update error:", e);
+      }
+
       try {
         await sendCancellationEmail(sub.id);
-        // 顧客にも解約完了メールを送信
-        const customerId = sub.customer as string;
         const customer = await stripe.customers.retrieve(customerId);
         if (!customer.deleted && customer.email) {
           await sendCancellationToCustomerEmail(customer.email);
@@ -82,12 +146,12 @@ export async function POST(req: NextRequest) {
       }
       break;
     }
+
     case "invoice.payment_failed": {
       const invoice = event.data.object as Stripe.Invoice;
       console.log(`[webhook] 支払い失敗: ${invoice.id}`);
       try {
         await sendPaymentFailedEmail(invoice.id);
-        // 顧客にも支払い失敗を通知
         if (invoice.customer_email) {
           await sendPaymentFailedToCustomerEmail(invoice.customer_email);
         }
@@ -96,6 +160,7 @@ export async function POST(req: NextRequest) {
       }
       break;
     }
+
     case "customer.subscription.trial_will_end": {
       const sub = event.data.object as Stripe.Subscription;
       console.log(`[webhook] トライアル終了予告: ${sub.id}`);
@@ -112,6 +177,7 @@ export async function POST(req: NextRequest) {
       }
       break;
     }
+
     default:
       break;
   }

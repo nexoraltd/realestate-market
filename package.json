@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "cross-env NODE_ENV=production next build",
     "start": "next start"
   },
   "dependencies": {
@@ -31,5 +31,8 @@
     "stripe": "^20.4.1",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0"
   }
 }

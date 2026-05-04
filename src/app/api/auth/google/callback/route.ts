@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { supabaseAdmin } from "@/lib/supabase";
+import { encodeSession, SESSION_COOKIE } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
@@ -7,11 +9,10 @@ export const dynamic = "force-dynamic";
 function decodeJwtPayload(token: string): Record<string, unknown> {
   const parts = token.split(".");
   if (parts.length < 2) throw new Error("Invalid JWT format");
-  // Base64url → Base64 → decode
   const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
   const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
   const json = Buffer.from(padded, "base64").toString("utf-8");
-  return JSON.parse(json);
+  return JSON.parse(json) as Record<string, unknown>;
 }
 
 export async function GET(req: NextRequest) {
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(`${baseUrl}/register?error=google_cancelled`);
   }
 
-  // 1. Googleのtoken endpointにcodeを渡してid_tokenを取得
+  // 1. Exchange code for id_token
   let idToken: string;
   try {
     const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
@@ -54,7 +55,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(`${baseUrl}/register?error=google_token`);
   }
 
-  // 2. id_tokenをdecodeしてemailを取得
+  // 2. Extract email from id_token
   let email: string;
   try {
     const payload = decodeJwtPayload(idToken);
@@ -67,34 +68,66 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(`${baseUrl}/register?error=google_decode`);
   }
 
-  // 3. Stripe顧客を検索/作成
+  // 3. Check Supabase for existing user
   let plan = "free";
-  try {
-    const stripe = new Stripe((process.env.STRIPE_SECRET_KEY || "").trim(), {
-      apiVersion: "2026-02-25.clover",
-    });
+  let customerId: string | undefined;
 
-    const existing = await stripe.customers.list({ email, limit: 1 });
-    if (existing.data.length > 0) {
-      // 既存顧客: planを取得
-      plan = existing.data[0].metadata?.plan || "free";
-    } else {
-      // 新規顧客: Googleログイン由来フラグをセット
-      await stripe.customers.create({
-        email,
-        metadata: {
-          plan: "free",
-          registered_at: new Date().toISOString(),
-          auth_provider: "google",
-        },
+  const { data: dbUser } = await supabaseAdmin
+    .from("realestate_users")
+    .select("plan, stripe_customer_id")
+    .eq("email", email)
+    .single();
+
+  if (dbUser) {
+    plan = dbUser.plan;
+    customerId = dbUser.stripe_customer_id ?? undefined;
+  } else {
+    // New user — check Stripe for any existing customer
+    try {
+      const stripe = new Stripe((process.env.STRIPE_SECRET_KEY || "").trim(), {
+        apiVersion: "2026-02-25.clover",
       });
+      const existing = await stripe.customers.list({ email, limit: 1 });
+      if (existing.data.length > 0) {
+        customerId = existing.data[0].id;
+        plan = existing.data[0].metadata?.plan || "free";
+      } else {
+        const customer = await stripe.customers.create({
+          email,
+          metadata: {
+            plan: "free",
+            registered_at: new Date().toISOString(),
+            auth_provider: "google",
+          },
+        });
+        customerId = customer.id;
+      }
+    } catch (err) {
+      console.error("[google/callback] Stripe error (non-fatal):", err);
     }
-  } catch (err) {
-    console.error("[google/callback] Stripe error:", err);
-    // Stripe失敗でも認証は通す（freeとして扱う）
   }
 
-  // 4. google-successページにリダイレクト（クエリパラメータでemail+planを渡す）
+  // 4. Upsert into Supabase
+  try {
+    await supabaseAdmin
+      .from("realestate_users")
+      .upsert(
+        { email, plan, ...(customerId ? { stripe_customer_id: customerId } : {}) },
+        { onConflict: "email" }
+      );
+  } catch (e) {
+    console.error("[google/callback] Supabase upsert error:", e);
+  }
+
+  // 5. Set session cookie and redirect
   const successParams = new URLSearchParams({ email, plan });
-  return NextResponse.redirect(`${baseUrl}/auth/google-success?${successParams.toString()}`);
+  const response = NextResponse.redirect(
+    `${baseUrl}/auth/google-success?${successParams.toString()}`
+  );
+  response.cookies.set(
+    SESSION_COOKIE.name,
+    encodeSession({ email, plan }),
+    SESSION_COOKIE.options
+  );
+  return response;
 }

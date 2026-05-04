@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import bcrypt from "bcryptjs";
+import { supabaseAdmin } from "@/lib/supabase";
+import { encodeSession, SESSION_COOKIE } from "@/lib/session";
 import { sendWelcomeEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
@@ -22,60 +24,69 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const stripe = new Stripe((process.env.STRIPE_SECRET_KEY || "").trim(), {
-      apiVersion: "2026-02-25.clover",
-    });
+    // Check if already registered in Supabase
+    const { data: existing } = await supabaseAdmin
+      .from("realestate_users")
+      .select("id, password_hash")
+      .eq("email", email)
+      .single();
 
-    // Check if customer already exists
-    const existing = await stripe.customers.list({ email, limit: 1 });
-    if (existing.data.length > 0) {
-      const customer = existing.data[0];
-      if (customer.metadata?.password_hash) {
-        return NextResponse.json(
-          { error: "このメールアドレスは既に登録されています。ログインしてください。" },
-          { status: 409 }
-        );
-      }
-      // Customer exists but no password (e.g. from newsletter) — set password
-      const hash = await bcrypt.hash(password, 12);
-      await stripe.customers.update(customer.id, {
-        metadata: {
-          ...customer.metadata,
-          password_hash: hash,
-          plan: customer.metadata?.plan || "free",
-          registered_at: customer.metadata?.registered_at || new Date().toISOString(),
-        },
-      });
-      await sendWelcomeEmail(email).catch((e) =>
-        console.error("[register-free] welcome email error:", e)
+    if (existing?.password_hash) {
+      return NextResponse.json(
+        { error: "このメールアドレスは既に登録されています。ログインしてください。" },
+        { status: 409 }
       );
-      return NextResponse.json({
-        success: true,
-        plan: "free",
-        customer_id: customer.id,
-      });
     }
 
-    // Create new Stripe customer
     const hash = await bcrypt.hash(password, 12);
-    const customer = await stripe.customers.create({
-      email,
-      metadata: {
-        password_hash: hash,
-        plan: "free",
-        registered_at: new Date().toISOString(),
-      },
-    });
+
+    // Upsert into Supabase (email may already exist without password, e.g. from OAuth)
+    await supabaseAdmin.from("realestate_users").upsert(
+      { email, password_hash: hash, plan: "free" },
+      { onConflict: "email" }
+    );
+
+    // Also create/link Stripe customer for future billing
+    let customerId: string | undefined;
+    try {
+      const stripe = new Stripe((process.env.STRIPE_SECRET_KEY || "").trim(), {
+        apiVersion: "2026-02-25.clover",
+      });
+      const stripeExisting = await stripe.customers.list({ email, limit: 1 });
+      if (stripeExisting.data.length > 0) {
+        customerId = stripeExisting.data[0].id;
+      } else {
+        const customer = await stripe.customers.create({
+          email,
+          metadata: { plan: "free", registered_at: new Date().toISOString() },
+        });
+        customerId = customer.id;
+      }
+      if (customerId) {
+        await supabaseAdmin
+          .from("realestate_users")
+          .update({ stripe_customer_id: customerId })
+          .eq("email", email);
+      }
+    } catch (stripeErr) {
+      console.error("[register-free] Stripe error (non-fatal):", stripeErr);
+    }
 
     await sendWelcomeEmail(email).catch((e) =>
       console.error("[register-free] welcome email error:", e)
     );
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       success: true,
       plan: "free",
-      customer_id: customer.id,
+      customer_id: customerId ?? null,
     });
+    res.cookies.set(
+      SESSION_COOKIE.name,
+      encodeSession({ email, plan: "free" }),
+      SESSION_COOKIE.options
+    );
+    return res;
   } catch (err) {
     console.error("[auth/register-free] error:", err);
     return NextResponse.json(
@@ -84,4 +95,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

@@ -1,21 +1,4 @@
-import Stripe from "stripe";
-
-let _stripe: Stripe | null = null;
-function getStripe(): Stripe {
-  if (!_stripe) {
-    _stripe = new Stripe((process.env.STRIPE_SECRET_KEY || "").trim(), {
-      apiVersion: "2026-02-25.clover",
-    });
-  }
-  return _stripe;
-}
-
-/** Monthly usage key format: estimate_2026-04 or search_2026-04 */
-function usageKey(feature: string): string {
-  const now = new Date();
-  const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-  return `${feature}_${month}`;
-}
+import { supabaseAdmin } from "./supabase";
 
 export interface UsageCheckResult {
   allowed: boolean;
@@ -25,16 +8,15 @@ export interface UsageCheckResult {
 }
 
 /**
- * Check and increment usage for a free-tier customer.
- * Returns null if the user is not a free member (paid users bypass limits).
- * Stores usage counts in Stripe customer metadata.
+ * Check and increment usage for a free-tier user.
+ * Reads from Supabase realestate_users (fast single query vs 2+ Stripe API calls).
+ * Paid users bypass limits. Guest (no email) = controlled by frontend.
  */
 export async function checkAndIncrementUsage(
   email: string | null,
   feature: "estimate" | "search",
   limits: { free: number; guest: number }
 ): Promise<{ result: UsageCheckResult; tier: string }> {
-  // No email = guest (no limit tracking, controlled by frontend)
   if (!email) {
     return {
       result: { allowed: true, used: 0, limit: limits.guest, remaining: limits.guest },
@@ -42,38 +24,33 @@ export async function checkAndIncrementUsage(
     };
   }
 
-  // Look up customer
-  const customers = await getStripe().customers.list({ email, limit: 1 });
-  if (customers.data.length === 0) {
+  const { data: user } = await supabaseAdmin
+    .from("realestate_users")
+    .select("plan, usage_search, usage_estimate, usage_month")
+    .eq("email", email)
+    .single();
+
+  if (!user) {
+    // Unknown email → treat as guest
     return {
       result: { allowed: true, used: 0, limit: limits.guest, remaining: limits.guest },
       tier: "guest",
     };
   }
 
-  const customer = customers.data[0];
-
-  // Check for active subscription → paid users have no limits
-  const subscriptions = await getStripe().subscriptions.list({
-    customer: customer.id,
-    status: "all",
-    limit: 5,
-  });
-  const activeSub = subscriptions.data.find(
-    (s) => s.status === "active" || s.status === "trialing"
-  );
-  if (activeSub) {
+  // Paid users have no limits
+  if (user.plan !== "free") {
     return {
       result: { allowed: true, used: 0, limit: -1, remaining: -1 },
       tier: "paid",
     };
   }
 
-  // Free member — check usage count
-  const key = usageKey(feature);
-  const used = parseInt(customer.metadata?.[key] || "0", 10);
+  const currentMonth = new Date().toISOString().slice(0, 7); // "YYYY-MM"
+  const monthChanged = user.usage_month !== currentMonth;
+  const usageCol = feature === "search" ? "usage_search" : "usage_estimate";
+  const used = monthChanged ? 0 : (user[usageCol] as number);
   const limit = limits.free;
-  const remaining = Math.max(0, limit - used);
 
   if (used >= limit) {
     return {
@@ -82,16 +59,25 @@ export async function checkAndIncrementUsage(
     };
   }
 
-  // Increment usage
-  await getStripe().customers.update(customer.id, {
-    metadata: {
-      ...customer.metadata,
-      [key]: String(used + 1),
-    },
-  });
+  // Increment (and reset other col if month changed)
+  const updateData: Record<string, unknown> = {
+    [usageCol]: used + 1,
+    usage_month: currentMonth,
+    updated_at: new Date().toISOString(),
+  };
+  if (monthChanged) {
+    const otherCol = feature === "search" ? "usage_estimate" : "usage_search";
+    updateData[otherCol] = 0;
+  }
 
+  await supabaseAdmin
+    .from("realestate_users")
+    .update(updateData)
+    .eq("email", email);
+
+  const remaining = limit - used - 1;
   return {
-    result: { allowed: true, used: used + 1, limit, remaining: remaining - 1 },
+    result: { allowed: true, used: used + 1, limit, remaining },
     tier: "free",
   };
 }

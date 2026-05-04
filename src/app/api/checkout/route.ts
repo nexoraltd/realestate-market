@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
       subscription_data: {
         // 月額は14日トライアル、年額はトライアルなし（年額は割引が特典）
         ...(isYearly ? {} : { trial_period_days: 14 }),
+        metadata: { plan: priceKey },
       },
       metadata: { plan: priceKey },
     });
