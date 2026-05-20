@@ -5,7 +5,8 @@ import "./globals.css";
 
 const GA_ID = 'G-1DEZ6SPVF8'
 const BASE_URL = 'https://market.next-aura.com'
-const hasClerkPublishableKey = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
+const CLERK_PUBLISHABLE_KEY =
+  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "pk_test_ZHVtbXk="
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -169,12 +170,8 @@ export default function RootLayout({
     </html>
   )
 
-  if (!hasClerkPublishableKey) {
-    return document
-  }
-
   return (
-    <ClerkProvider localization={jaJP}>
+    <ClerkProvider localization={jaJP} publishableKey={CLERK_PUBLISHABLE_KEY}>
       {document}
     </ClerkProvider>
   );
