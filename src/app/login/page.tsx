@@ -2,13 +2,14 @@
 
 import { Suspense, useState } from "react";
 import Link from "next/link";
-import { useSignIn } from "@clerk/nextjs/legacy";
+import { useSignIn, useSignUp } from "@clerk/nextjs/legacy";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import LegalNotice from "@/components/LegalNotice";
 
 function LoginForm() {
   const { signIn, isLoaded } = useSignIn();
+  const { signUp, isLoaded: isSignUpLoaded } = useSignUp();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -16,7 +17,7 @@ function LoginForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!isLoaded) return;
+    if (!isLoaded || !isSignUpLoaded) return;
     setError(null);
     setLoading(true);
     try {
@@ -24,11 +25,22 @@ function LoginForm() {
         process.env.NEXT_PUBLIC_APP_URL ||
         process.env.NEXT_PUBLIC_BASE_URL ||
         window.location.origin;
-      await signIn.create({
-        strategy: "email_link",
-        identifier: email,
-        redirectUrl: `${appUrl}/account`,
-      });
+      const redirectUrl = `${appUrl}/account`;
+      try {
+        await signIn.create({
+          strategy: "email_link",
+          identifier: email,
+          redirectUrl,
+        });
+      } catch {
+        await signUp.create({
+          emailAddress: email,
+        });
+        await signUp.prepareEmailAddressVerification({
+          strategy: "email_link",
+          redirectUrl,
+        });
+      }
       setSent(true);
     } catch {
       setError("メール送信に失敗しました。");
@@ -102,7 +114,7 @@ function LoginForm() {
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button
           type="submit"
-          disabled={loading || !isLoaded}
+          disabled={loading || !isLoaded || !isSignUpLoaded}
           className="w-full bg-[#4285F4] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#3367D6] disabled:opacity-50"
         >
           {loading ? "送信中..." : "ログインリンクを送信"}
