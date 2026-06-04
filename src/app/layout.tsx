@@ -6,7 +6,8 @@ import "./globals.css";
 const GA_ID = 'G-1DEZ6SPVF8'
 const BASE_URL = 'https://market.next-aura.com'
 const CLERK_PUBLISHABLE_KEY =
-  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "pk_test_ZHVtbXk="
+  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+  "pk_test_aW52aXRpbmctYnJlYW0tMjUuY2xlcmsuYWNjb3VudHMuZGV2JA"
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
