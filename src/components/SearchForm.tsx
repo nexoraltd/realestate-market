@@ -3,25 +3,33 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PREFECTURES } from "@/lib/prefectures";
+import { useLatestDataPeriod } from "@/components/useLatestDataPeriod";
 
 interface City {
   id: string;
   name: string;
 }
 
-const currentYear = new Date().getFullYear();
-const years = Array.from({ length: currentYear - 2005 + 1 }, (_, i) =>
-  String(currentYear - i)
-);
-
 export default function SearchForm({ compact = false }: { compact?: boolean }) {
   const router = useRouter();
+  const latestPeriod = useLatestDataPeriod();
   const [prefCode, setPrefCode] = useState("");
   const [cityCode, setCityCode] = useState("");
-  const [year, setYear] = useState(String(currentYear - 1));
-  const [quarter, setQuarter] = useState("1");
+  const [year, setYear] = useState(latestPeriod.year);
+  const [quarter, setQuarter] = useState(latestPeriod.quarter);
   const [cities, setCities] = useState<City[]>([]);
   const [loading, setLoading] = useState(false);
+  const latestYear = Number(latestPeriod.year);
+  const years = Array.from({ length: latestYear - 2005 + 1 }, (_, i) =>
+    String(latestYear - i)
+  );
+  const selectedPeriodIndex = Number(year) * 4 + Number(quarter);
+  const latestPeriodIndex = latestYear * 4 + Number(latestPeriod.quarter);
+
+  useEffect(() => {
+    setYear(latestPeriod.year);
+    setQuarter(latestPeriod.quarter);
+  }, [latestPeriod.year, latestPeriod.quarter]);
 
   useEffect(() => {
     if (!prefCode) {
@@ -120,7 +128,7 @@ export default function SearchForm({ compact = false }: { compact?: boolean }) {
               </option>
             ))}
           </select>
-          {Number(year) >= currentYear && (
+          {selectedPeriodIndex > latestPeriodIndex && (
             <p className="mt-1 text-xs text-amber-600">
               ⚠️ {year}年のデータはまだ収録されていない可能性があります
             </p>
