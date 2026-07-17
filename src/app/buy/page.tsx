@@ -123,13 +123,13 @@ export default function BuyPage() {
                 <ul className="space-y-3">
                   {cat.areas.map((a) => (
                     <li key={a.code}>
-                      <a
-                        href={`/search?area=${a.code}&year=2024&quarter=4`}
+                      <LatestSearchLink
+                        area={a.code}
                         className="flex items-center justify-between hover:bg-gray-50 rounded-lg p-2 -m-2 transition"
                       >
                         <span className="font-medium">{a.name}</span>
                         <span className="text-xs text-gray-500">{a.note}</span>
-                      </a>
+                      </LatestSearchLink>
                     </li>
                   ))}
                 </ul>
@@ -172,3 +172,4 @@ export default function BuyPage() {
     </>
   );
 }
+import LatestSearchLink from "@/components/LatestSearchLink";
