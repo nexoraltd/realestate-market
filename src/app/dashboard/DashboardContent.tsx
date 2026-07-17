@@ -8,6 +8,7 @@ import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import SubscriptionPanel from "@/components/SubscriptionPanel";
 import { getPermissions, type PlanKey } from "@/lib/planPermissions";
 import ProFeaturesPanel from "@/components/ProFeaturesPanel";
+import { useLatestDataPeriod } from "@/components/useLatestDataPeriod";
 
 const SESSION_KEY = "realestate_verified_email";
 
@@ -55,6 +56,7 @@ const prefectures: Record<string, string> = {
 type Tab = "search" | "csv" | "trend" | "compare" | "pro";
 
 export default function DashboardContent() {
+  const latestPeriod = useLatestDataPeriod();
   const [activeTab, setActiveTab] = useState<Tab>("search");
 
   // Subscription gate state
@@ -66,7 +68,7 @@ export default function DashboardContent() {
 
   // CSV tab state (must be before any conditional return to respect Rules of Hooks)
   const [csvArea, setCsvArea] = useState("");
-  const [csvYear, setCsvYear] = useState("2024");
+  const [csvYear, setCsvYear] = useState(latestPeriod.year);
   const [csvLoading, setCsvLoading] = useState(false);
   const [csvUsed, setCsvUsed] = useState<number>(0);
   const [csvLimit, setCsvLimit] = useState<number>(100);
@@ -332,7 +334,7 @@ export default function DashboardContent() {
     );
   }
 
-  const years = Array.from({ length: 20 }, (_, i) => String(2024 - i));
+  const years = Array.from({ length: 20 }, (_, i) => String(Number(latestPeriod.year) - i));
 
   async function handleCsvDownload() {
     if (!csvArea) return;

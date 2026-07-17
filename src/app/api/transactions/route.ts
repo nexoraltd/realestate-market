@@ -5,6 +5,7 @@ import { STRIPE_PRICE_IDS } from "@/lib/plans";
 import { checkAndIncrementUsage } from "@/lib/usageLimit";
 import { supabaseAdmin } from "@/lib/supabase";
 import Stripe from "stripe";
+import { getLatestAvailablePeriod } from "@/lib/latestPeriod.server";
 
 async function enrichWithStations(transactions: Transaction[]): Promise<Transaction[]> {
   if (transactions.length === 0) return transactions;
@@ -100,15 +101,13 @@ export async function GET(request: NextRequest) {
   if (email) {
     const plan = await resolvePlan(email);
     if (!plan) {
-      const currentYear = new Date().getFullYear();
-      const currentQuarter = Math.ceil((new Date().getMonth() + 1) / 3);
+      const latestPeriod = await getLatestAvailablePeriod();
       // 現在より古い年、または現在より前の四半期（同年）はブロック
       const requestedYear = parseInt(year, 10);
       const requestedQuarter = parseInt(quarter, 10);
-      if (
-        requestedYear < currentYear ||
-        (requestedYear === currentYear && requestedQuarter < currentQuarter)
-      ) {
+      const requestedIndex = requestedYear * 4 + requestedQuarter;
+      const latestIndex = parseInt(latestPeriod.year, 10) * 4 + parseInt(latestPeriod.quarter, 10);
+      if (requestedIndex < latestIndex) {
         return NextResponse.json(
           { error: "直近1四半期以前のデータはスタンダードプラン以上でご利用いただけます。" },
           { status: 403 }

@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 import { PREFECTURE_GEO, getPriceColor, getPriceLevel } from "@/lib/prefecture-geo";
 import { MAJOR_CITIES } from "@/lib/major-cities";
 import type { MapPricesResponse } from "@/app/api/map-prices/route";
+import { useLatestDataPeriod } from "@/components/useLatestDataPeriod";
 
 export default function LeafletMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
   const router = useRouter();
+  const latestPeriod = useLatestDataPeriod();
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -43,8 +45,6 @@ export default function LeafletMap() {
 
         L.control.zoom({ position: "topright" }).addTo(map);
         L.control.attribution({ position: "bottomright" }).addTo(map);
-
-        const currentYear = new Date().getFullYear() - 1;
 
         // ── 都道府県マーカー（大きめ・常時表示） ──
         PREFECTURE_GEO.forEach((pref) => {
@@ -132,7 +132,7 @@ export default function LeafletMap() {
           if (btn) {
             btn.onclick = () => {
               const pref = btn.dataset.pref;
-              router.push(`/search?area=${pref}&year=${currentYear}&quarter=1`);
+              router.push(`/search?area=${pref}&year=${latestPeriod.year}&quarter=${latestPeriod.quarter}`);
             };
           }
         });
@@ -154,7 +154,7 @@ export default function LeafletMap() {
         mapInstance.current = null;
       }
     };
-  }, [router]);
+  }, [router, latestPeriod.year, latestPeriod.quarter]);
 
   return (
     <div className="relative w-full h-full rounded-2xl overflow-hidden">

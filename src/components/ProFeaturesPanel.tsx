@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import type { PlanKey } from "@/lib/planPermissions";
+import { useLatestDataPeriod } from "@/components/useLatestDataPeriod";
 
 const prefectures: Record<string, string> = {
   "01": "北海道", "02": "青森県", "03": "岩手県", "04": "宮城県", "05": "秋田県",
@@ -31,9 +32,13 @@ interface Props {
 
 /** カスタムレポートパネル */
 function ReportPanel({ email }: { email: string }) {
+  const latestPeriod = useLatestDataPeriod();
   const [areas, setAreas] = useState<string[]>([]);
   const [areaInput, setAreaInput] = useState("");
-  const [years, setYears] = useState<string[]>(["2024", "2023"]);
+  const [years, setYears] = useState<string[]>([
+    latestPeriod.year,
+    String(Number(latestPeriod.year) - 1),
+  ]);
   const [yearInput, setYearInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState<ReportData | null>(null);
@@ -81,7 +86,7 @@ function ReportPanel({ email }: { email: string }) {
     return v.toLocaleString();
   }
 
-  const allYears = Array.from({ length: 20 }, (_, i) => String(2025 - i));
+  const allYears = Array.from({ length: 20 }, (_, i) => String(Number(latestPeriod.year) - i));
 
   return (
     <div className="space-y-6">

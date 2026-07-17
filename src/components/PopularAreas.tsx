@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { PREFECTURE_GEO, getPriceColor } from "@/lib/prefecture-geo";
+import { useLatestDataPeriod } from "@/components/useLatestDataPeriod";
 
 const FLOOR_PLAN_TABS = [
   { key: "all", label: "全て" },
@@ -115,7 +116,7 @@ const POPULAR: AreaData[] = [
 
 export default function PopularAreas() {
   const [activeTab, setActiveTab] = useState("all");
-  const currentYear = new Date().getFullYear() - 1;
+  const latestPeriod = useLatestDataPeriod();
 
   return (
     <section className="py-16 bg-white">
@@ -159,7 +160,7 @@ export default function PopularAreas() {
             return (
               <Link
                 key={code}
-                href={`/search?area=${code}&year=${currentYear}&quarter=1`}
+                href={`/search?area=${code}&year=${latestPeriod.year}&quarter=${latestPeriod.quarter}`}
                 className="card-hover group bg-white rounded-xl border border-slate-100 hover:border-slate-300 overflow-hidden"
               >
                 {/* Header */}

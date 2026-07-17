@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLatestDataPeriod } from "@/components/useLatestDataPeriod";
 
 const REGIONS: {
   name: string;
@@ -93,12 +94,12 @@ const REGIONS: {
 
 export default function JapanMap() {
   const router = useRouter();
+  const latestPeriod = useLatestDataPeriod();
   const [hovered, setHovered] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ name: string; x: number; y: number } | null>(null);
 
   const handleClick = (code: string) => {
-    const currentYear = new Date().getFullYear() - 1;
-    router.push(`/search?area=${code}&year=${currentYear}&quarter=1`);
+    router.push(`/search?area=${code}&year=${latestPeriod.year}&quarter=${latestPeriod.quarter}`);
   };
 
   return (
