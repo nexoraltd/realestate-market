@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import { getTransactions } from "@/lib/api";
 import { MAJOR_CITIES } from "@/lib/major-cities";
+import { getLatestAvailablePeriod } from "@/lib/latestPeriod.server";
+import { getRecentPeriods as buildRecentPeriods } from "@/lib/dataPeriod";
 
 // ISR: 毎日1回再生成
 export const revalidate = 86400;
+export const dynamic = "force-dynamic";
 
 const PREF_CODES = [
   "01","02","03","04","05","06","07","08","09","10",
@@ -65,7 +68,8 @@ export interface MapPricesResponse {
 }
 
 export async function GET() {
-  const periods = getRecentPeriods(2);
+  const latestPeriod = await getLatestAvailablePeriod();
+  const periods = buildRecentPeriods(latestPeriod, 2);
 
   // 都道府県 & 都市を並列取得
   const [prefResults, cityResults] = await Promise.all([
